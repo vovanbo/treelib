@@ -187,10 +187,9 @@ Class methods:
 
 .. method:: rsearch(nid[, filter])
 
-    Search the tree from ``nid`` to the root along links reservedly Note:
+    Search the tree from ``nid`` to the root along links reservedly. Parameter
     ``filter`` refers to the function of one variable to act on the
     :class:`Node` object.
-
 
 .. method:: show([nid[, level[, idhidden[, filter[, key[, reverse[, line_type]]]]]]]])
 
