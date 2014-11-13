@@ -49,14 +49,375 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="treelib-node-module">
-<h2>treelib.node module<a class="headerlink" href="#treelib-node-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-treelib.node">
+<span id="treelib-node-module"></span><h2>treelib.node module<a class="headerlink" href="#module-treelib.node" title="Permalink to this headline">¶</a></h2>
+<p>treelib - Simple to use for you.</p>
+<p>Python 2/3 Tree Implementation</p>
+<dl class="class">
+<dt id="treelib.node.Node">
+<em class="property">class </em><code class="descclassname">treelib.node.</code><code class="descname">Node</code><span class="sig-paren">(</span><em>tag=None</em>, <em>identifier=None</em>, <em>expanded=True</em>, <em>data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.node.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A Node object is stored inside the _nodes dictionary of a Tree object.
+Use Node objects to store data inside the data attribute.</p>
+<dl class="attribute">
+<dt id="treelib.node.Node.ADD">
+<code class="descname">ADD</code><em class="property"> = 0</em><a class="headerlink" href="#treelib.node.Node.ADD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.node.Node.DELETE">
+<code class="descname">DELETE</code><em class="property"> = 1</em><a class="headerlink" href="#treelib.node.Node.DELETE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.node.Node.INSERT">
+<code class="descname">INSERT</code><em class="property"> = 2</em><a class="headerlink" href="#treelib.node.Node.INSERT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.node.Node.bpointer">
+<code class="descname">bpointer</code><a class="headerlink" href="#treelib.node.Node.bpointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the value of _bpointer; see below for the setter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.node.Node.fpointer">
+<code class="descname">fpointer</code><a class="headerlink" href="#treelib.node.Node.fpointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the value of _fpointer; see below for the setter</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.node.Node.identifier">
+<code class="descname">identifier</code><a class="headerlink" href="#treelib.node.Node.identifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the value of _identifier; see below for the setter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.node.Node.is_leaf">
+<code class="descname">is_leaf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treelib.node.Node.is_leaf" title="Permalink to this definition">¶</a></dt>
+<dd><p>return True if the the current node has no soon</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.node.Node.is_root">
+<code class="descname">is_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treelib.node.Node.is_root" title="Permalink to this definition">¶</a></dt>
+<dd><p>return True if self has no parent, i.e. if self is root</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.node.Node.tag">
+<code class="descname">tag</code><a class="headerlink" href="#treelib.node.Node.tag" title="Permalink to this definition">¶</a></dt>
+<dd><p>return the value if _tag; see below for the setter</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.node.Node.update_bpointer">
+<code class="descname">update_bpointer</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.node.Node.update_bpointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>set bpointer</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.node.Node.update_fpointer">
+<code class="descname">update_fpointer</code><span class="sig-paren">(</span><em>nid</em>, <em>mode=0</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.node.Node.update_fpointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>set _fpointer recursively</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="treelib-tree-module">
-<h2>treelib.tree module<a class="headerlink" href="#treelib-tree-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-treelib.tree">
+<span id="treelib-tree-module"></span><h2>treelib.tree module<a class="headerlink" href="#module-treelib.tree" title="Permalink to this headline">¶</a></h2>
+<p>treelib - Simple to use for you.</p>
+<p>Python 2/3 Tree Implementation</p>
+<dl class="exception">
+<dt id="treelib.tree.DuplicatedNodeIdError">
+<em class="property">exception </em><code class="descclassname">treelib.tree.</code><code class="descname">DuplicatedNodeIdError</code><a class="headerlink" href="#treelib.tree.DuplicatedNodeIdError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception throwed if an identifier already exists in a tree.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="treelib.tree.InvalidLevelNumber">
+<em class="property">exception </em><code class="descclassname">treelib.tree.</code><code class="descname">InvalidLevelNumber</code><a class="headerlink" href="#treelib.tree.InvalidLevelNumber" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="treelib.tree.LinkPastRootNodeError">
+<em class="property">exception </em><code class="descclassname">treelib.tree.</code><code class="descname">LinkPastRootNodeError</code><a class="headerlink" href="#treelib.tree.LinkPastRootNodeError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception throwed in Tree.link_past_node() if one attempts
+to &#8220;link past&#8221; the root node of a tree.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="treelib.tree.MultipleRootError">
+<em class="property">exception </em><code class="descclassname">treelib.tree.</code><code class="descname">MultipleRootError</code><a class="headerlink" href="#treelib.tree.MultipleRootError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception throwed if more than one root exists in a tree.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="treelib.tree.NodeIDAbsentError">
+<em class="property">exception </em><code class="descclassname">treelib.tree.</code><code class="descname">NodeIDAbsentError</code><a class="headerlink" href="#treelib.tree.NodeIDAbsentError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">exceptions.Exception</span></code></p>
+<p>Exception throwed if a node&#8217;s identifier is unknown</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="treelib.tree.Tree">
+<em class="property">class </em><code class="descclassname">treelib.tree.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>tree=None</em>, <em>deep=False</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Tree objects are made of Node(s) stored in _nodes dictionary.</p>
+<dl class="attribute">
+<dt id="treelib.tree.Tree.DEPTH">
+<code class="descname">DEPTH</code><em class="property"> = 1</em><a class="headerlink" href="#treelib.tree.Tree.DEPTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.tree.Tree.ROOT">
+<code class="descname">ROOT</code><em class="property"> = 0</em><a class="headerlink" href="#treelib.tree.Tree.ROOT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.tree.Tree.WIDTH">
+<code class="descname">WIDTH</code><em class="property"> = 2</em><a class="headerlink" href="#treelib.tree.Tree.WIDTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.tree.Tree.ZIGZAG">
+<code class="descname">ZIGZAG</code><em class="property"> = 3</em><a class="headerlink" href="#treelib.tree.Tree.ZIGZAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.add_node">
+<code class="descname">add_node</code><span class="sig-paren">(</span><em>node</em>, <em>parent=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new node to tree.
+The &#8216;node&#8217; parameter refers to an instance of Class::Node</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.all_nodes">
+<code class="descname">all_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.all_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all nodes in a list</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.children">
+<code class="descname">children</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the children (Node) list of nid.
+Empty list is returned if nid does not exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.contains">
+<code class="descname">contains</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the tree contains node of given id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.create_node">
+<code class="descname">create_node</code><span class="sig-paren">(</span><em>tag=None</em>, <em>identifier=None</em>, <em>parent=None</em>, <em>data=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.create_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a child node for given &#64;parent node.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.depth">
+<code class="descname">depth</code><span class="sig-paren">(</span><em>node=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the maximum level of this tree or the level of the given node</p>
+<p>&#64;param node Node instance or identifier
+&#64;return int
+&#64;throw NodeIDAbsentError</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.expand_tree">
+<code class="descname">expand_tree</code><span class="sig-paren">(</span><em>nid=None</em>, <em>mode=1</em>, <em>filter=None</em>, <em>key=None</em>, <em>reverse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.expand_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python generator. Loosly based on an algorithm from
+&#8216;Essential LISP&#8217; by John R. Anderson, Albert T. Corbett, and
+Brian J. Reiser, page 239-241</p>
+<p>UPDATE: the &#64;filter function is performed on Node object during
+traversing.</p>
+<p>UPDATE: the &#64;key and &#64;reverse are present to sort nodes at each
+level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.get_node">
+<code class="descname">get_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.get_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the node with nid. None returned if nid not exists.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.is_branch">
+<code class="descname">is_branch</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.is_branch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the children (ID) list of nid.
+Empty list is returned if nid does not exist</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.leaves">
+<code class="descname">leaves</code><span class="sig-paren">(</span><em>root=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.leaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get leaves of the whole tree of a subtree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.level">
+<code class="descname">level</code><span class="sig-paren">(</span><em>nid</em>, <em>filter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the node level in this tree.
+The level is an integer starting with &#8216;0&#8217; at the root.
+In other words, the root lives at level &#8216;0&#8217;;</p>
+<p>Update: &#64;filter params is added to calculate level passing
+exclusive nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.link_past_node">
+<code class="descname">link_past_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.link_past_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a node by linking past it.</p>
+<p>For example, if we have a -&gt; b -&gt; c and delete node b, we are left
+with a -&gt; c</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.move_node">
+<code class="descname">move_node</code><span class="sig-paren">(</span><em>source</em>, <em>destination</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.move_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move a node indicated by &#64;source parameter to be a child of
+&#64;destination.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="treelib.tree.Tree.nodes">
+<code class="descname">nodes</code><a class="headerlink" href="#treelib.tree.Tree.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict form of nodes in a tree: {id: node_instance}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.parent">
+<code class="descname">parent</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get parent node object of given id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.paste">
+<code class="descname">paste</code><span class="sig-paren">(</span><em>nid</em>, <em>new_tree</em>, <em>deepcopy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.paste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paste a &#64;new_tree to the original one by linking the root
+of new tree to given node (nid).</p>
+<p>Update: add &#64;deepcopy of pasted tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.paths_to_leaves">
+<code class="descname">paths_to_leaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.paths_to_leaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use this function to get the identifiers allowing to go from the root
+nodes to each leaf.
+Return a list of list of identifiers, root being not omitted.</p>
+<dl class="docutils">
+<dt>For example :</dt>
+<dd>Harry
+<a href="#id1"><span class="problematic" id="id2">|</span></a>___ Bill
+<a href="#id3"><span class="problematic" id="id4">|</span></a>___ Jane
+|    <a href="#id5"><span class="problematic" id="id6">|</span></a>___ Diane
+|         <a href="#id7"><span class="problematic" id="id8">|</span></a>___ George
+|              <a href="#id9"><span class="problematic" id="id10">|</span></a>___ Jill
+|         <a href="#id11"><span class="problematic" id="id12">|</span></a>___ Mary
+|    <a href="#id13"><span class="problematic" id="id14">|</span></a>___ Mark</dd>
+</dl>
+<p>expected result :
+[[&#8216;harry&#8217;, &#8216;jane&#8217;, &#8216;diane&#8217;, &#8216;mary&#8217;],</p>
+<blockquote>
+<div>[&#8216;harry&#8217;, &#8216;jane&#8217;, &#8216;mark&#8217;],
+[&#8216;harry&#8217;, &#8216;jane&#8217;, &#8216;diane&#8217;, &#8216;george&#8217;, &#8216;jill&#8217;],
+[&#8216;harry&#8217;, &#8216;bill&#8217;]]</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.remove_node">
+<code class="descname">remove_node</code><span class="sig-paren">(</span><em>identifier</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.remove_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a node indicated by &#8216;identifier&#8217;; all the successors are
+removed as well.</p>
+<p>Return the number of removed nodes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.remove_subtree">
+<code class="descname">remove_subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.remove_subtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a subtree deleted from this tree. If nid is None, an
+empty tree is returned.
+For the original tree, this method is similar to
+<cite>remove_node(self,nid)</cite>, because given node and its children
+are removed from the original tree in both methods.
+For the returned value and performance, these two methods are
+different:</p>
+<blockquote>
+<div><cite>remove_node</cite> returns the number of deleted nodes;
+<cite>remove_subtree</cite> returns a subtree of deleted nodes;</div></blockquote>
+<p>You are always suggested to use <cite>remove_node</cite> if your only to
+delete nodes from a tree, as the other one need memory
+allocation to store the new tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.rsearch">
+<code class="descname">rsearch</code><span class="sig-paren">(</span><em>nid</em>, <em>filter=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.rsearch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the tree branch along the branch from nid to its
+ancestors (until root).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.save2file">
+<code class="descname">save2file</code><span class="sig-paren">(</span><em>filename</em>, <em>nid=None</em>, <em>level=0</em>, <em>idhidden=True</em>, <em>filter=None</em>, <em>key=None</em>, <em>reverse=False</em>, <em>line_type=u'ascii-ex'</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.save2file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update 20/05/13: Save tree into file for offline analysis</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.show">
+<code class="descname">show</code><span class="sig-paren">(</span><em>nid=None</em>, <em>level=0</em>, <em>idhidden=True</em>, <em>filter=None</em>, <em>key=None</em>, <em>reverse=False</em>, <em>line_type=u'ascii-ex'</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.show" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.siblings">
+<code class="descname">siblings</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.siblings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the siblings of given &#64;nid.</p>
+<p>If &#64;nid is root or there are no siblings, an empty list is returned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.size">
+<code class="descname">size</code><span class="sig-paren">(</span><em>level=None</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of nodes of the whole tree if &#64;level is not
+given. Otherwise, the total number of nodes at specific level
+is returned.</p>
+<p>&#64;param level The level number in the tree. It must be between
+[0, tree.depth].</p>
+<p>Otherwise, InvalidLevelNumber exception will be raised.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.subtree">
+<code class="descname">subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.subtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a shallow COPY of subtree with nid being the new root.
+If nid is None, return an empty tree.
+If you are looking for a deepcopy, please create a new tree
+with this shallow copy,</p>
+<dl class="docutils">
+<dt>e.g.</dt>
+<dd>new_tree = Tree(t.subtree(t.root), deep=True)</dd>
+</dl>
+<p>This line creates a deep copy of the entire tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="treelib.tree.Tree.to_json">
+<code class="descname">to_json</code><span class="sig-paren">(</span><em>with_data=False</em><span class="sig-paren">)</span><a class="headerlink" href="#treelib.tree.Tree.to_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the json string corresponding to self</p>
+</dd></dl>
+
+</dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-treelib">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-treelib" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -70,9 +431,9 @@
   <ul>
 <li><a class="reference internal" href="#">treelib package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#treelib-node-module">treelib.node module</a></li>
-<li><a class="reference internal" href="#treelib-tree-module">treelib.tree module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-treelib.node">treelib.node module</a></li>
+<li><a class="reference internal" href="#module-treelib.tree">treelib.tree module</a></li>
+<li><a class="reference internal" href="#module-treelib">Module contents</a></li>
 </ul>
 </li>
 </ul>
