@@ -17,6 +17,8 @@ several children and merely one parent.
    A :class:`Node` object contains basic properties such as node identifier,
    node tag, parent node, children nodes etc., and some operations for a node.
 
+.. currentmodule:: node
+
 Class attributes are:
 
 .. attribute:: Node.ADD
@@ -84,6 +86,8 @@ Instance methods:
     parameter or a shallow/deep copy of another tree. When ``deep=True``, a
     deepcopy operation is performed on feeding ``tree`` parameter and *more
     memory is required to create the tree*.
+
+.. currentmodule:: tree
 
 Class attributes are:
 
