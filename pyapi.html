@@ -8,7 +8,7 @@
     
     <title>Useful APIs &mdash; treelib 1.3.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     <script type="text/javascript">
@@ -27,8 +27,8 @@
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="Install" href="install.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -43,74 +43,83 @@
         <li class="right" >
           <a href="install.html" title="Install"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">treelib 1.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="module-treelib">
 <span id="useful-apis"></span><h1>Useful APIs<a class="headerlink" href="#module-treelib" title="Permalink to this headline">¶</a></h1>
-<p>This <cite>treelib</cite> is a simple module containing only two classes: <tt class="docutils literal"><span class="pre">Node</span></tt> and
-<tt class="docutils literal"><span class="pre">Tree</span></tt>. Tree is a self-contained structure with some nodes and connected by
+<p>This <cite>treelib</cite> is a simple module containing only two classes: <code class="docutils literal"><span class="pre">Node</span></code> and
+<code class="docutils literal"><span class="pre">Tree</span></code>. Tree is a self-contained structure with some nodes and connected by
 branches. One tree has and only has one root, while a node (except root) has
 several children and merely one parent.</p>
+<p><em>Note:</em> To solve the string compatibility between Python 2.x and 3.x, treelib
+follows the way of porting Python 3.x to 2/3. That means, all strings are
+manipulated as unicode and you do not need <cite>u&#8217;&#8216;</cite> prefix anymore. The impacted
+functions include <cite>str()</cite>, <cite>show()</cite> and <cite>save2file()</cite> routines. But if your
+data contains non-ascii characters and Python 2.x is used, you have to trigger
+the compatibility by declaring <cite>unicode_literals</cite> in the code:</p>
+<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; from __future__ import unicode_literals
+</pre></div>
+</div>
 <div class="section" id="node-objects">
-<h2><a class="reference internal" href="#treelib.Node" title="treelib.Node"><tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt></a> Objects<a class="headerlink" href="#node-objects" title="Permalink to this headline">¶</a></h2>
+<h2><a class="reference internal" href="#treelib.Node" title="treelib.Node"><code class="xref py py-class docutils literal"><span class="pre">Node</span></code></a> Objects<a class="headerlink" href="#node-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treelib.Node">
-<em class="property">class </em><tt class="descclassname">treelib.</tt><tt class="descname">Node</tt><big>(</big><span class="optional">[</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>expanded</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#treelib.Node" title="Permalink to this definition">¶</a></dt>
-<dd><p>A <a class="reference internal" href="#treelib.Node" title="treelib.Node"><tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt></a> object contains basic properties such as node identifier,
+<em class="property">class </em><code class="descclassname">treelib.</code><code class="descname">Node</code><span class="sig-paren">(</span><span class="optional">[</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>expanded</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#treelib.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <a class="reference internal" href="#treelib.Node" title="treelib.Node"><code class="xref py py-class docutils literal"><span class="pre">Node</span></code></a> object contains basic properties such as node identifier,
 node tag, parent node, children nodes etc., and some operations for a node.</p>
 </dd></dl>
 
 <p>Class attributes are:</p>
 <dl class="attribute">
 <dt id="treelib.Node.ADD">
-<tt class="descclassname">Node.</tt><tt class="descname">ADD</tt><a class="headerlink" href="#treelib.Node.ADD" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">ADD</code><a class="headerlink" href="#treelib.Node.ADD" title="Permalink to this definition">¶</a></dt>
 <dd><p>Addition mode for method <cite>update_fpointer()</cite>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="treelib.Node.DELETE">
-<tt class="descclassname">Node.</tt><tt class="descname">DELETE</tt><a class="headerlink" href="#treelib.Node.DELETE" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">DELETE</code><a class="headerlink" href="#treelib.Node.DELETE" title="Permalink to this definition">¶</a></dt>
 <dd><p>Deletion mode for method <cite>update_fpointer()</cite>.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="treelib.Node.INSERT">
-<tt class="descclassname">Node.</tt><tt class="descname">INSERT</tt><a class="headerlink" href="#treelib.Node.INSERT" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Node.</code><code class="descname">INSERT</code><a class="headerlink" href="#treelib.Node.INSERT" title="Permalink to this definition">¶</a></dt>
 <dd><p>Behave in the same way with Node.ADD since version 1.1.</p>
 </dd></dl>
 
 <p>Instance attributes:</p>
 <dl class="attribute">
 <dt id="node.identifier">
-<tt class="descclassname">node.</tt><tt class="descname">identifier</tt><a class="headerlink" href="#node.identifier" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">node.</code><code class="descname">identifier</code><a class="headerlink" href="#node.identifier" title="Permalink to this definition">¶</a></dt>
 <dd><p>The unique ID of a node within the scope of a tree. This attribute can be
-accessed and modified with <tt class="docutils literal"><span class="pre">.</span></tt> and <tt class="docutils literal"><span class="pre">=</span></tt> operator respectively.</p>
+accessed and modified with <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">=</span></code> operator respectively.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.tag">
-<tt class="descclassname">node.</tt><tt class="descname">tag</tt><a class="headerlink" href="#node.tag" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">node.</code><code class="descname">tag</code><a class="headerlink" href="#node.tag" title="Permalink to this definition">¶</a></dt>
 <dd><p>The readable node name for human. This attribute can be accessed and
-modified with <tt class="docutils literal"><span class="pre">.</span></tt> and <tt class="docutils literal"><span class="pre">=</span></tt> operator respectively.</p>
+modified with <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">=</span></code> operator respectively.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.bpointer">
-<tt class="descclassname">node.</tt><tt class="descname">bpointer</tt><a class="headerlink" href="#node.bpointer" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">node.</code><code class="descname">bpointer</code><a class="headerlink" href="#node.bpointer" title="Permalink to this definition">¶</a></dt>
 <dd><p>The parent ID of a node. This attribute can be
-accessed and modified with <tt class="docutils literal"><span class="pre">.</span></tt> and <tt class="docutils literal"><span class="pre">=</span></tt> operator respectively.</p>
+accessed and modified with <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">=</span></code> operator respectively.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.fpointer">
-<tt class="descclassname">node.</tt><tt class="descname">fpointer</tt><a class="headerlink" href="#node.fpointer" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">node.</code><code class="descname">fpointer</code><a class="headerlink" href="#node.fpointer" title="Permalink to this definition">¶</a></dt>
 <dd><p>With a getting operator, a list of IDs of node&#8217;s children is obtained. With
 a setting operator, the value can be list, set, or dict. For list or set,
 it is converted to a list type by the package; for dict, the keys are
@@ -120,230 +129,234 @@ treated as the node IDs.</p>
 <p>Instance methods:</p>
 <dl class="method">
 <dt id="node.is_leaf">
-<tt class="descclassname">node.</tt><tt class="descname">is_leaf</tt><big>(</big><big>)</big><a class="headerlink" href="#node.is_leaf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the node has children. Return False if the <tt class="docutils literal"><span class="pre">fpointer</span></tt> is empty
+<code class="descclassname">node.</code><code class="descname">is_leaf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.is_leaf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the node has children. Return False if the <code class="docutils literal"><span class="pre">fpointer</span></code> is empty
 or None.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="node.is_root">
-<tt class="descclassname">node.</tt><tt class="descname">is_root</tt><big>(</big><big>)</big><a class="headerlink" href="#node.is_root" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">node.</code><code class="descname">is_root</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#node.is_root" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the node is the root of present tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="node.update_bpointer">
-<tt class="descclassname">node.</tt><tt class="descname">update_bpointer</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#node.update_bpointer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set the parent (indicated by the <tt class="docutils literal"><span class="pre">nid</span></tt> parameter) of a node.</p>
+<code class="descclassname">node.</code><code class="descname">update_bpointer</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#node.update_bpointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the parent (indicated by the <code class="docutils literal"><span class="pre">nid</span></code> parameter) of a node.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="node.update_fpointer">
-<tt class="descclassname">node.</tt><tt class="descname">update_fpointer</tt><big>(</big><em>nid</em>, <em>mode=Node.ADD</em><big>)</big><a class="headerlink" href="#node.update_fpointer" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">node.</code><code class="descname">update_fpointer</code><span class="sig-paren">(</span><em>nid</em>, <em>mode=Node.ADD</em><span class="sig-paren">)</span><a class="headerlink" href="#node.update_fpointer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Update the children list with different modes: addition (Node.ADD or
 Node.INSERT) and deletion (Node.DELETE).</p>
 </dd></dl>
 
 </div>
 <div class="section" id="tree-objects">
-<h2><tt class="xref py py-mod docutils literal"><span class="pre">Tree</span></tt> Objects<a class="headerlink" href="#tree-objects" title="Permalink to this headline">¶</a></h2>
+<h2><code class="xref py py-mod docutils literal"><span class="pre">Tree</span></code> Objects<a class="headerlink" href="#tree-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="node.Tree">
-<em class="property">class </em><tt class="descclassname">node.</tt><tt class="descname">Tree</tt><big>(</big><em>tree=None</em>, <em>deep=False</em><big>)</big><a class="headerlink" href="#node.Tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>The <a class="reference internal" href="#node.Tree" title="node.Tree"><tt class="xref py py-class docutils literal"><span class="pre">Tree</span></tt></a> object defines the tree-like structure based on
-<tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt> objects. A new tree can be created from scratch without any
-parameter or a shallow/deep copy of another tree. When <tt class="docutils literal"><span class="pre">deep=True</span></tt>, a
-deepcopy operation is performed on feeding <tt class="docutils literal"><span class="pre">tree</span></tt> parameter and <em>more
+<em class="property">class </em><code class="descclassname">node.</code><code class="descname">Tree</code><span class="sig-paren">(</span><em>tree=None</em>, <em>deep=False</em><span class="sig-paren">)</span><a class="headerlink" href="#node.Tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#node.Tree" title="node.Tree"><code class="xref py py-class docutils literal"><span class="pre">Tree</span></code></a> object defines the tree-like structure based on
+<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> objects. A new tree can be created from scratch without any
+parameter or a shallow/deep copy of another tree. When <code class="docutils literal"><span class="pre">deep=True</span></code>, a
+deepcopy operation is performed on feeding <code class="docutils literal"><span class="pre">tree</span></code> parameter and <em>more
 memory is required to create the tree</em>.</p>
 </dd></dl>
 
 <p>Class attributes are:</p>
 <dl class="attribute">
 <dt id="node.Tree.ROOT">
-<tt class="descclassname">Tree.</tt><tt class="descname">ROOT</tt><a class="headerlink" href="#node.Tree.ROOT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for the <tt class="docutils literal"><span class="pre">level</span></tt> parameter in tree&#8217;s methods.</p>
+<code class="descclassname">Tree.</code><code class="descname">ROOT</code><a class="headerlink" href="#node.Tree.ROOT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default value for the <code class="docutils literal"><span class="pre">level</span></code> parameter in tree&#8217;s methods.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.Tree.DEPTH">
-<tt class="descclassname">Tree.</tt><tt class="descname">DEPTH</tt><a class="headerlink" href="#node.Tree.DEPTH" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Tree.</code><code class="descname">DEPTH</code><a class="headerlink" href="#node.Tree.DEPTH" title="Permalink to this definition">¶</a></dt>
 <dd><p>The depth-first search mode for tree.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.Tree.WIDTH">
-<tt class="descclassname">Tree.</tt><tt class="descname">WIDTH</tt><a class="headerlink" href="#node.Tree.WIDTH" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Tree.</code><code class="descname">WIDTH</code><a class="headerlink" href="#node.Tree.WIDTH" title="Permalink to this definition">¶</a></dt>
 <dd><p>The width-first search mode for tree.</p>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="node.Tree.ZIGZAG">
-<tt class="descclassname">Tree.</tt><tt class="descname">ZIGZAG</tt><a class="headerlink" href="#node.Tree.ZIGZAG" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">Tree.</code><code class="descname">ZIGZAG</code><a class="headerlink" href="#node.Tree.ZIGZAG" title="Permalink to this definition">¶</a></dt>
 <dd><p>The <a class="reference external" href="http://en.wikipedia.org/wiki/Tree_%28data_structure%29">ZIGZAG search</a> mode for tree.</p>
 </dd></dl>
 
 <p>Instance attributes:</p>
 <dl class="attribute">
 <dt id="tree.root">
-<tt class="descclassname">tree.</tt><tt class="descname">root</tt><a class="headerlink" href="#tree.root" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">root</code><a class="headerlink" href="#tree.root" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get or set the ID of the root.  This attribute can be accessed and modified
-with <tt class="docutils literal"><span class="pre">.</span></tt> and <tt class="docutils literal"><span class="pre">=</span></tt> operator respectively.</p>
+with <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">=</span></code> operator respectively.</p>
 </dd></dl>
 
 <p>Instance methods:</p>
 <dl class="method">
 <dt id="tree.size">
-<tt class="descclassname">tree.</tt><tt class="descname">size</tt><big>(</big><big>)</big><a class="headerlink" href="#tree.size" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.size" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the number of nodes in this tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.contains">
-<tt class="descclassname">tree.</tt><tt class="descname">contains</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.contains" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">contains</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.contains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the tree contains given node.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.parent">
-<tt class="descclassname">tree.</tt><tt class="descname">parent</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.parent" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">parent</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.parent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Obtain specific node&#8217;s parent (Node instance). Return None if the parent is
 None or does not exist in the tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.all_nodes">
-<tt class="descclassname">tree.</tt><tt class="descname">all_nodes</tt><big>(</big><big>)</big><a class="headerlink" href="#tree.all_nodes" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">all_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.all_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of all the nodes randomly belonging to this tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.depth">
-<tt class="descclassname">tree.</tt><tt class="descname">depth</tt><big>(</big><big>)</big><a class="headerlink" href="#tree.depth" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">depth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.depth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get depth of the tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.leaves">
-<tt class="descclassname">tree.</tt><tt class="descname">leaves</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.leaves" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">leaves</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.leaves" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get leaves from given node.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.add_node">
-<tt class="descclassname">tree.</tt><tt class="descname">add_node</tt><big>(</big><em>node</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#tree.add_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">add_node</code><span class="sig-paren">(</span><em>node</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.add_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a new node object to the tree and make the parent as the root by
 default.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.create_node">
-<tt class="descclassname">tree.</tt><tt class="descname">create_node</tt><big>(</big><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#tree.create_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">create_node</code><span class="sig-paren">(</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.create_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a new node and add it to this tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.expand_tree">
-<tt class="descclassname">tree.</tt><tt class="descname">expand_tree</tt><big>(</big><em>[nid[, mode[, filter[, key[, reverse]]]]]]</em><big>)</big><a class="headerlink" href="#tree.expand_tree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Traverse the tree nodes with different modes. <tt class="docutils literal"><span class="pre">nid</span></tt> refers to the
-expanding point to start; <tt class="docutils literal"><span class="pre">mode</span></tt> refers to the search mode (Tree.DEPTH,
-Tree.WIDTH); <tt class="docutils literal"><span class="pre">filter</span></tt> refers to the function of one variable to act on
-the <tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt> object; <tt class="docutils literal"><span class="pre">key</span></tt>, <tt class="docutils literal"><span class="pre">reverse</span></tt> are present to sort
+<code class="descclassname">tree.</code><code class="descname">expand_tree</code><span class="sig-paren">(</span><em>[nid[, mode[, filter[, key[, reverse]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.expand_tree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traverse the tree nodes with different modes. <code class="docutils literal"><span class="pre">nid</span></code> refers to the
+expanding point to start; <code class="docutils literal"><span class="pre">mode</span></code> refers to the search mode (Tree.DEPTH,
+Tree.WIDTH); <code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on
+the <code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object; <code class="docutils literal"><span class="pre">key</span></code>, <code class="docutils literal"><span class="pre">reverse</span></code> are present to sort
 :class:Node objects at the same level.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.get_node">
-<tt class="descclassname">tree.</tt><tt class="descname">get_node</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.get_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the object of the node with ID of <tt class="docutils literal"><span class="pre">nid</span></tt> An alternative way is using
+<code class="descclassname">tree.</code><code class="descname">get_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.get_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the object of the node with ID of <code class="docutils literal"><span class="pre">nid</span></code> An alternative way is using
 &#8216;[]&#8217; operation on the tree. But small difference exists between them: the
-get_node() will return None if <tt class="docutils literal"><span class="pre">nid</span></tt> is absent, whereas &#8216;[]&#8217; will raise
-<tt class="docutils literal"><span class="pre">KeyError</span></tt>.</p>
+get_node() will return None if <code class="docutils literal"><span class="pre">nid</span></code> is absent, whereas &#8216;[]&#8217; will raise
+<code class="docutils literal"><span class="pre">KeyError</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.is_branch">
-<tt class="descclassname">tree.</tt><tt class="descname">is_branch</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.is_branch" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">is_branch</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.is_branch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the children (only sons) list of the node with ID == nid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.siblings">
-<tt class="descclassname">tree.</tt><tt class="descname">siblings</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.siblings" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">siblings</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.siblings" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all the siblings of given nid.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.move_node">
-<tt class="descclassname">tree.</tt><tt class="descname">move_node</tt><big>(</big><em>source</em>, <em>destination</em><big>)</big><a class="headerlink" href="#tree.move_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">move_node</code><span class="sig-paren">(</span><em>source</em>, <em>destination</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.move_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Move node (source) from its parent to another parent (destination).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.paste">
-<tt class="descclassname">tree.</tt><tt class="descname">paste</tt><big>(</big><em>nid</em>, <em>new_tree</em><big>)</big><a class="headerlink" href="#tree.paste" title="Permalink to this definition">¶</a></dt>
-<dd><p>Paste a new tree to an existing tree, with <tt class="docutils literal"><span class="pre">nid</span></tt> becoming the parent of the
+<code class="descclassname">tree.</code><code class="descname">paste</code><span class="sig-paren">(</span><em>nid</em>, <em>new_tree</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.paste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paste a new tree to an existing tree, with <code class="docutils literal"><span class="pre">nid</span></code> becoming the parent of the
 root of this new tree.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.remove_node">
-<tt class="descclassname">tree.</tt><tt class="descname">remove_node</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.remove_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">remove_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.remove_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a node and free the memory along with its successors.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.link_past_node">
-<tt class="descclassname">tree.</tt><tt class="descname">link_past_node</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.link_past_node" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">link_past_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.link_past_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Remove a node and link its children to its parent (root is not allowed).</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.rsearch">
-<tt class="descclassname">tree.</tt><tt class="descname">rsearch</tt><big>(</big><em>nid</em><span class="optional">[</span>, <em>filter</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#tree.rsearch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Search the tree from <tt class="docutils literal"><span class="pre">nid</span></tt> to the root along links reservedly. Parameter
-<tt class="docutils literal"><span class="pre">filter</span></tt> refers to the function of one variable to act on the
-<tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt> object.</p>
+<code class="descclassname">tree.</code><code class="descname">rsearch</code><span class="sig-paren">(</span><em>nid</em><span class="optional">[</span>, <em>filter</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.rsearch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Search the tree from <code class="docutils literal"><span class="pre">nid</span></code> to the root along links reservedly. Parameter
+<code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on the
+<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.show">
-<tt class="descclassname">tree.</tt><tt class="descname">show</tt><big>(</big><em>[nid[, level[, idhidden[, filter[, key[, reverse[, line_type]]]]]]]]</em><big>)</big><a class="headerlink" href="#tree.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Print the tree structure in hierarchy style. <tt class="docutils literal"><span class="pre">nid</span></tt> refers to the
-expanding point to start; <tt class="docutils literal"><span class="pre">level</span></tt> refers to the node level in the tree
-(root as level 0); <tt class="docutils literal"><span class="pre">idhidden</span></tt> refers to hiding the node ID when printing;
-<tt class="docutils literal"><span class="pre">filter</span></tt> refers to the function of one variable to act on the
-<tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt> object; <tt class="docutils literal"><span class="pre">key</span></tt>, <tt class="docutils literal"><span class="pre">reverse</span></tt> are present to sort
-<tt class="xref py py-class docutils literal"><span class="pre">Node</span></tt> object in the same level.</p>
-<p>You have three ways to output your tree data, i.e., stdout with <tt class="docutils literal"><span class="pre">show()</span></tt>,
-plain text file with <tt class="docutils literal"><span class="pre">save2file()</span></tt>, and json string with <tt class="docutils literal"><span class="pre">to_json()</span></tt>. The
+<code class="descclassname">tree.</code><code class="descname">show</code><span class="sig-paren">(</span><em>[nid[, level[, idhidden[, filter[, key[, reverse[, line_type]]]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the tree structure in hierarchy style. <code class="docutils literal"><span class="pre">nid</span></code> refers to the
+expanding point to start; <code class="docutils literal"><span class="pre">level</span></code> refers to the node level in the tree
+(root as level 0); <code class="docutils literal"><span class="pre">idhidden</span></code> refers to hiding the node ID when printing;
+<code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on the
+<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object; <code class="docutils literal"><span class="pre">key</span></code>, <code class="docutils literal"><span class="pre">reverse</span></code> are present to sort
+<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object in the same level.</p>
+<p>You have three ways to output your tree data, i.e., stdout with <code class="docutils literal"><span class="pre">show()</span></code>,
+plain text file with <code class="docutils literal"><span class="pre">save2file()</span></code>, and json string with <code class="docutils literal"><span class="pre">to_json()</span></code>. The
 former two use the same backend to generate a string of tree structure in a
 text graph.</p>
-<p><em>Version &gt;= 1.2.7a</em>: you can also spicify the <tt class="docutils literal"><span class="pre">line_type</span></tt> parameter (now supporting &#8216;ascii&#8217; [default], &#8216;ascii-ex&#8217;, &#8216;ascii-exr&#8217;, &#8216;ascii-em&#8217;, &#8216;ascii-emv&#8217;, &#8216;ascii-emh&#8217;) to the change graphical form.</p>
+<dl class="docutils">
+<dt><em>Version &gt;= 1.2.7a</em>: you can also spicify the <code class="docutils literal"><span class="pre">line_type</span></code> parameter (now</dt>
+<dd>supporting &#8216;ascii&#8217; [default], &#8216;ascii-ex&#8217;, &#8216;ascii-exr&#8217;, &#8216;ascii-em&#8217;,
+&#8216;ascii-emv&#8217;, &#8216;ascii-emh&#8217;) to the change graphical form.</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.subtree">
-<tt class="descclassname">tree.</tt><tt class="descname">subtree</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.subtree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a soft copy of the subtree with <tt class="docutils literal"><span class="pre">nid</span></tt> being the root. The softness
+<code class="descclassname">tree.</code><code class="descname">subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.subtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a soft copy of the subtree with <code class="docutils literal"><span class="pre">nid</span></code> being the root. The softness
 means all the nodes are shared between subtree and the original.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.remove_subtree">
-<tt class="descclassname">tree.</tt><tt class="descname">remove_subtree</tt><big>(</big><em>nid</em><big>)</big><a class="headerlink" href="#tree.remove_subtree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a subtree with <tt class="docutils literal"><span class="pre">nid</span></tt> being the root, and remove all nodes in the
+<code class="descclassname">tree.</code><code class="descname">remove_subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.remove_subtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a subtree with <code class="docutils literal"><span class="pre">nid</span></code> being the root, and remove all nodes in the
 subtree from the original one.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.save2file">
-<tt class="descclassname">tree.</tt><tt class="descname">save2file</tt><big>(</big><em>filename[, nid[, level[, idhidden[, filter[, key[, reverse]]]]]]]</em><big>)</big><a class="headerlink" href="#tree.save2file" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">save2file</code><span class="sig-paren">(</span><em>filename[, nid[, level[, idhidden[, filter[, key[, reverse]]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.save2file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save the tree into file for offline analysis.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.to_json">
-<tt class="descclassname">tree.</tt><tt class="descname">to_json</tt><big>(</big><big>)</big><a class="headerlink" href="#tree.to_json" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">tree.</code><code class="descname">to_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.to_json" title="Permalink to this definition">¶</a></dt>
 <dd><p>To format the tree in a JSON format.</p>
 </dd></dl>
 
@@ -354,13 +367,13 @@ subtree from the original one.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Useful APIs</a><ul>
-<li><a class="reference internal" href="#node-objects"><tt class="docutils literal"><span class="pre">Node</span></tt> Objects</a></li>
-<li><a class="reference internal" href="#tree-objects"><tt class="docutils literal"><span class="pre">Tree</span></tt> Objects</a></li>
+<li><a class="reference internal" href="#node-objects"><code class="docutils literal"><span class="pre">Node</span></code> Objects</a></li>
+<li><a class="reference internal" href="#tree-objects"><code class="docutils literal"><span class="pre">Tree</span></code> Objects</a></li>
 </ul>
 </li>
 </ul>
@@ -371,12 +384,14 @@ subtree from the original one.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="examples.html"
                         title="next chapter">Examples</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/pyapi.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/pyapi.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
       <input type="text" name="q" />
@@ -393,7 +408,7 @@ subtree from the original one.</p>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -408,13 +423,13 @@ subtree from the original one.</p>
         <li class="right" >
           <a href="install.html" title="Install"
              >previous</a> |</li>
-        <li><a href="index.html">treelib 1.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.0 documentation</a> &raquo;</li> 
       </ul>
     </div>
-    <div class="footer">
+    <div class="footer" role="contentinfo">
         &copy; Copyright 2014, Xiaming Chen.
-      Last updated on Dec 30, 2014.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+      Last updated on Mar 25, 2015.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
     </div>
   </body>
 </html>
