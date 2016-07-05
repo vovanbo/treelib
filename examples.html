@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Examples &mdash; treelib 1.3.0 documentation</title>
+    <title>Examples &mdash; treelib 1.3.5 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.3.0',
+        VERSION:     '1.3.5',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -23,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="treelib 1.3.0 documentation" href="index.html" />
+    <link rel="top" title="treelib 1.3.5 documentation" href="index.html" />
     <link rel="prev" title="Useful APIs" href="pyapi.html" /> 
   </head>
   <body role="document">
@@ -39,7 +39,7 @@
         <li class="right" >
           <a href="pyapi.html" title="Useful APIs"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.5 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,9 +52,9 @@
 <h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="basic-usage">
 <h2>Basic Usage<a class="headerlink" href="#basic-usage" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; from treelib import Node, Tree
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from treelib import Node, Tree
 &gt;&gt;&gt; <span class="nv">tree</span> <span class="o">=</span> Tree<span class="o">()</span>
-&gt;&gt;&gt; tree.create_node<span class="o">(</span><span class="s2">&quot;Harry&quot;</span>, <span class="s2">&quot;harry&quot;</span><span class="o">)</span>  <span class="c"># root node</span>
+&gt;&gt;&gt; tree.create_node<span class="o">(</span><span class="s2">&quot;Harry&quot;</span>, <span class="s2">&quot;harry&quot;</span><span class="o">)</span>  <span class="c1"># root node</span>
 &gt;&gt;&gt; tree.create_node<span class="o">(</span><span class="s2">&quot;Jane&quot;</span>, <span class="s2">&quot;jane&quot;</span>, <span class="nv">parent</span><span class="o">=</span><span class="s2">&quot;harry&quot;</span><span class="o">)</span>
 &gt;&gt;&gt; tree.create_node<span class="o">(</span><span class="s2">&quot;Bill&quot;</span>, <span class="s2">&quot;bill&quot;</span>, <span class="nv">parent</span><span class="o">=</span><span class="s2">&quot;harry&quot;</span><span class="o">)</span>
 &gt;&gt;&gt; tree.create_node<span class="o">(</span><span class="s2">&quot;Diane&quot;</span>, <span class="s2">&quot;diane&quot;</span>, <span class="nv">parent</span><span class="o">=</span><span class="s2">&quot;jane&quot;</span><span class="o">)</span>
@@ -74,28 +74,28 @@ Harry
 <h2>API Examples<a class="headerlink" href="#api-examples" title="Permalink to this headline">¶</a></h2>
 <p><strong>Example 1</strong>: Expand a tree with specific mode (Tree.DEPTH [default],
 Tree.WIDTH, Tree.ZIGZAG).</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; print<span class="o">(</span><span class="s1">&#39;,&#39;</span>.join<span class="o">([</span>tree<span class="o">[</span>node<span class="o">]</span>.tag <span class="k">for</span> node in <span class="se">\</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print<span class="o">(</span><span class="s1">&#39;,&#39;</span>.join<span class="o">([</span>tree<span class="o">[</span>node<span class="o">]</span>.tag <span class="k">for</span> node in <span class="se">\</span>
             tree.expand_tree<span class="o">(</span><span class="nv">mode</span><span class="o">=</span>Tree.DEPTH<span class="o">)]))</span>
 Harry,Bill,Jane,Diane,Mary,Mark
 </pre></div>
 </div>
 <p><strong>Example 2</strong>: Expand tree with custom filter.</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; print<span class="o">(</span><span class="s1">&#39;,&#39;</span>.join<span class="o">([</span>tree<span class="o">[</span>node<span class="o">]</span>.tag <span class="k">for</span> node in <span class="se">\</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print<span class="o">(</span><span class="s1">&#39;,&#39;</span>.join<span class="o">([</span>tree<span class="o">[</span>node<span class="o">]</span>.tag <span class="k">for</span> node in <span class="se">\</span>
             tree.expand_tree<span class="o">(</span><span class="nv">filter</span> <span class="o">=</span> lambda x: <span class="se">\</span>
             x.identifier !<span class="o">=</span> <span class="s1">&#39;diane&#39;</span><span class="o">)]))</span>
 Harry,Bill,Jane,Mark
 </pre></div>
 </div>
 <p><strong>Example 3</strong>: Get a subtree with the root of &#8216;diane&#8217;.</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; <span class="nv">sub_t</span> <span class="o">=</span> tree.subtree<span class="o">(</span><span class="s1">&#39;diane&#39;</span><span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">sub_t</span> <span class="o">=</span> tree.subtree<span class="o">(</span><span class="s1">&#39;diane&#39;</span><span class="o">)</span>
 &gt;&gt;&gt; sub_t.show<span class="o">()</span>
 Diane
 └── Mary
 </pre></div>
 </div>
 <p><strong>Example 4</strong>: Paste a new tree to the original one.</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; <span class="nv">new_tree</span> <span class="o">=</span> Tree<span class="o">()</span>
-&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n1&quot;</span>, 1<span class="o">)</span>  <span class="c"># root node</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">new_tree</span> <span class="o">=</span> Tree<span class="o">()</span>
+&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n1&quot;</span>, 1<span class="o">)</span>  <span class="c1"># root node</span>
 &gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n2&quot;</span>, 2, <span class="nv">parent</span><span class="o">=</span>1<span class="o">)</span>
 &gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n3&quot;</span>, 3, <span class="nv">parent</span><span class="o">=</span>1<span class="o">)</span>
 &gt;&gt;&gt; tree.paste<span class="o">(</span><span class="s1">&#39;bill&#39;</span>, new_tree<span class="o">)</span>
@@ -112,7 +112,7 @@ Harry
 </pre></div>
 </div>
 <p><strong>Example 5</strong>: Remove the existing node from the tree</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; tree.remove_node<span class="o">(</span>1<span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.remove_node<span class="o">(</span>1<span class="o">)</span>
 &gt;&gt;&gt; tree.show<span class="o">()</span>
 Harry
 ├── Bill
@@ -123,7 +123,7 @@ Harry
 </pre></div>
 </div>
 <p><strong>Example 6</strong>: Move a node to another parent.</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; tree.move_node<span class="o">(</span><span class="s1">&#39;mary&#39;</span>, <span class="s1">&#39;harry&#39;</span><span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.move_node<span class="o">(</span><span class="s1">&#39;mary&#39;</span>, <span class="s1">&#39;harry&#39;</span><span class="o">)</span>
 &gt;&gt;&gt; tree.show<span class="o">()</span>
 Harry
 ├── Bill
@@ -134,12 +134,12 @@ Harry
 </pre></div>
 </div>
 <p><strong>Example 7</strong>: Get the height of the tree.</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; tree.depth<span class="o">()</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.depth<span class="o">()</span>
 2
 </pre></div>
 </div>
 <p><strong>Example 8</strong>: Get the level of a node.</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; <span class="nv">node</span> <span class="o">=</span> tree.get_node<span class="o">(</span><span class="s2">&quot;bill&quot;</span><span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">node</span> <span class="o">=</span> tree.get_node<span class="o">(</span><span class="s2">&quot;bill&quot;</span><span class="o">)</span>
 &gt;&gt;&gt; tree.depth<span class="o">(</span>node<span class="o">)</span>
 1
 </pre></div>
@@ -148,7 +148,7 @@ Harry
 <dt><strong>Example 9</strong>: Print or dump tree structure. For example, the same tree in</dt>
 <dd>basic example can be printed with &#8216;ascii-em&#8217;:</dd>
 </dl>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; tree.show<span class="o">(</span><span class="nv">line_type</span><span class="o">=</span><span class="s2">&quot;ascii-em&quot;</span><span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.show<span class="o">(</span><span class="nv">line_type</span><span class="o">=</span><span class="s2">&quot;ascii-em&quot;</span><span class="o">)</span>
 Harry
 ╠══ Bill
 ╠══ Jane
@@ -159,7 +159,7 @@ Harry
 </div>
 <p>In the JSON form, to_json() takes optional parameter with_data to trigger if
 the data field is appended into JSON string. For example,</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; print<span class="o">(</span>tree.to_json<span class="o">(</span><span class="nv">with_data</span><span class="o">=</span>True<span class="o">))</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; print<span class="o">(</span>tree.to_json<span class="o">(</span><span class="nv">with_data</span><span class="o">=</span>True<span class="o">))</span>
 <span class="o">{</span><span class="s2">&quot;Harry&quot;</span>: <span class="o">{</span><span class="s2">&quot;data&quot;</span>: null, <span class="s2">&quot;children&quot;</span>: <span class="o">[{</span><span class="s2">&quot;Bill&quot;</span>: <span class="o">{</span><span class="s2">&quot;data&quot;</span>: null<span class="o">}}</span>, <span class="o">{</span><span class="s2">&quot;Jane&quot;</span>: <span class="o">{</span><span class="s2">&quot;data&quot;</span>: null, <span class="s2">&quot;children&quot;</span>: <span class="o">[{</span><span class="s2">&quot;Diane&quot;</span>: <span class="o">{</span><span class="s2">&quot;data&quot;</span>: null<span class="o">}}</span>, <span class="o">{</span><span class="s2">&quot;Mark&quot;</span>: <span class="o">{</span><span class="s2">&quot;data&quot;</span>: null<span class="o">}}]}}</span>, <span class="o">{</span><span class="s2">&quot;Mary&quot;</span>: <span class="o">{</span><span class="s2">&quot;data&quot;</span>: null<span class="o">}}]}}</span>
 </pre></div>
 </div>
@@ -169,23 +169,30 @@ the data field is appended into JSON string. For example,</p>
 <p>Sometimes, you need trees to store your own data. The newsest version of
 <a class="reference internal" href="treelib.html#module-treelib" title="treelib"><code class="xref py py-mod docutils literal"><span class="pre">treelib</span></code></a> supports <code class="docutils literal"><span class="pre">.data</span></code> variable to store whatever you want. For
 example, to define a flower tree with your own data:</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; class Flower<span class="o">(</span>object<span class="o">)</span>: <span class="se">\</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; class Flower<span class="o">(</span>object<span class="o">)</span>: <span class="se">\</span>
         def __init__<span class="o">(</span>self, color<span class="o">)</span>: <span class="se">\</span>
             self.color <span class="o">=</span> color
 </pre></div>
 </div>
 <p>You can create a flower tree now:</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; <span class="nv">ftree</span> <span class="o">=</span> Tree<span class="o">()</span>
-&gt;&gt;&gt; ftree.create_node<span class="o">(</span><span class="s2">&quot;Root&quot;</span>, <span class="s2">&quot;root&quot;</span><span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">ftree</span> <span class="o">=</span> Tree<span class="o">()</span>
+&gt;&gt;&gt; ftree.create_node<span class="o">(</span><span class="s2">&quot;Root&quot;</span>, <span class="s2">&quot;root&quot;</span>, <span class="nv">data</span><span class="o">=</span>Flower<span class="o">(</span><span class="s2">&quot;black&quot;</span><span class="o">))</span>
 &gt;&gt;&gt; ftree.create_node<span class="o">(</span><span class="s2">&quot;F1&quot;</span>, <span class="s2">&quot;f1&quot;</span>, <span class="nv">parent</span><span class="o">=</span><span class="s1">&#39;root&#39;</span>, <span class="nv">data</span><span class="o">=</span>Flower<span class="o">(</span><span class="s2">&quot;white&quot;</span><span class="o">))</span>
 &gt;&gt;&gt; ftree.create_node<span class="o">(</span><span class="s2">&quot;F2&quot;</span>, <span class="s2">&quot;f2&quot;</span>, <span class="nv">parent</span><span class="o">=</span><span class="s1">&#39;root&#39;</span>, <span class="nv">data</span><span class="o">=</span>Flower<span class="o">(</span><span class="s2">&quot;red&quot;</span><span class="o">))</span>
 </pre></div>
 </div>
+<p>Printing the colors of the tree:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; ftree.show<span class="o">(</span><span class="nv">data_property</span><span class="o">=</span><span class="s2">&quot;color&quot;</span><span class="o">)</span>
+    black
+    ├── white
+    └── red
+</pre></div>
+</div>
 <p><strong>Notes:</strong> Before version 1.2.5, you may need to inherit and modify the behaviors of tree. Both are supported since then. For flower example,</p>
-<div class="highlight-sh"><div class="highlight"><pre>&gt;&gt;&gt; class FlowerNode<span class="o">(</span>treelib.Node<span class="o">)</span>: <span class="se">\</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; class FlowerNode<span class="o">(</span>treelib.Node<span class="o">)</span>: <span class="se">\</span>
         def __init__<span class="o">(</span>self, color<span class="o">)</span>: <span class="se">\</span>
             self.color <span class="o">=</span> color
-&gt;&gt;&gt; <span class="c"># create a new node</span>
+&gt;&gt;&gt; <span class="c1"># create a new node</span>
 &gt;&gt;&gt; <span class="nv">fnode</span> <span class="o">=</span> FlowerNode<span class="o">(</span><span class="s2">&quot;white&quot;</span><span class="o">)</span>
 </pre></div>
 </div>
@@ -221,14 +228,11 @@ example, to define a flower tree with your own data:</p>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
@@ -247,13 +251,13 @@ example, to define a flower tree with your own data:</p>
         <li class="right" >
           <a href="pyapi.html" title="Useful APIs"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.5 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2014, Xiaming Chen.
-      Last updated on Mar 25, 2015.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+      Last updated on Jul 05, 2016.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
     </div>
   </body>
 </html>
