@@ -126,6 +126,12 @@ it is converted to a list type by the package; for dict, the keys are
 treated as the node IDs.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="node.data">
+<code class="descclassname">node.</code><code class="descname">data</code><a class="headerlink" href="#node.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>User payload associated with this node.</p>
+</dd></dl>
+
 <p>Instance methods:</p>
 <dl class="method">
 <dt id="node.is_leaf">
@@ -199,24 +205,12 @@ memory is required to create the tree</em>.</p>
 with <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">=</span></code> operator respectively.</p>
 </dd></dl>
 
-<p>Instance methods:</p>
+<p><strong>Instance methods</strong>:</p>
 <dl class="method">
-<dt id="tree.size">
-<code class="descclassname">tree.</code><code class="descname">size</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the number of nodes in this tree.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tree.contains">
-<code class="descclassname">tree.</code><code class="descname">contains</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.contains" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the tree contains given node.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tree.parent">
-<code class="descclassname">tree.</code><code class="descname">parent</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.parent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain specific node&#8217;s parent (Node instance). Return None if the parent is
-None or does not exist in the tree.</p>
+<dt id="tree.add_node">
+<code class="descclassname">tree.</code><code class="descname">add_node</code><span class="sig-paren">(</span><em>node</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.add_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a new node object to the tree and make the parent as the root by
+default.</p>
 </dd></dl>
 
 <dl class="method">
@@ -226,28 +220,30 @@ None or does not exist in the tree.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tree.depth">
-<code class="descclassname">tree.</code><code class="descname">depth</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get depth of the tree.</p>
+<dt id="tree.children">
+<code class="descclassname">tree.</code><code class="descname">children</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the children (Node) list of <code class="docutils literal"><span class="pre">nid</span></code>. Empty list is returned if
+<code class="docutils literal"><span class="pre">nid</span></code> does not exist</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tree.leaves">
-<code class="descclassname">tree.</code><code class="descname">leaves</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.leaves" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get leaves from given node.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tree.add_node">
-<code class="descclassname">tree.</code><code class="descname">add_node</code><span class="sig-paren">(</span><em>node</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.add_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add a new node object to the tree and make the parent as the root by
-default.</p>
+<dt id="tree.contains">
+<code class="descclassname">tree.</code><code class="descname">contains</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the tree contains given node.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.create_node">
-<code class="descclassname">tree.</code><code class="descname">create_node</code><span class="sig-paren">(</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>parent</em><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.create_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a new node and add it to this tree.</p>
+<code class="descclassname">tree.</code><code class="descname">create_node</code><span class="sig-paren">(</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>parent</em><span class="optional">[</span>, <em>data</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.create_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a new node and add it to this tree. If <code class="docutils literal"><span class="pre">identifier</span></code> is absent,
+a UUID will be generated automatically.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.depth">
+<code class="descclassname">tree.</code><code class="descname">depth</code><span class="sig-paren">(</span><span class="optional">[</span><em>node</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.depth" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the maximum level of this tree or the level of the given node
+(Note: the parameter is node_instance rather than node_identifier).</p>
 </dd></dl>
 
 <dl class="method">
@@ -276,28 +272,16 @@ get_node() will return None if <code class="docutils literal"><span class="pre">
 </dd></dl>
 
 <dl class="method">
-<dt id="tree.siblings">
-<code class="descclassname">tree.</code><code class="descname">siblings</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.siblings" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all the siblings of given nid.</p>
+<dt id="tree.leaves">
+<code class="descclassname">tree.</code><code class="descname">leaves</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.leaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get leaves from given node.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tree.move_node">
-<code class="descclassname">tree.</code><code class="descname">move_node</code><span class="sig-paren">(</span><em>source</em>, <em>destination</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.move_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Move node (source) from its parent to another parent (destination).</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tree.paste">
-<code class="descclassname">tree.</code><code class="descname">paste</code><span class="sig-paren">(</span><em>nid</em>, <em>new_tree</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.paste" title="Permalink to this definition">¶</a></dt>
-<dd><p>Paste a new tree to an existing tree, with <code class="docutils literal"><span class="pre">nid</span></code> becoming the parent of the
-root of this new tree.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tree.remove_node">
-<code class="descclassname">tree.</code><code class="descname">remove_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.remove_node" title="Permalink to this definition">¶</a></dt>
-<dd><p>Remove a node and free the memory along with its successors.</p>
+<dt id="tree.level">
+<code class="descclassname">tree.</code><code class="descname">level</code><span class="sig-paren">(</span><em>nid</em><span class="optional">[</span>, <em>filter</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.level" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the node level in this tree. The level is an integer starting with &#8216;0&#8217;
+at the root. In other words, the root lives at level &#8216;0&#8217;;</p>
 </dd></dl>
 
 <dl class="method">
@@ -307,11 +291,78 @@ root of this new tree.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="tree.move_node">
+<code class="descclassname">tree.</code><code class="descname">move_node</code><span class="sig-paren">(</span><em>source</em>, <em>destination</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.move_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move node (source) from its parent to another parent (destination).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.nodes">
+<code class="descclassname">tree.</code><code class="descname">nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict form of nodes in a tree: {id: node_instance}</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.parent">
+<code class="descclassname">tree.</code><code class="descname">parent</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain specific node&#8217;s parent (Node instance). Return None if the parent is
+None or does not exist in the tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.paste">
+<code class="descclassname">tree.</code><code class="descname">paste</code><span class="sig-paren">(</span><em>nid</em>, <em>new_tree</em><span class="optional">[</span>, <em>deepcopy</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.paste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Paste a new tree to an existing tree, with <code class="docutils literal"><span class="pre">nid</span></code> becoming the parent of the
+root of this new tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.paths_to_leaves">
+<code class="descclassname">tree.</code><code class="descname">paths_to_leaves</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.paths_to_leaves" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use this function to get the identifiers allowing to go from the root nodes
+to each leaf. Return a list of list of identifiers, root being not omitted.</p>
+<p>For example :
+Harry
+<a href="#id1"><span class="problematic" id="id2">|</span></a>___ Bill
+<a href="#id3"><span class="problematic" id="id4">|</span></a>___ Jane
+|    <a href="#id5"><span class="problematic" id="id6">|</span></a>___ Diane
+|         <a href="#id7"><span class="problematic" id="id8">|</span></a>___ George
+|              <a href="#id9"><span class="problematic" id="id10">|</span></a>___ Jill
+|         <a href="#id11"><span class="problematic" id="id12">|</span></a>___ Mary
+|    <a href="#id13"><span class="problematic" id="id14">|</span></a>___ Mark</p>
+<p>expected result :
+[[&#8216;harry&#8217;, &#8216;jane&#8217;, &#8216;diane&#8217;, &#8216;mary&#8217;],</p>
+<blockquote>
+<div>[&#8216;harry&#8217;, &#8216;jane&#8217;, &#8216;mark&#8217;],
+[&#8216;harry&#8217;, &#8216;jane&#8217;, &#8216;diane&#8217;, &#8216;george&#8217;, &#8216;jill&#8217;],
+[&#8216;harry&#8217;, &#8216;bill&#8217;]]</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.remove_node">
+<code class="descclassname">tree.</code><code class="descname">remove_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.remove_node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a node and free the memory along with its successors.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.remove_subtree">
+<code class="descclassname">tree.</code><code class="descname">remove_subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.remove_subtree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a subtree with <code class="docutils literal"><span class="pre">nid</span></code> being the root, and remove all nodes in the
+subtree from the original one.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="tree.rsearch">
 <code class="descclassname">tree.</code><code class="descname">rsearch</code><span class="sig-paren">(</span><em>nid</em><span class="optional">[</span>, <em>filter</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.rsearch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Search the tree from <code class="docutils literal"><span class="pre">nid</span></code> to the root along links reservedly. Parameter
 <code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on the
 <code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.save2file">
+<code class="descclassname">tree.</code><code class="descname">save2file</code><span class="sig-paren">(</span><em>filename[, nid[, level[, idhidden[, filter[, key[, reverse]]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.save2file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the tree into file for offline analysis.</p>
 </dd></dl>
 
 <dl class="method">
@@ -336,6 +387,19 @@ text graph.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="tree.siblings">
+<code class="descclassname">tree.</code><code class="descname">siblings</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.siblings" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all the siblings of given nid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.size">
+<code class="descclassname">tree.</code><code class="descname">size</code><span class="sig-paren">(</span><span class="optional">[</span><em>level</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of nodes of the whole tree if <code class="docutils literal"><span class="pre">level</span></code> is not given.
+Otherwise, the total number of nodes at specific level is returned.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="tree.subtree">
 <code class="descclassname">tree.</code><code class="descname">subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.subtree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a soft copy of the subtree with <code class="docutils literal"><span class="pre">nid</span></code> being the root. The softness
@@ -343,16 +407,9 @@ means all the nodes are shared between subtree and the original.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tree.remove_subtree">
-<code class="descclassname">tree.</code><code class="descname">remove_subtree</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.remove_subtree" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a subtree with <code class="docutils literal"><span class="pre">nid</span></code> being the root, and remove all nodes in the
-subtree from the original one.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="tree.save2file">
-<code class="descclassname">tree.</code><code class="descname">save2file</code><span class="sig-paren">(</span><em>filename[, nid[, level[, idhidden[, filter[, key[, reverse]]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.save2file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Save the tree into file for offline analysis.</p>
+<dt id="tree.to_dict">
+<code class="descclassname">tree.</code><code class="descname">to_dict</code><span class="sig-paren">(</span><span class="optional">[</span><em>nid</em><span class="optional">[</span>, <em>key</em><span class="optional">[</span>, <em>sort</em><span class="optional">[</span>, <em>reverse</em><span class="optional">[</span>, <em>with_data</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.to_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the whole tree into a dict.</p>
 </dd></dl>
 
 <dl class="method">
