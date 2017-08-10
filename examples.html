@@ -1,32 +1,31 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Examples &mdash; treelib 1.3.5 documentation</title>
-    
+    <title>Examples &#8212; treelib 1.4.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.3.5',
+        VERSION:     '1.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="treelib 1.3.5 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="Useful APIs" href="pyapi.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -39,7 +38,7 @@
         <li class="right" >
           <a href="pyapi.html" title="Useful APIs"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -86,7 +85,7 @@ Harry,Bill,Jane,Diane,Mary,Mark
 Harry,Bill,Jane,Mark
 </pre></div>
 </div>
-<p><strong>Example 3</strong>: Get a subtree with the root of &#8216;diane&#8217;.</p>
+<p><strong>Example 3</strong>: Get a subtree with the root of ‘diane’.</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">sub_t</span> <span class="o">=</span> tree.subtree<span class="o">(</span><span class="s1">&#39;diane&#39;</span><span class="o">)</span>
 &gt;&gt;&gt; sub_t.show<span class="o">()</span>
 Diane
@@ -95,9 +94,9 @@ Diane
 </div>
 <p><strong>Example 4</strong>: Paste a new tree to the original one.</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">new_tree</span> <span class="o">=</span> Tree<span class="o">()</span>
-&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n1&quot;</span>, 1<span class="o">)</span>  <span class="c1"># root node</span>
-&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n2&quot;</span>, 2, <span class="nv">parent</span><span class="o">=</span>1<span class="o">)</span>
-&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n3&quot;</span>, 3, <span class="nv">parent</span><span class="o">=</span>1<span class="o">)</span>
+&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n1&quot;</span>, <span class="m">1</span><span class="o">)</span>  <span class="c1"># root node</span>
+&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n2&quot;</span>, <span class="m">2</span>, <span class="nv">parent</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>
+&gt;&gt;&gt; new_tree.create_node<span class="o">(</span><span class="s2">&quot;n3&quot;</span>, <span class="m">3</span>, <span class="nv">parent</span><span class="o">=</span><span class="m">1</span><span class="o">)</span>
 &gt;&gt;&gt; tree.paste<span class="o">(</span><span class="s1">&#39;bill&#39;</span>, new_tree<span class="o">)</span>
 &gt;&gt;&gt; tree.show<span class="o">()</span>
 Harry
@@ -112,7 +111,7 @@ Harry
 </pre></div>
 </div>
 <p><strong>Example 5</strong>: Remove the existing node from the tree</p>
-<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.remove_node<span class="o">(</span>1<span class="o">)</span>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.remove_node<span class="o">(</span><span class="m">1</span><span class="o">)</span>
 &gt;&gt;&gt; tree.show<span class="o">()</span>
 Harry
 ├── Bill
@@ -135,18 +134,18 @@ Harry
 </div>
 <p><strong>Example 7</strong>: Get the height of the tree.</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.depth<span class="o">()</span>
-2
+<span class="m">2</span>
 </pre></div>
 </div>
 <p><strong>Example 8</strong>: Get the level of a node.</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; <span class="nv">node</span> <span class="o">=</span> tree.get_node<span class="o">(</span><span class="s2">&quot;bill&quot;</span><span class="o">)</span>
 &gt;&gt;&gt; tree.depth<span class="o">(</span>node<span class="o">)</span>
-1
+<span class="m">1</span>
 </pre></div>
 </div>
 <dl class="docutils">
 <dt><strong>Example 9</strong>: Print or dump tree structure. For example, the same tree in</dt>
-<dd>basic example can be printed with &#8216;ascii-em&#8217;:</dd>
+<dd>basic example can be printed with ‘ascii-em’:</dd>
 </dl>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; tree.show<span class="o">(</span><span class="nv">line_type</span><span class="o">=</span><span class="s2">&quot;ascii-em&quot;</span><span class="o">)</span>
 Harry
@@ -221,7 +220,7 @@ example, to define a flower tree with your own data:</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/examples.txt"
+      <li><a href="_sources/examples.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -251,13 +250,13 @@ example, to define a flower tree with your own data:</p>
         <li class="right" >
           <a href="pyapi.html" title="Useful APIs"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, Xiaming Chen.
-      Last updated on Jul 05, 2016.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+        &#169; Copyright 2012-2017, Xiaming Chen.
+      Last updated on Aug 10, 2017.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>

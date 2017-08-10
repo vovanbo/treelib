@@ -1,33 +1,32 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>Useful APIs &mdash; treelib 1.3.5 documentation</title>
-    
+    <title>Useful APIs &#8212; treelib 1.4.0 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '1.3.5',
+        VERSION:     '1.4.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="treelib 1.3.5 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Examples" href="examples.html" />
     <link rel="prev" title="Install" href="install.html" /> 
   </head>
-  <body role="document">
+  <body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
@@ -43,7 +42,7 @@
         <li class="right" >
           <a href="install.html" title="Install"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -54,16 +53,17 @@
             
   <div class="section" id="module-treelib">
 <span id="useful-apis"></span><h1>Useful APIs<a class="headerlink" href="#module-treelib" title="Permalink to this headline">¶</a></h1>
-<p>This <cite>treelib</cite> is a simple module containing only two classes: <code class="docutils literal"><span class="pre">Node</span></code> and
-<code class="docutils literal"><span class="pre">Tree</span></code>. Tree is a self-contained structure with some nodes and connected by
-branches. One tree has and only has one root, while a node (except root) has
-several children and merely one parent.</p>
-<p><em>Note:</em> To solve the string compatibility between Python 2.x and 3.x, treelib
-follows the way of porting Python 3.x to 2/3. That means, all strings are
-manipulated as unicode and you do not need <cite>u&#8217;&#8216;</cite> prefix anymore. The impacted
-functions include <cite>str()</cite>, <cite>show()</cite> and <cite>save2file()</cite> routines. But if your
-data contains non-ascii characters and Python 2.x is used, you have to trigger
-the compatibility by declaring <cite>unicode_literals</cite> in the code:</p>
+<p><cite>treelib</cite> is a Python module with two primary classes: <code class="docutils literal"><span class="pre">Node</span></code> and
+<code class="docutils literal"><span class="pre">Tree</span></code>. Tree is a self-contained structure with some nodes and
+connected by branches. A tree owns merely a root, while a
+node (except root) has some children and one parent.</p>
+<p><em>Note:</em> To solve string compatibility between Python 2.x and 3.x,
+treelib follows the way of porting Python 3.x to 2/3. That means, all
+strings are manipulated as unicode and you do not need <cite>u’‘</cite> prefix
+anymore. The impacted functions include <cite>str()</cite>, <cite>show()</cite> and
+<cite>save2file()</cite> routines. But if your data contains non-ascii
+characters and Python 2.x is used, you have to trigger the
+compatibility by declaring <cite>unicode_literals</cite> in the code:</p>
 <div class="highlight-sh"><div class="highlight"><pre><span></span>&gt;&gt;&gt; from __future__ import unicode_literals
 </pre></div>
 </div>
@@ -71,7 +71,7 @@ the compatibility by declaring <cite>unicode_literals</cite> in the code:</p>
 <h2><a class="reference internal" href="#treelib.Node" title="treelib.Node"><code class="xref py py-class docutils literal"><span class="pre">Node</span></code></a> Objects<a class="headerlink" href="#node-objects" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="treelib.Node">
-<em class="property">class </em><code class="descclassname">treelib.</code><code class="descname">Node</code><span class="sig-paren">(</span><span class="optional">[</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>expanded</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treelib/node.html#Node"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#treelib.Node" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">treelib.</code><code class="descname">Node</code><span class="sig-paren">(</span><span class="optional">[</span><em>tag</em><span class="optional">[</span>, <em>identifier</em><span class="optional">[</span>, <em>expanded</em><span class="optional">]</span><span class="optional">]</span><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#treelib.Node" title="Permalink to this definition">¶</a></dt>
 <dd><p>A <a class="reference internal" href="#treelib.Node" title="treelib.Node"><code class="xref py py-class docutils literal"><span class="pre">Node</span></code></a> object contains basic properties such as node identifier,
 node tag, parent node, children nodes etc., and some operations for a node.</p>
 </dd></dl>
@@ -120,7 +120,7 @@ accessed and modified with <code class="docutils literal"><span class="pre">.</s
 <dl class="attribute">
 <dt id="node.fpointer">
 <code class="descclassname">node.</code><code class="descname">fpointer</code><a class="headerlink" href="#node.fpointer" title="Permalink to this definition">¶</a></dt>
-<dd><p>With a getting operator, a list of IDs of node&#8217;s children is obtained. With
+<dd><p>With a getting operator, a list of IDs of node’s children is obtained. With
 a setting operator, the value can be list, set, or dict. For list or set,
 it is converted to a list type by the package; for dict, the keys are
 treated as the node IDs.</p>
@@ -176,7 +176,7 @@ memory is required to create the tree</em>.</p>
 <dl class="attribute">
 <dt id="node.Tree.ROOT">
 <code class="descclassname">Tree.</code><code class="descname">ROOT</code><a class="headerlink" href="#node.Tree.ROOT" title="Permalink to this definition">¶</a></dt>
-<dd><p>Default value for the <code class="docutils literal"><span class="pre">level</span></code> parameter in tree&#8217;s methods.</p>
+<dd><p>Default value for the <code class="docutils literal"><span class="pre">level</span></code> parameter in tree’s methods.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -205,6 +205,12 @@ memory is required to create the tree</em>.</p>
 with <code class="docutils literal"><span class="pre">.</span></code> and <code class="docutils literal"><span class="pre">=</span></code> operator respectively.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="tree.nodes">
+<code class="descclassname">tree.</code><code class="descname">nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict form of nodes in a tree: {id: node_instance}</p>
+</dd></dl>
+
 <p><strong>Instance methods</strong>:</p>
 <dl class="method">
 <dt id="tree.add_node">
@@ -217,6 +223,12 @@ default.</p>
 <dt id="tree.all_nodes">
 <code class="descclassname">tree.</code><code class="descname">all_nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.all_nodes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the list of all the nodes randomly belonging to this tree.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.all_nodes_iter">
+<code class="descclassname">tree.</code><code class="descname">all_nodes_iter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.all_nodes_iter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all nodes in an iterator.</p>
 </dd></dl>
 
 <dl class="method">
@@ -251,17 +263,28 @@ a UUID will be generated automatically.</p>
 <code class="descclassname">tree.</code><code class="descname">expand_tree</code><span class="sig-paren">(</span><em>[nid[, mode[, filter[, key[, reverse]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.expand_tree" title="Permalink to this definition">¶</a></dt>
 <dd><p>Traverse the tree nodes with different modes. <code class="docutils literal"><span class="pre">nid</span></code> refers to the
 expanding point to start; <code class="docutils literal"><span class="pre">mode</span></code> refers to the search mode (Tree.DEPTH,
-Tree.WIDTH); <code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on
-the <code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object; <code class="docutils literal"><span class="pre">key</span></code>, <code class="docutils literal"><span class="pre">reverse</span></code> are present to sort
+Tree.WIDTH). <code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on
+the <code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object. In this manner, the traversing will not continue to
+following children of node whose condition does not pass the filter.
+<code class="docutils literal"><span class="pre">key</span></code>, <code class="docutils literal"><span class="pre">reverse</span></code> are present to sort
 :class:Node objects at the same level.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="tree.filter_nodes">
+<code class="descclassname">tree.</code><code class="descname">filter_nodes</code><span class="sig-paren">(</span><em>func</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.filter_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters all nodes by function.
+<code class="docutils literal"><span class="pre">func</span></code> is passed one node as an argument and that node is included if function returns true.
+Returns a filter iterator of the node in python 3 or a list of the nodes in python 2.
+Thanks for William Rusnack.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="tree.get_node">
 <code class="descclassname">tree.</code><code class="descname">get_node</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.get_node" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the object of the node with ID of <code class="docutils literal"><span class="pre">nid</span></code> An alternative way is using
-&#8216;[]&#8217; operation on the tree. But small difference exists between them: the
-get_node() will return None if <code class="docutils literal"><span class="pre">nid</span></code> is absent, whereas &#8216;[]&#8217; will raise
+‘[]’ operation on the tree. But small difference exists between them: the
+get_node() will return None if <code class="docutils literal"><span class="pre">nid</span></code> is absent, whereas ‘[]’ will raise
 <code class="docutils literal"><span class="pre">KeyError</span></code>.</p>
 </dd></dl>
 
@@ -280,8 +303,8 @@ get_node() will return None if <code class="docutils literal"><span class="pre">
 <dl class="method">
 <dt id="tree.level">
 <code class="descclassname">tree.</code><code class="descname">level</code><span class="sig-paren">(</span><em>nid</em><span class="optional">[</span>, <em>filter</em><span class="optional">]</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.level" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the node level in this tree. The level is an integer starting with &#8216;0&#8217;
-at the root. In other words, the root lives at level &#8216;0&#8217;;</p>
+<dd><p>Get the node level in this tree. The level is an integer starting with ‘0’
+at the root. In other words, the root lives at level ‘0’;</p>
 </dd></dl>
 
 <dl class="method">
@@ -297,15 +320,9 @@ at the root. In other words, the root lives at level &#8216;0&#8217;;</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="tree.nodes">
-<code class="descclassname">tree.</code><code class="descname">nodes</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#tree.nodes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a dict form of nodes in a tree: {id: node_instance}</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="tree.parent">
 <code class="descclassname">tree.</code><code class="descname">parent</code><span class="sig-paren">(</span><em>nid</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.parent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Obtain specific node&#8217;s parent (Node instance). Return None if the parent is
+<dd><p>Obtain specific node’s parent (Node instance). Return None if the parent is
 None or does not exist in the tree.</p>
 </dd></dl>
 
@@ -355,19 +372,21 @@ subtree from the original one.</p>
 <code class="descclassname">tree.</code><code class="descname">show</code><span class="sig-paren">(</span><em>[nid[, level[, idhidden[, filter[, key[, reverse[, line_type[, data_property]]]]]]]]]</em><span class="sig-paren">)</span><a class="headerlink" href="#tree.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print the tree structure in hierarchy style. <code class="docutils literal"><span class="pre">nid</span></code> refers to the
 expanding point to start; <code class="docutils literal"><span class="pre">level</span></code> refers to the node level in the tree
-(root as level 0); <code class="docutils literal"><span class="pre">idhidden</span></code> refers to hiding the node ID when printing;
+(root as level 0).
+<code class="docutils literal"><span class="pre">idhidden</span></code> refers to hiding the node ID when printing.
 <code class="docutils literal"><span class="pre">filter</span></code> refers to the function of one variable to act on the
-<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object; <code class="docutils literal"><span class="pre">key</span></code>, <code class="docutils literal"><span class="pre">reverse</span></code> are present to sort
-<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object in the same level. <code class="docutils literal"><span class="pre">data_property</span></code> refers to the property
-on the node data object to be printed.</p>
+<code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object.  In this manner, the traversing will not continue to
+following children of node whose condition does not pass the filter.
+<code class="docutils literal"><span class="pre">key</span></code>, <code class="docutils literal"><span class="pre">reverse</span></code> are present to sort <code class="xref py py-class docutils literal"><span class="pre">Node</span></code> object in the same level.
+<code class="docutils literal"><span class="pre">data_property</span></code> refers to the property on the node data object to be printed.</p>
 <p>You have three ways to output your tree data, i.e., stdout with <code class="docutils literal"><span class="pre">show()</span></code>,
 plain text file with <code class="docutils literal"><span class="pre">save2file()</span></code>, and json string with <code class="docutils literal"><span class="pre">to_json()</span></code>. The
 former two use the same backend to generate a string of tree structure in a
 text graph.</p>
 <dl class="docutils">
 <dt><em>Version &gt;= 1.2.7a</em>: you can also spicify the <code class="docutils literal"><span class="pre">line_type</span></code> parameter (now</dt>
-<dd>supporting &#8216;ascii&#8217; [default], &#8216;ascii-ex&#8217;, &#8216;ascii-exr&#8217;, &#8216;ascii-em&#8217;,
-&#8216;ascii-emv&#8217;, &#8216;ascii-emh&#8217;) to the change graphical form.</dd>
+<dd>supporting ‘ascii’ [default], ‘ascii-ex’, ‘ascii-exr’, ‘ascii-em’,
+‘ascii-emv’, ‘ascii-emh’) to the change graphical form.</dd>
 </dl>
 </dd></dl>
 
@@ -430,7 +449,7 @@ means all the nodes are shared between subtree and the original.</p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/pyapi.txt"
+      <li><a href="_sources/pyapi.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -463,13 +482,13 @@ means all the nodes are shared between subtree and the original.</p>
         <li class="right" >
           <a href="install.html" title="Install"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.3.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">treelib 1.4.0 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &copy; Copyright 2014, Xiaming Chen.
-      Last updated on Jul 05, 2016.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+        &#169; Copyright 2012-2017, Xiaming Chen.
+      Last updated on Aug 10, 2017.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
     </div>
   </body>
 </html>
