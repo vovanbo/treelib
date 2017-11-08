@@ -59,14 +59,14 @@ class Tree:
             else:
                 self._nodes = tree._nodes
 
-    def __getitem__(self, key):
+    def __getitem__(self, key) -> Node:
         """Return _nodes[key]"""
         try:
             return self._nodes[key]
         except KeyError:
             raise NodeIDAbsentError("Node '%s' is not in the tree" % key)
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Return len(_nodes)"""
         return len(self._nodes)
 
@@ -74,7 +74,7 @@ class Tree:
         """Set _nodes[key]"""
         self._nodes.update({key: item})
 
-    def __str__(self):
+    def __str__(self) -> str:
         result = ""
 
         def write(line):
