@@ -340,16 +340,10 @@ class Tree:
 
     def leaves(self, nid=None):
         """Get leaves of the whole tree of a subtree."""
-        leaves = []
         if nid is None:
-            for node in self.all_nodes_iter():
-                if node.is_leaf:
-                    leaves.append(node)
-        else:
-            for node in self.expand_tree(nid):
-                if self[node].is_leaf:
-                    leaves.append(self[node])
-        return leaves
+            return [n for n in self.all_nodes_iter() if n.is_leaf]
+
+        return [self[n] for n in self.expand_tree(nid) if self[n].is_leaf]
 
     def level(self, nid, filter=None):
         """
