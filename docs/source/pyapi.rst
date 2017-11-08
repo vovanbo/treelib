@@ -25,9 +25,9 @@ compatibility by declaring `unicode_literals` in the code:
 :class:`Node` Objects
 ---------------------
 
-.. class:: Node([tag[, identifier[, expanded]]])
+.. class:: Node([tag[, id[, expanded]]])
 
-   A :class:`Node` object contains basic properties such as node identifier,
+   A :class:`Node` object contains basic properties such as node id,
    node tag, parent node, children nodes etc., and some operations for a node.
 
 
@@ -53,7 +53,7 @@ Class attributes are:
 Instance attributes:
 
 
-.. attribute:: identifier
+.. attribute:: id
 
     The unique ID of a node within the scope of a tree. This attribute can be
     accessed and modified with ``.`` and ``=`` operator respectively.
@@ -65,13 +65,13 @@ Instance attributes:
     modified with ``.`` and ``=`` operator respectively.
 
 
-.. attribute:: bpointer
+.. attribute:: parent
 
     The parent ID of a node. This attribute can be
     accessed and modified with ``.`` and ``=`` operator respectively.
 
 
-.. attribute:: fpointer
+.. attribute:: children
 
     With a getting operator, a list of IDs of node's children is obtained. With
     a setting operator, the value can be list, set, or dict. For list or set,
@@ -88,7 +88,7 @@ Instance methods:
 
 .. method:: is_leaf ()
 
-    Check if the node has children. Return False if the ``fpointer`` is empty
+    Check if the node has children. Return False if the ``children`` is empty
     or None.
 
 .. method:: is_root ()
@@ -184,9 +184,9 @@ Instance attributes:
     Check if the tree contains given node.
 
 
-.. method:: create_node(tag[, identifier[, parent[, data]]])
+.. method:: create_node(tag[, id[, parent[, data]]])
 
-    Create a new node and add it to this tree. If ``identifier`` is absent,
+    Create a new node and add it to this tree. If ``id`` is absent,
     a UUID will be generated automatically.
 
 

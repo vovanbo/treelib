@@ -9,10 +9,10 @@ import pytest
 
 def test_initialization(node1):
     assert node1.tag == "Test One"
-    assert node1.identifier == "identifier 1"
+    assert node1.id == "identifier 1"
     assert node1.expanded
-    assert node1.bpointer is None
-    assert node1.fpointer == []
+    assert node1.parent is None
+    assert node1.children == []
     assert node1.data is None
 
 
@@ -22,23 +22,23 @@ def test_set_tag(node1):
 
 
 def test_set_identifier(node1):
-    node1.identifier = "ID1"
-    assert node1.identifier == "ID1"
+    node1.id = "ID1"
+    assert node1.id == "ID1"
 
 
 def test_set_fpointer(node1):
-    node1.update_fpointer("identifier 2")
-    assert node1.fpointer == ['identifier 2']
+    node1.add_child('id 2')
+    assert node1.children == ['id 2']
 
 
 def test_set_bpointer(node2):
-    node2.update_bpointer("identifier 1")
-    assert node2.bpointer == 'identifier 1'
+    node2.parent = "id 1"
+    assert node2.parent == 'id 1'
 
 
 def test_set_is_leaf(node1, node2):
-    node1.update_fpointer("identifier 2")
-    node2.update_bpointer("identifier 1")
+    node1.add_child('id 2')
+    node2.parent = "id 1"
     assert not node1.is_leaf
     assert node2.is_leaf
 
@@ -167,7 +167,7 @@ def test_leaves(tree):
         assert tree[nid].is_leaf == (tree[nid] in leaves)
 
     leaves = tree.leaves(nid='jane')
-    for nid in tree.expand_tree(nid='jane'):
+    for nid in tree.expand_tree(node_id='jane'):
         assert tree[nid].is_leaf == (tree[nid] in leaves)
 
 
@@ -186,7 +186,7 @@ def test_expand_tree(tree):
     assert len(nodes) == 5
 
     # expanding from specific node
-    nodes = [nid for nid in tree.expand_tree(nid="bill")]
+    nodes = [nid for nid in tree.expand_tree(node_id="bill")]
     assert len(nodes) == 2
 
     # changing into width mode
@@ -204,7 +204,7 @@ def test_move_node(tree):
     diane_parent = tree.parent("diane")
     tree.move_node("diane", "bill")
     assert "diane" in tree.is_branch("bill")
-    tree.move_node("diane", diane_parent.identifier)
+    tree.move_node("diane", diane_parent.id)
 
 
 def test_paste_tree(tree):
@@ -254,7 +254,7 @@ def test_to_json(tree):
 
 def test_siblings(tree):
     assert not tree.siblings("hárry")
-    assert tree.siblings("jane")[0].identifier == "bill"
+    assert tree.siblings("jane")[0].id == "bill"
 
 
 def test_tree_data(tree):
@@ -290,7 +290,7 @@ def test_level(tree):
     assert tree.level('hárry') == 0
     depth = tree.depth()
     assert tree.level('diane') == depth
-    assert tree.level('diane', lambda x: x.identifier != 'jane') == depth - 1
+    assert tree.level('diane', lambda x: x.id != 'jane') == depth - 1
 
 
 def test_size(tree):

@@ -5,113 +5,100 @@
 
 import uuid
 
-import warnings
 from collections import Sequence, MutableMapping, Set
 
 
 class Node:
     """
-    Nodes are elementary objects which are stored a `_nodes` dictionary of a Tree.
+    Nodes are elementary objects which are stored a `_nodes` dictionary
+    of a Tree.
     Use `data` attribute to store node-specific data.
     """
-
-    #: ADD, DELETE, INSERT constants :
-    (ADD, DELETE) = list(range(2))
-
-    def __init__(self, tag=None, identifier=None, expanded=True, data=None):
+    def __init__(self, tag=None, id=None, expanded=True, data=None):
         """Create a new Node object to be placed inside a Tree object"""
 
         #: if given as a parameter, must be unique
-        self._identifier = None
-        self._set_identifier(identifier)
+        self._id = None
+        self._set_id(id)
 
         #: None or something else
-        #: if None, self._identifier will be set to the identifier's value.
-        if tag is None:
-            self._tag = self._identifier
-        else:
-            self._tag = tag
+        #: if None, self._id will be set to the id's value.
+        self._tag = self._id if tag is None else tag
 
         #: boolean
         self.expanded = expanded
 
-        #: identifier of the parent's node :
-        self._bpointer = None
-        #: identifier(s) of the soons' node(s) :
-        self._fpointer = list()
+        #: id of the parent's node :
+        self._parent = None
+        #: id(s) of the soons' node(s) :
+        self._children = list()
 
         #: None or whatever given as a parameter
         self.data = data
 
     def __repr__(self):
-        name = self.__class__.__name__
-        kwargs = (
-            f"tag={self.tag!r}",
-            f"identifier={self.identifier!r}",
-            f"data={self.data!r}",
-        )
-        return f"{name}({', '.join(kwargs)})"
+        kwargs = (f"tag={self.tag!r}",
+                  f"id={self.id!r}",
+                  f"data={self.data!r}")
+        return f"{self.__class__.__name__}({', '.join(kwargs)})"
 
     def __lt__(self, other):
         return self.tag < other.tag
 
-    def _set_identifier(self, nid):
-        """Initialize self._set_identifier"""
-        if nid is None:
-            self._identifier = str(uuid.uuid1())
-        else:
-            self._identifier = nid
+    def _set_id(self, node_id):
+        """Initialize self._set_id"""
+        self._id = str(uuid.uuid1()) if node_id is None else node_id
 
     @property
-    def bpointer(self):
-        """Return the value of `_bpointer`."""
-        return self._bpointer
+    def parent(self):
+        """Return the value of `_parent`."""
+        return self._parent
 
-    @bpointer.setter
-    def bpointer(self, nid):
-        """Set the value of `_bpointer`."""
-        self._bpointer = nid
+    @parent.setter
+    def parent(self, node_id):
+        """Set the value of `_parent`."""
+        self._parent = node_id
 
     @property
-    def fpointer(self):
-        """Return the value of `_fpointer`."""
-        return self._fpointer
+    def children(self):
+        """Return the value of `_children`."""
+        return self._children
 
-    @fpointer.setter
-    def fpointer(self, value):
-        """Set the value of `_fpointer`."""
+    @children.setter
+    def children(self, value):
+        """Set the value of `_children`."""
         if value is None:
-            self._fpointer = list()
+            self._children = list()
         elif isinstance(value, (Sequence, Set)):
-            self._fpointer = list(value)
+            self._children = list(value)
         elif isinstance(value, MutableMapping):
-            self._fpointer = list(value.keys())
+            self._children = list(value.keys())
         else:
             raise ValueError('Sequence, Set or MutableMapping '
-                             'are allowed values for fpointer only.')
+                             'are allowed values for children only.')
 
     @property
-    def identifier(self):
-        """Return the value of `_identifier`."""
-        return self._identifier
+    def id(self):
+        """Return the value of `_id`."""
+        return self._id
 
-    @identifier.setter
-    def identifier(self, value):
-        """Set the value of `_identifier`."""
+    @id.setter
+    def id(self, value):
+        """Set the value of `_id`."""
         if value is None:
-            warnings.warn("Node ID can not be None")
-        else:
-            self._set_identifier(value)
+            raise ValueError("Node ID can not be None")
+
+        self._set_id(value)
 
     @property
     def is_leaf(self):
         """Return true if current node has no children."""
-        return not self.fpointer
+        return not self.children
 
     @property
     def is_root(self):
         """Return true if self has no parent, i.e. as root."""
-        return self._bpointer is None
+        return self._parent is None
 
     @property
     def tag(self):
@@ -123,17 +110,10 @@ class Node:
         """Set the value of `_tag`."""
         self._tag = value
 
-    def update_bpointer(self, nid):
-        """Update parent node."""
-        self.bpointer = nid
+    def add_child(self, nid):
+        if nid is not None:
+            self._children.append(nid)
 
-    def update_fpointer(self, nid, mode=ADD):
-        """Update all children nodes."""
-        if nid is None:
-            return
-
-        if mode is self.ADD:
-            self._fpointer.append(nid)
-        elif mode is self.DELETE:
-            if nid in self._fpointer:
-                self._fpointer.remove(nid)
+    def remove_child(self, nid):
+        if nid is not None and nid in self._children:
+            self._children.remove(nid)

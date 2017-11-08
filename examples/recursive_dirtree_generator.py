@@ -36,14 +36,14 @@ def build_recursive_tree(tree, base, depth, width):
             directory = Directory()
             tree.create_node(
                 directory.name,
-                # node identifier is md5 hash of it's name
+                # node id is md5 hash of it's name
                 blake2b(directory.name.encode()).hexdigest(),
-                parent=base.identifier,
+                parent=base.id,
                 data=directory
             )
-        dirs_nodes = tree.children(base.identifier)
+        dirs_nodes = tree.children(base.id)
         for dir in dirs_nodes:
-            newbase = tree.get_node(dir.identifier)
+            newbase = tree.get_node(dir.id)
             build_recursive_tree(tree, newbase, depth, width)
 
 

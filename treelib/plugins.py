@@ -14,12 +14,12 @@ def export_to_dot(tree, filename, shape='circle', graph='digraph'):
     if tree.nodes:        
         
         for n in tree.expand_tree(mode=tree.WIDTH):
-            nid = tree[n].identifier
+            nid = tree[n].id
             state = '"' + nid + '"' + ' [label="' + tree[n].tag + '", shape=' + shape + ']'
             nodes.append(state)
 
             for c in tree.children(nid):
-                cid = c.identifier
+                cid = c.id
 
                 connections.append('"' + nid + '"' + ' -> ' + '"' + cid + '"')
 

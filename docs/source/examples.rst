@@ -42,7 +42,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 
     >>> print(','.join([tree[node].tag for node in \
                 tree.expand_tree(filter = lambda x: \
-                x.identifier != 'diane')]))
+                x.id != 'diane')]))
     Harry,Bill,Jane,Mark
 
 **Example 3**: Get a subtree with the root of 'diane'.

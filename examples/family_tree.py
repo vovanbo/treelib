@@ -9,7 +9,7 @@ from treelib import Tree
 
 
 def create_family_tree():
-    ## Create the family tree
+    # Create the family tree
     tree = Tree()
     tree.create_node("Harry", "harry")  # root node
     tree.create_node("Jane", "jane", parent="harry")
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     print(','.join([tree[node].tag for node in tree.expand_tree()]))
 
     example("All family members (with identifiers) but Diane's sub-family:")
-    tree.show(id_hidden=False, filter_=lambda x: x.identifier != 'diane')
+    tree.show(id_hidden=False, filter_=lambda x: x.id != 'diane')
 
     example("Let me introduce Diane family only:")
     sub_t = tree.subtree('diane')
