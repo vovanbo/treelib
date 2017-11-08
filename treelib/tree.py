@@ -2,100 +2,42 @@
 # -*- coding: utf-8 -*-
 """treelib - Simple to use for you.
 
-   Python 2/3 Tree Implementation
+Python 3 Tree Implementation
 """
-from __future__ import print_function
-from __future__ import unicode_literals
-import sys
-import json
-from copy import deepcopy
-try:
-    from .node import Node
-except ImportError:
-    from node import Node
-try:
-    from StringIO import StringIO as BytesIO
-except ImportError:
-    from io import BytesIO
-
-
-
 __author__ = 'chenxm'
 
+import json
+import copy
+from collections import OrderedDict
+from enum import Enum
 
-class NodeIDAbsentError(Exception):
-    """Exception throwed if a node's identifier is unknown"""
-    pass
-
-
-class NodePropertyAbsentError(Exception):
-    """Exception throwed if a node's data property is not specified"""
-    pass
-
-
-class MultipleRootError(Exception):
-    """Exception throwed if more than one root exists in a tree."""
-    pass
+from treelib.exceptions import (
+    NodeIDAbsentError, MultipleRootError, DuplicatedNodeIdError,
+    LinkPastRootNodeError, LoopError
+)
+from .node import Node
 
 
-class DuplicatedNodeIdError(Exception):
-    """Exception throwed if an identifier already exists in a tree."""
-    pass
+class ASCIIMode(Enum):
+    simple = ('|', '|-- ', '+-- ')
+    ex = ('│', '├── ', '└── ')
+    exr = ('│', '├── ', '╰── ')
+    em = ('║', '╠══ ', '╚══ ')
+    emv = ('║', '╟── ', '╙── ')
+    emh = ('│', '╞══ ', '╘══ ')
 
 
-class LinkPastRootNodeError(Exception):
-    """
-    Exception throwed in Tree.link_past_node() if one attempts
-    to "link past" the root node of a tree.
-    """
-    pass
-
-
-class InvalidLevelNumber(Exception):
-    pass
-
-
-class LoopError(Exception):
-    """
-    Exception thrown if trying to move node B to node A's position
-    while A is B's ancestor.
-    """
-    pass
-
-
-def python_2_unicode_compatible(klass):
-    """
-    (slightly modified from :
-        http://django.readthedocs.org/en/latest/_modules/django/utils/encoding.html)
-
-    A decorator that defines __unicode__ and __str__ methods under Python 2.
-    Under Python 3 it does nothing.
-
-    To support Python 2 and 3 with a single code base, define a __str__ method
-    returning text and apply this decorator to the class.
-    """
-    if sys.version_info[0] == 2:
-        if '__str__' not in klass.__dict__:
-            raise ValueError("@python_2_unicode_compatible cannot be applied "
-                             "to %s because it doesn't define __str__()." %
-                             klass.__name__)
-        klass.__unicode__ = klass.__str__
-        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
-    return klass
-
-@python_2_unicode_compatible
-class Tree(object):
+class Tree:
     """Tree objects are made of Node(s) stored in _nodes dictionary."""
 
     #: ROOT, DEPTH, WIDTH, ZIGZAG constants :
     (ROOT, DEPTH, WIDTH, ZIGZAG) = list(range(4))
 
     def __contains__(self, identifier):
-        """Return a list of the nodes'identifiers matching the
+        """Return a list of the nodes' identifiers matching the
         identifier argument.
         """
-        return [node for node in self._nodes
-                if node == identifier]
+        return [node for node in self._nodes if node == identifier]
 
     def __init__(self, tree=None, deep=False):
         """Initiate a new tree or copy another tree with a shallow or
@@ -103,7 +45,7 @@ class Tree(object):
         """
 
         #: dictionary, identifier: Node object
-        self._nodes = {}
+        self._nodes = OrderedDict()
 
         #: identifier of the root node
         self.root = None
@@ -113,7 +55,7 @@ class Tree(object):
 
             if deep:
                 for nid in tree._nodes:
-                    self._nodes[nid] = deepcopy(tree._nodes[nid])
+                    self._nodes[nid] = copy.deepcopy(tree._nodes[nid])
             else:
                 self._nodes = tree._nodes
 
@@ -133,17 +75,26 @@ class Tree(object):
         self._nodes.update({key: item})
 
     def __str__(self):
-        self.reader = ""
+        result = ""
 
         def write(line):
-            self.reader += line.decode('utf-8') + "\n"
+            nonlocal result
+            result += f'{line}\n'
 
         self.__print_backend(func=write)
-        return self.reader
+        return result
 
-    def __print_backend(self, nid=None, level=ROOT, idhidden=True, filter=None,
-                       key=None, reverse=False, line_type='ascii-ex',
-                       data_property=None, func=print):
+    @staticmethod
+    def __get_label(node, data_property, id_hidden):
+        result = getattr(node.data, data_property) \
+            if data_property \
+            else node.tag
+
+        return result if id_hidden else f'{result}[{node.identifier}]'
+
+    def __print_backend(self, nid=None, level=ROOT, id_hidden=True, filter=None,
+                        key=None, reverse=False, ascii_mode=ASCIIMode.ex,
+                        data_property=None, func=print):
         """
         Another implementation of printing tree using Stack
         Print tree structure in hierarchy style.
@@ -165,79 +116,54 @@ class Tree(object):
         UPDATE: the @key @reverse is present to sort node at each
         level.
         """
-        # Factory for proper get_label() function
-        if data_property:
-            if idhidden:
-                def get_label(node):
-                    return getattr(node.data, data_property)
-            else:
-                def get_label(node):
-                    return "%s[%s]" % (getattr(node.data, data_property), node.identifier)
-        else:
-            if idhidden:
-                def get_label(node):
-                    return node.tag
-            else:
-                def get_label(node):
-                    return "%s[%s]" % (node.tag, node.identifier)
-
-        # legacy ordering
-        if key is None:
-            def key(node):
-                return node
+        key_func = (lambda x: x) if key is None else key
 
         # iter with func
-        for pre, node in self.__get(nid, level, filter, key, reverse,
-                                    line_type):
-            label = get_label(node)
-            func('{0}{1}'.format(pre, label).encode('utf-8'))
+        for pre, node in self.__get(nid, level, filter, key_func, reverse,
+                                    ascii_mode):
+            label = self.__get_label(node, data_property, id_hidden)
+            func('{0}{1}'.format(pre, label))
 
-    def __get(self, nid, level, filter_, key, reverse, line_type):
-        # default filter
-        if filter_ is None:
-            def filter_(node):
-                return True
+    def __get(self, nid, level, filter_, key, reverse, ascii_mode):
+        filter_ = (lambda x: True) if filter_ is None else filter_
 
         # render characters
-        dt = {
-            'ascii': ('|', '|-- ', '+-- '),
-            'ascii-ex': ('\u2502', '\u251c\u2500\u2500 ', '\u2514\u2500\u2500 '),
-            'ascii-exr': ('\u2502', '\u251c\u2500\u2500 ', '\u2570\u2500\u2500 '),
-            'ascii-em': ('\u2551', '\u2560\u2550\u2550 ', '\u255a\u2550\u2550 '),
-            'ascii-emv': ('\u2551', '\u255f\u2500\u2500 ', '\u2559\u2500\u2500 '),
-            'ascii-emh': ('\u2502', '\u255e\u2550\u2550 ', '\u2558\u2550\u2550 '),
-        }[line_type]
+        dt = ascii_mode.value \
+            if isinstance(ascii_mode, ASCIIMode) \
+            else ASCIIMode[ascii_mode].value
 
         return self.__get_iter(nid, level, filter_, key, reverse, dt, [])
 
     def __get_iter(self, nid, level, filter_, key, reverse, dt, is_last):
         dt_vline, dt_line_box, dt_line_cor = dt
-        leading = ''
-        lasting = dt_line_box
 
         nid = self.root if (nid is None) else nid
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
         node = self[nid]
 
         if level == self.ROOT:
             yield "", node
         else:
-            leading = ''.join(map(lambda x: dt_vline + ' ' * 3
-                                  if not x else ' ' * 4, is_last[0:-1]))
+            leading = ''.join(dt_vline + ' ' * 3 if not x else ' ' * 4
+                              for x in is_last[0:-1])
             lasting = dt_line_cor if is_last[-1] else dt_line_box
             yield leading + lasting, node
 
         if filter_(node) and node.expanded:
             children = [self[i] for i in node.fpointer if filter_(self[i])]
-            idxlast = len(children)-1
+            idxlast = len(children) - 1
+
             if key:
-                children.sort(key=key, reverse=reverse)
+                children_iter = sorted(children, key=key, reverse=reverse)
             elif reverse:
-                children = reversed(children)
+                children_iter = reversed(children)
+            else:
+                children_iter = children
+
             level += 1
-            for idx, child in enumerate(children):
+            for idx, child in enumerate(children_iter):
                 is_last.append(idx == idxlast)
                 for item in self.__get_iter(child.identifier, level, filter_,
                                             key, reverse, dt, is_last):
@@ -254,7 +180,8 @@ class Tree(object):
         else:
             self[nid].update_fpointer(child_id, mode)
 
-    def __real_true(self, p):
+    @staticmethod
+    def __real_true(p):
         return True
 
     def add_node(self, node, parent=None):
@@ -263,22 +190,21 @@ class Tree(object):
         The 'node' parameter refers to an instance of Class::Node
         """
         if not isinstance(node, Node):
-            raise OSError("First parameter must be object of Class::Node.")
+            raise TypeError('First parameter must be instance of Node.')
 
         if node.identifier in self._nodes:
-            raise DuplicatedNodeIdError("Can't create node "
-                                        "with ID '%s'" % node.identifier)
+            raise DuplicatedNodeIdError(f"Can't create node "
+                                        f"with ID '{node.identifier}'")
 
         pid = parent.identifier if isinstance(parent, Node) else parent
 
         if pid is None:
             if self.root is not None:
-                raise MultipleRootError("A tree takes one root merely.")
+                raise MultipleRootError('A tree takes one root merely.')
             else:
                 self.root = node.identifier
         elif not self.contains(pid):
-            raise NodeIDAbsentError("Parent node '%s' "
-                                    "is not in the tree" % pid)
+            raise NodeIDAbsentError(f"Parent node '{pid}' is not in the tree")
 
         self._nodes.update({node.identifier: node})
         self.__update_fpointer(pid, node.identifier, Node.ADD)
@@ -286,9 +212,9 @@ class Tree(object):
 
     def all_nodes(self):
         """Return all nodes in a list"""
-        return list(self._nodes.values())
+        return list(self.all_nodes_iter())
 
-    def all_nodes_itr(self):
+    def all_nodes_iter(self):
         """
         Returns all nodes in an iterator
         Added by William Rusnack
@@ -304,7 +230,7 @@ class Tree(object):
 
     def contains(self, nid):
         """Check if the tree contains node of given id"""
-        return True if nid in self._nodes else False
+        return nid in self._nodes
 
     def create_node(self, tag=None, identifier=None, parent=None, data=None):
         """Create a child node for given @parent node."""
@@ -329,12 +255,9 @@ class Tree(object):
                 ret = level if level >= ret else ret
         else:
             # Get level of the given node
-            if not isinstance(node, Node):
-                nid = node
-            else:
-                nid = node.identifier
+            nid = node.identifier if isinstance(node, Node) else node
             if not self.contains(nid):
-                raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+                raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
             ret = self.level(nid)
         return ret
 
@@ -354,7 +277,7 @@ class Tree(object):
         """
         nid = self.root if (nid is None) else nid
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
         filter = self.__real_true if (filter is None) else filter
         if filter(self[nid]):
@@ -392,13 +315,15 @@ class Tree(object):
                         stack = stack_fw if direction else stack_bw
 
     def filter_nodes(self, func):
+        """Filters all nodes by function
+
+        Function is passed one node as an argument and that node is included
+        if function returns true.
+        Returns a filter iterator of the node.
+
+        Added by William Rusnack
         """
-        Filters all nodes by function
-        function is passed one node as an argument and that node is included if function returns true
-        returns a filter iterator of the node in python 3 or a list of the nodes in python 2
-        Added William Rusnack
-        """
-        return filter(func, self.all_nodes_itr())
+        return filter(func, self.all_nodes_iter())
 
     def get_node(self, nid):
         """Return the node with `nid`. None returned if `nid` does not exist."""
@@ -412,26 +337,26 @@ class Tree(object):
         Empty list is returned if nid does not exist
         """
         if nid is None:
-            raise OSError("First parameter can't be None")
-        if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise ValueError("First parameter can't be None")
 
-        try:
-            fpointer = self[nid].fpointer
-        except KeyError:
-            fpointer = []
-        return fpointer
+        if not self.contains(nid):
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
+
+        if nid not in self:
+            return []
+
+        return self[nid].fpointer
 
     def leaves(self, nid=None):
         """Get leaves of the whole tree of a subtree."""
         leaves = []
         if nid is None:
-            for node in self._nodes.values():
-                if node.is_leaf():
+            for node in self.all_nodes_iter():
+                if node.is_leaf:
                     leaves.append(node)
         else:
             for node in self.expand_tree(nid):
-                if self[node].is_leaf():
+                if self[node].is_leaf:
                     leaves.append(self[node])
         return leaves
 
@@ -444,7 +369,7 @@ class Tree(object):
         Update: @filter params is added to calculate level passing
         exclusive nodes.
         """
-        return len([n for n in self.rsearch(nid, filter)])-1
+        return len([n for n in self.rsearch(nid, filter)]) - 1
 
     def link_past_node(self, nid):
         """
@@ -454,15 +379,19 @@ class Tree(object):
         with a -> c
         """
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
+
         if self.root == nid:
-            raise LinkPastRootNodeError("Cannot link past the root node, "
-                                        "delete it with remove_node()")
+            raise LinkPastRootNodeError('Cannot link past the root node, '
+                                        'delete it with remove_node()')
+
         # Get the parent of the node we are linking past
         parent = self[self[nid].bpointer]
+
         # Set the children of the node to the parent
         for child in self[nid].fpointer:
             self[child].update_bpointer(parent.identifier)
+
         # Link the children to the parent
         parent.fpointer += self[nid].fpointer
         # Delete the node
@@ -487,12 +416,14 @@ class Tree(object):
     def is_ancestor(self, ancestor, grandchild):
         parent = self[grandchild].bpointer
         child = grandchild
+
         while parent is not None:
             if parent == ancestor:
                 return True
-            else:
-                child = self[child].bpointer
-                parent = self[child].bpointer
+
+            child = self[child].bpointer
+            parent = self[child].bpointer
+
         return False
 
     @property
@@ -503,7 +434,7 @@ class Tree(object):
     def parent(self, nid):
         """Get parent node object of given id"""
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
         pid = self[nid].bpointer
         if pid is None or not self.contains(pid):
@@ -518,21 +449,24 @@ class Tree(object):
 
         Update: add @deepcopy of pasted tree.
         """
-        assert isinstance(new_tree, Tree)
+        if not isinstance(new_tree, Tree):
+            raise TypeError('Instance of Tree is required as '
+                            '"new_tree" parameter.')
+
         if nid is None:
-            raise OSError("First parameter can't be None")
+            raise ValueError('First parameter can not be None')
 
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
         set_joint = set(new_tree._nodes) & set(self._nodes)  # joint keys
         if set_joint:
             # TODO: a deprecated routine is needed to avoid exception
-            raise ValueError('Duplicated nodes %s exists.' % list(set_joint))
+            raise ValueError(f'Duplicated nodes {list(set_joint)} exists.')
 
         if deepcopy:
             for node in new_tree._nodes:
-                self._nodes.update({node.identifier: deepcopy(node)})
+                self._nodes.update({node.identifier: copy.deepcopy(node)})
         else:
             self._nodes.update(new_tree._nodes)
         self.__update_fpointer(nid, new_tree.root, Node.ADD)
@@ -579,21 +513,24 @@ class Tree(object):
             return 0
 
         if not self.contains(identifier):
-            raise NodeIDAbsentError("Node '%s' "
-                                    "is not in the tree" % identifier)
+            raise NodeIDAbsentError(f"Node '{identifier}' is not in the tree")
 
         parent = self[identifier].bpointer
-        for id in self.expand_tree(identifier):
+        for id_ in self.expand_tree(identifier):
             # TODO: implementing this function as a recursive function:
             #       check if node has children
             #       true -> run remove_node with child_id
             #       no -> delete node
-            removed.append(id)
+            removed.append(id_)
+
         cnt = len(removed)
-        for id in removed:
-            del self._nodes[id]
+
+        for id_ in removed:
+            del self._nodes[id_]
+
         # Update its parent info
         self.__update_fpointer(parent, identifier, Node.DELETE)
+
         return cnt
 
     def remove_subtree(self, nid):
@@ -618,21 +555,24 @@ class Tree(object):
             return st
 
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
-        st.root = nid
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
+        st.root = nid
         parent = self[nid].bpointer
         self[nid].bpointer = None  # reset root parent for the new tree
         removed = []
-        for id in self.expand_tree(nid):
-            removed.append(id)
-        for id in removed:
-            st._nodes.update({id: self._nodes.pop(id)})
+
+        for id_ in self.expand_tree(nid):
+            removed.append(id_)
+
+        for id_ in removed:
+            st._nodes.update({id_: self._nodes.pop(id_)})
+
         # Update its parent info
         self.__update_fpointer(parent, nid, Node.DELETE)
         return st
 
-    def rsearch(self, nid, filter=None):
+    def rsearch(self, nid, filter_=None):
         """
         Traverse the tree branch along the branch from nid to its
         ancestors (until root).
@@ -641,42 +581,47 @@ class Tree(object):
             return
 
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
-        filter = (self.__real_true) if (filter is None) else filter
+        filter_ = self.__real_true if filter_ is None else filter_
 
         current = nid
         while current is not None:
-            if filter(self[current]):
+            if filter_(self[current]):
                 yield current
             # subtree() hasn't update the bpointer
             current = self[current].bpointer if self.root != current else None
 
-    def save2file(self, filename, nid=None, level=ROOT, idhidden=True,
-                  filter=None, key=None, reverse=False, line_type='ascii-ex', data_property=None):
+    def save2file(self, filename, nid=None, level=ROOT, id_hidden=True,
+                  filter_=None, key=None, reverse=False,
+                  ascii_mode=ASCIIMode.ex, data_property=None):
         """Update 20/05/13: Save tree into file for offline analysis"""
+
         def _write_line(line, f):
             f.write(line + b'\n')
 
-        handler = lambda x: _write_line(x, open(filename, 'ab'))
+        self.__print_backend(
+            nid, level, id_hidden, filter_, key, reverse, ascii_mode,
+            data_property, func=lambda x: _write_line(x, open(filename, 'ab'))
+        )
 
-        self.__print_backend(nid, level, idhidden, filter,
-            key, reverse, line_type, data_property, func=handler)
-
-    def show(self, nid=None, level=ROOT, idhidden=True, filter=None,
-             key=None, reverse=False, line_type='ascii-ex', data_property=None):
-        self.reader = ""
+    def show(self, nid=None, level=ROOT, id_hidden=True, filter_=None,
+             key=None, reverse=False, ascii_mode=ASCIIMode.ex,
+             data_property=None):
+        result = ""
 
         def write(line):
-            self.reader += line.decode('utf-8') + "\n"
+            nonlocal result
+            result += f'{line}\n'
 
         try:
-            self.__print_backend(nid, level, idhidden, filter,
-                key, reverse, line_type, data_property, func=write)
+            self.__print_backend(nid, level, id_hidden, filter_,
+                                 key, reverse, ascii_mode, data_property,
+                                 func=write)
         except NodeIDAbsentError:
             print('Tree is empty')
 
-        print(self.reader.encode('utf-8'))
+        print(result)
 
     def siblings(self, nid):
         """
@@ -692,7 +637,7 @@ class Tree(object):
 
         return siblings
 
-    def size(self, level=None):
+    def size(self, level: int = None):
         """
         Get the number of nodes of the whole tree if @level is not
         given. Otherwise, the total number of nodes at specific level
@@ -705,13 +650,15 @@ class Tree(object):
         """
         if level is None:
             return len(self._nodes)
-        else:
-            try:
-                level = int(level)
-                return len([node for node in self.all_nodes_itr() if self.level(node.identifier) == level])
-            except:
-                raise TypeError("level should be an integer instead of '%s'" % type(level))
-            
+
+        if not isinstance(level, int):
+            raise TypeError(f"Level should be an integer instead "
+                            f"of '{type(level)}'")
+
+        return len(
+            [node for node in self.all_nodes_iter()
+             if self.level(node.identifier) == level]
+        )
 
     def subtree(self, nid):
         """
@@ -725,44 +672,53 @@ class Tree(object):
 
         This line creates a deep copy of the entire tree.
         """
-        st = Tree()
+        result = Tree()
         if nid is None:
-            return st
+            return result
 
         if not self.contains(nid):
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % nid)
+            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
 
-        st.root = nid
+        result.root = nid
         for node_n in self.expand_tree(nid):
-            st._nodes.update({self[node_n].identifier: self[node_n]})
-        return st
+            result._nodes.update({self[node_n].identifier: self[node_n]})
 
-    def to_dict(self, nid=None, key=None, sort=True, reverse=False, with_data=False):
+        return result
+
+    def to_dict(self, nid=None, key=None, sort=True, reverse=False,
+                with_data=False):
         """transform self into a dict"""
 
         nid = self.root if (nid is None) else nid
         ntag = self[nid].tag
-        tree_dict = {ntag: {"children": []}}
+        result = {ntag: {'children': []}}
         if with_data:
-            tree_dict[ntag]["data"] = self[nid].data
+            result[ntag]['data'] = self[nid].data
 
         if self[nid].expanded:
             queue = [self[i] for i in self[nid].fpointer]
-            key = (lambda x: x) if (key is None) else key
             if sort:
-                queue.sort(key=key, reverse=reverse)
+                queue_iter = sorted(
+                    queue, key=(lambda x: x) if key is None else key,
+                    reverse=reverse
+                )
+            else:
+                queue_iter = queue
 
-            for elem in queue:
-                tree_dict[ntag]["children"].append(
-                    self.to_dict(elem.identifier, with_data=with_data, sort=sort, reverse=reverse))
-            if len(tree_dict[ntag]["children"]) == 0:
-                tree_dict = self[nid].tag if not with_data else \
-                            {ntag: {"data":self[nid].data}}
-            return tree_dict
+            for elem in queue_iter:
+                result[ntag]['children'].append(
+                    self.to_dict(elem.identifier, with_data=with_data,
+                                 sort=sort, reverse=reverse)
+                )
+
+            if not result[ntag]['children']:
+                result = self[nid].tag if not with_data else \
+                    {ntag: {'data': self[nid].data}}
+
+        return result
 
     def to_json(self, with_data=False, sort=True, reverse=False):
         """Return the json string corresponding to self"""
-        return json.dumps(self.to_dict(with_data=with_data, sort=sort, reverse=reverse))
-
-if __name__ == '__main__':
-    pass
+        return json.dumps(
+            self.to_dict(with_data=with_data, sort=sort, reverse=reverse)
+        )

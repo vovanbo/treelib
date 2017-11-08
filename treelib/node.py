@@ -1,19 +1,22 @@
 #!/usr/bin/env python
 """treelib - Simple to use for you.
-   Python 2/3 Tree Implementation
+   Python 3 Tree Implementation
 """
 
 import uuid
 
+import warnings
+from collections import Sequence, MutableMapping, Set
 
-class Node(object):
+
+class Node:
     """
     Nodes are elementary objects which are stored a `_nodes` dictionary of a Tree.
     Use `data` attribute to store node-specific data.
     """
 
     #: ADD, DELETE, INSERT constants :
-    (ADD, DELETE, INSERT) = list(range(3))
+    (ADD, DELETE) = list(range(2))
 
     def __init__(self, tag=None, identifier=None, expanded=True, data=None):
         """Create a new Node object to be placed inside a Tree object"""
@@ -40,6 +43,15 @@ class Node(object):
         #: None or whatever given as a parameter
         self.data = data
 
+    def __repr__(self):
+        name = self.__class__.__name__
+        kwargs = (
+            f"tag={self.tag!r}",
+            f"identifier={self.identifier!r}",
+            f"data={self.data!r}",
+        )
+        return f"{name}({', '.join(kwargs)})"
+
     def __lt__(self, other):
         return self.tag < other.tag
 
@@ -58,12 +70,7 @@ class Node(object):
     @bpointer.setter
     def bpointer(self, nid):
         """Set the value of `_bpointer`."""
-        if nid is not None:
-            self._bpointer = nid
-        else:
-            # print("WARNING: the bpointer of node %s " \
-            #      "is set to None" % self._identifier)
-            self._bpointer = None
+        self._bpointer = nid
 
     @property
     def fpointer(self):
@@ -75,14 +82,13 @@ class Node(object):
         """Set the value of `_fpointer`."""
         if value is None:
             self._fpointer = list()
-        elif isinstance(value, list):
-            self._fpointer = value
-        elif isinstance(value, dict):
-            self._fpointer = list(value.keys())
-        elif isinstance(value, set):
+        elif isinstance(value, (Sequence, Set)):
             self._fpointer = list(value)
-        else:  # TODO: add deprecated routine
-            pass
+        elif isinstance(value, MutableMapping):
+            self._fpointer = list(value.keys())
+        else:
+            raise ValueError('Sequence, Set or MutableMapping '
+                             'are allowed values for fpointer only.')
 
     @property
     def identifier(self):
@@ -93,17 +99,16 @@ class Node(object):
     def identifier(self, value):
         """Set the value of `_identifier`."""
         if value is None:
-            print("WARNING: node ID can not be None")
+            warnings.warn("Node ID can not be None")
         else:
             self._set_identifier(value)
 
+    @property
     def is_leaf(self):
         """Return true if current node has no children."""
-        if len(self.fpointer) == 0:
-            return True
-        else:
-            return False
+        return not self.fpointer
 
+    @property
     def is_root(self):
         """Return true if self has no parent, i.e. as root."""
         return self._bpointer is None
@@ -116,7 +121,7 @@ class Node(object):
     @tag.setter
     def tag(self, value):
         """Set the value of `_tag`."""
-        self._tag = value if value is not None else None
+        self._tag = value
 
     def update_bpointer(self, nid):
         """Update parent node."""
@@ -132,18 +137,3 @@ class Node(object):
         elif mode is self.DELETE:
             if nid in self._fpointer:
                 self._fpointer.remove(nid)
-        elif mode is self.INSERT:  # deprecate to ADD mode
-            print("WARNING: INSERT is deprecated to ADD mode")
-            self.update_fpointer(nid)
-
-    def __repr__(self):
-        name = self.__class__.__name__
-        kwargs = [
-            "tag=%r" % self.tag,
-            "identifier=%r" % self.identifier,
-            "data=%r" % self.data,
-        ]
-        return "%s(%s)" % (name, ", ".join(kwargs))
-
-if __name__ == '__main__':
-    pass

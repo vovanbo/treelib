@@ -116,11 +116,35 @@ Tree.WIDTH, Tree.ZIGZAG).
     1
 
 **Example 9**: Print or dump tree structure. For example, the same tree in
- basic example can be printed with 'ascii-em':
+ basic example can be printed with 'em':
 
 .. code-block:: sh
 
-    >>> tree.show(line_type="ascii-em")
+    >>> tree.show(ascii_mode='em')
+    Harry
+    ╠══ Bill
+    ╠══ Jane
+    ║   ╠══ Diane
+    ║   ╚══ Mark
+    ╚══ Mary
+
+In the JSON form, to_json() takes optional parameter with_data to trigger if
+the data field is appended into JSON string. For example,
+
+
+    >>> tree.show(ascii_mode='em')
+    Harry
+    ╠══ Bill
+    ╠══ Jane
+    ║   ╠══ Diane
+    ║   ╚══ Mark
+    ╚══ Mary
+
+In the JSON form, to_json() takes optional parameter with_data to trigger if
+the data field is appended into JSON string. For example,
+
+
+    >>> tree.show(line_type='em')
     Harry
     ╠══ Bill
     ╠══ Jane

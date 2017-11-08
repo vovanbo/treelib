@@ -305,9 +305,9 @@ Instance attributes:
     former two use the same backend to generate a string of tree structure in a
     text graph.
 
-    *Version >= 1.2.7a*: you can also spicify the ``line_type`` parameter (now
-     supporting 'ascii' [default], 'ascii-ex', 'ascii-exr', 'ascii-em',
-     'ascii-emv', 'ascii-emh') to the change graphical form.
+    *Version >= 1.2.7a*: you can also spicify the ``ascii_mode`` parameter (now
+     supporting 'simple' [default], 'ex', 'exr', 'em', 'emv', 'emh')
+     to the change graphical form.
 
 
 .. method:: siblings(nid)
