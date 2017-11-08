@@ -30,15 +30,11 @@ parser.add_argument('--debug', type=bool, default=False, help='Debug mode')
 parser.add_argument('--profiling', type=str, choices=['timeit', 'cprofile'],
                     default=None, help='Profiling mode')
 
-
 args = parser.parse_args()
 root_path = Path(args.path).resolve(strict=True)
-pattern = args.pattern
-
 
 folder_tree = tree.Tree()
 root_node = folder_tree.create_node(str(root_path), root_path)  # root node
-start_depth = len(root_path.parts)
 
 
 def crc32(data):
@@ -96,7 +92,9 @@ def crawler():
     global DIRCOUNT
     global FILECOUNT
 
-    for current_path in sorted(root_path.glob(f'**/{pattern}')):
+    start_depth = len(root_path.parts)
+
+    for current_path in sorted(root_path.glob(f'**/{args.pattern}')):
         current_depth = len(current_path.parts) - start_depth
         if args.debug:
             print(f'current: {current_path}')

@@ -9,13 +9,14 @@ It could be useful to implement Directory Tree data structure
 
 import treelib
 import random
-import hashlib
-from string import digits, letters
+from hashlib import blake2b
+from string import digits, ascii_letters
 
 MAX_FILES_PER_DIR = 10
 
+
 def get_random_string(length):
-    return ''.join(random.choice(digits + letters) for _ in range(length))
+    return ''.join(random.choice(digits + ascii_letters) for _ in range(length))
 
 
 def build_recursive_tree(tree, base, depth, width):
@@ -29,24 +30,28 @@ def build_recursive_tree(tree, base, depth, width):
     Returns:
 
     """
-    if depth >= 0:
+    while depth >= 0:
         depth -= 1
-        for i in xrange(width):
+        for _ in range(width):
             directory = Directory()
-            tree.create_node("{0}".format(directory.name), "{0}".format(hashlib.md5(directory.name)),
-                             parent=base.identifier, data=directory)  #  node identifier is md5 hash of it's name
+            tree.create_node(
+                directory.name,
+                # node identifier is md5 hash of it's name
+                blake2b(directory.name.encode()).hexdigest(),
+                parent=base.identifier,
+                data=directory
+            )
         dirs_nodes = tree.children(base.identifier)
         for dir in dirs_nodes:
             newbase = tree.get_node(dir.identifier)
             build_recursive_tree(tree, newbase, depth, width)
-    else:
-        return
 
 
-class Directory(object):
+class Directory:
     def __init__(self):
         self._name = get_random_string(64)
-        self._files = [File() for _ in xrange(MAX_FILES_PER_DIR)]  # Each directory contains 1000 files
+        # Each directory contains 1000 files
+        self._files = [File() for _ in range(MAX_FILES_PER_DIR)]
 
     @property
     def name(self):
@@ -57,8 +62,7 @@ class Directory(object):
         return self._files
 
 
-
-class File(object):
+class File:
     def __init__(self):
         self._name = get_random_string(64)
 
