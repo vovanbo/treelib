@@ -1,178 +1,144 @@
 #!/usr/bin/env python
 # A file folder scanner contributed by @holger 
 #
-# You can spicify the scanned folder and file pattern by changing rootPath
+# You can specify the scanned folder and file pattern by changing root_path
 # and pattern variables
 #
-
 __author__ = 'holger'
+
+import zlib
+import argparse
+from pathlib import Path
 
 from treelib import tree
 
-import fnmatch
-import os
-import zlib
-import argparse
-
-DEBUG = 0
 FILECOUNT = 0
 DIRCOUNT = 0
 DIR_ERRORLIST = []
 FILE_ERRORLIST = []
 
 
-# Time Profiling
-PROFILING = 0
-# 0 - nothing
-# 1 - time
-# 2 - cProfile
+parser = argparse.ArgumentParser(description='Scan the given folder and print '
+                                             'its structure in a tree.')
+parser.add_argument('path', nargs='?', type=Path,
+                    help='An path to be scanned.',
+                    default=Path.cwd())
+parser.add_argument('pattern', nargs='?', type=str,
+                    help='File name pattern to filtered, e.g. *.pdf',
+                    default="*")
+parser.add_argument('--debug', type=bool, default=False, help='Debug mode')
+parser.add_argument('--profiling', type=str, choices=['timeit', 'cprofile'],
+                    default=None, help='Profiling mode')
 
-if PROFILING == 1:
-    import timeit
-if PROFILING == 2:
-    import cProfile
-
-
-parser = argparse.ArgumentParser(description='Scan the given folder and print its structure in a tree.')
-parser.add_argument('abspath', type=str, help= 'An absolute path to be scanned.')
-parser.add_argument('pattern', type=str, help= 'File name pattern to filtered, e.g. *.pdf')
 
 args = parser.parse_args()
-rootPath = args.abspath
+root_path = Path(args.path).resolve(strict=True)
 pattern = args.pattern
 
-folder_blacklist = []
 
-dir_tree = tree.Tree()
-dir_tree.create_node('Root', rootPath)  # root node
+folder_tree = tree.Tree()
+root_node = folder_tree.create_node(str(root_path), root_path)  # root node
+start_depth = len(root_path.parts)
 
 
 def crc32(data):
-    data = bytes(data, 'UTF-8')
+    data = bytes(str(data), 'UTF-8')
 
-    if DEBUG:
+    if args.debug:
         print('++++++ CRC32 ++++++')
         print('input: ' + str(data))
         print('crc32: ' + hex(zlib.crc32(data) & 0xffffffff))
         print('+++++++++++++++++++')
-    return hex(zlib.crc32(data) & 0xffffffff)  # crc32 returns a signed value, &-ing it will match py3k
-
-parent = rootPath
-i = 1
-
-# calculating start depth
-start_depth = rootPath.count('/')
+    # crc32 returns a signed value, &-ing it will match py3k
+    return hex(zlib.crc32(data) & 0xffffffff)
 
 
-def get_noteid(depth, root, dir):
-    """ get_noteid returns
+def get_node_id(depth, path):
+    """ get_node_id returns
         - depth contains the current depth of the folder hierarchy
-        - dir contains the current directory
+        - folder contains the current directory
 
-        Function returns a string containing the current depth, the folder name and unique ID build by hashing the
-        absolute path of the directory. All spaces are replaced by '_'
+        Function returns a string containing the current depth, the folder name
+        and unique ID build by hashing the absolute path of the directory.
+        All spaces are replaced by '_'
 
         <depth>_<dirname>+++<crc32>
         e.g. 2_Folder_XYZ_1+++<crc32>
     """
-    return str(str(depth) + '_' + dir).replace(" ", "_") + '+++' + crc32(os.path.join(root, dir))
-
-# TODO: Verzeichnistiefe pruefen: Was ist mit sowas /mp3/
+    return f"{depth}_{path}+++{crc32(path)}".replace(" ", "_")
 
 
-def get_parentid(current_depth, root, dir):
+def get_parent_id(depth, path):
     # special case for the 'root' of the tree
     # because we don't want a cryptic root-name
-    if current_depth == 0:
-        return root
+    if path == root_path:
+        return str(root_path)
 
     # looking for parent directory
     # e.g. /home/user1/mp3/folder1/parent_folder/current_folder
     # get 'parent_folder'
 
-    search_string = os.path.join(root, dir)
-    pos2 = search_string.rfind('/')
-    pos1 = search_string.rfind('/', 0, pos2)
-    parent_dir = search_string[pos1 + 1:pos2]
-    parentid = str(current_depth - 1) + '_' + parent_dir.replace(" ", "_") + '+++' + crc32(root)
-    return parentid
-    # TODO: catch error
+    parent_id = f"{depth - 1}_{path.parent}+++{crc32(path.parent)}"
+    return parent_id.replace(" ", "_")
 
 
-
-def print_node(dir, node_id, parent_id):
-    print('#############################')
-    print('node created')
-    print('      dir:     ' + dir)
-    print('      note_id: ' + node_id)
-    print('      parent:  ' + parent_id)
+def print_node(folder, node_id, parent_id):
+    print(f"""
+#############################
+node created
+folder: {folder}
+node_id: {node_id}
+parent_id: {parent_id}
+""")
 
 
 def crawler():
     global DIRCOUNT
     global FILECOUNT
 
-    for root, dirs, files in os.walk(rootPath):
+    for current_path in sorted(root_path.glob(f'**/{pattern}')):
+        current_depth = len(current_path.parts) - start_depth
+        if args.debug:
+            print(f'current: {current_path}')
+
+        node_id = get_node_id(current_depth, current_path)
+        parent_id = get_parent_id(current_depth, current_path)
+
+        if args.debug:
+            print_node(current_path, node_id, parent_id)
+
+        if parent_id not in folder_tree:
+            parent_id = root_node
+
+        # create node
+        folder_tree.create_node(current_path.name, node_id, parent_id)
 
         # +++ DIRECTORIES +++
-        for dir in dirs:
-
-            # calculating current depth
-            current_depth = os.path.join(root, dir).count('/') - start_depth
-
-            if DEBUG:
-                print('current: ' + os.path.join(root, dir))
-
-            node_id = get_noteid(current_depth, root, dir)
-            parent_id = str(get_parentid(current_depth, root, dir))
-
+        if current_path.is_dir():
             if parent_id == str(None):
-                DIR_ERRORLIST.append(os.path.join(root, dir))
-
-            if DEBUG:
-                print_node(dir, node_id, parent_id)
-
-            # create node
-            dir_tree.create_node(dir, node_id, parent_id)
+                DIR_ERRORLIST.append(current_path)
             DIRCOUNT += 1
-
-        # +++ FILES +++
-        for filename in fnmatch.filter(files, pattern):
-
-            if dir in folder_blacklist:
-                continue
-
-            # calculating current depth
-            current_depth = os.path.join(root, filename).count('/') - start_depth
-
-            if DEBUG:
-                print('current: ' + os.path.join(root, filename))
-
-            node_id   = get_noteid(current_depth, root, filename)
-            parent_id = str(get_parentid(current_depth, root, filename))
-
+        elif current_path.is_file():
+            # +++ FILES +++
             if parent_id == str(None):
-                FILE_ERRORLIST.append(os.path.join(root, dir))
-
-            if DEBUG:
-                print_node(filename, node_id, parent_id)
-
-            # create node
-            dir_tree.create_node(filename, node_id, parent_id)
+                FILE_ERRORLIST.append(current_path)
             FILECOUNT += 1
 
 
-if PROFILING == 0:
+profiling_result = None
+
+if args.profiling is None:
     crawler()
-if PROFILING == 1:
-    t1 = timeit.Timer("crawler()", "from __main__ import crawler")
-    print('time:      ' + str(t1.timeit(number=1)))
-if PROFILING == 2:
-    cProfile.run("crawler()")
+elif args.profiling == 'timeit':
+    import timeit
+    timeit_result = timeit.Timer("crawler()", "from __main__ import crawler")
+    profiling_result = f'time: {timeit_result.timeit(number=1)}'
+elif args.profiling == 'cprofile':
+    import cProfile
+    profile = cProfile.Profile()
+    profiling_result = profile.run("crawler()")
 
-
-print('filecount: ' + str(FILECOUNT))
-print('dircount:  ' + str(DIRCOUNT))
+folder_tree.show()
 
 if DIR_ERRORLIST:
     for item in DIR_ERRORLIST:
@@ -180,18 +146,19 @@ if DIR_ERRORLIST:
 else:
     print('no directory errors')
 
-print('\n\n\n')
-
 if FILE_ERRORLIST:
     for item in FILE_ERRORLIST:
         print(item)
 else:
     print('no file errors')
 
-print('nodes: ' + str(len(dir_tree.nodes)))
+print(f'Count of files: {FILECOUNT}')
+print(f'Count of folders: {DIRCOUNT}')
+print(f'Count of tree nodes: {len(folder_tree.nodes)}')
 
-dir_tree.show()
-
-
-
-
+if profiling_result is not None:
+    print('\nProfiling results:')
+    if isinstance(profiling_result, str):
+        print(profiling_result)
+    elif isinstance(profiling_result, cProfile.Profile):
+        profiling_result.print_stats('ncalls')

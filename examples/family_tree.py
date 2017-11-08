@@ -26,13 +26,13 @@ if __name__ == '__main__':
     tree = create_family_tree()
 
     example("Tree of the whole family:")
-    tree.show(key=lambda x: x.tag, reverse=True, line_type='ascii-em')
+    tree.show(key=lambda x: x.tag, reverse=True, ascii_mode='em')
 
     example("All family members in DEPTH mode:")
     print(','.join([tree[node].tag for node in tree.expand_tree()]))
 
     example("All family members (with identifiers) but Diane's sub-family:")
-    tree.show(idhidden=False, filter=lambda x: x.identifier != 'diane')
+    tree.show(id_hidden=False, filter_=lambda x: x.identifier != 'diane')
 
     example("Let me introduce Diane family only:")
     sub_t = tree.subtree('diane')
