@@ -3,8 +3,7 @@
 """This is a public location to maintain contributed
    utilities to extend the basic Tree class.
 """
-from __future__ import unicode_literals
-import codecs
+from treelib.common import TraversalMode
 
 
 def export_to_dot(tree, filename, shape='circle', graph='digraph'):
@@ -13,27 +12,24 @@ def export_to_dot(tree, filename, shape='circle', graph='digraph'):
     nodes, connections = [], []
     if tree.nodes:        
         
-        for n in tree.expand_tree(mode=tree.WIDTH):
-            nid = tree[n].id
-            state = '"' + nid + '"' + ' [label="' + tree[n].tag + '", shape=' + shape + ']'
+        for node in tree.expand_tree(mode=TraversalMode.WIDTH):
+            node_id = tree[node].id
+            state = f'"{node_id}" [label="{tree[node].tag}", shape={shape}]'
             nodes.append(state)
 
-            for c in tree.children(nid):
-                cid = c.id
-
-                connections.append('"' + nid + '"' + ' -> ' + '"' + cid + '"')
+            for child in tree.children(node_id):
+                connections.append(f'"{node_id}" -> "{child.id}"')
 
     # write nodes and connections to dot format
-    with codecs.open(filename, 'w', 'utf-8') as f:
-        f.write(graph + ' tree {\n')
-        for n in nodes:
-            f.write('\t' + n + '\n')
-        
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(f'{graph} tree {{\n')
+
+        for node in nodes:
+            f.write(f'\t{node}\n')
+
         f.write('\n')
-        for c in connections:
-            f.write('\t' + c + '\n')
+
+        for child in connections:
+            f.write(f'\t{child}\n')
 
         f.write('}')
-
-if __name__ == '__main__':
-    pass

@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import pytest
+import os
 
 from treelib import Tree
-from treelib.plugins import *
-import os
+from treelib.plugins import export_to_dot
 
 
 def read_generated_output(filename):
-    output = codecs.open(filename, 'r', 'utf-8')
-    generated = output.read()
-    output.close()
-
-    return generated
+    with open(filename, 'r', encoding='utf-8') as fp:
+        return fp.read()
 
 
 def test_export_to_dot(tree):
