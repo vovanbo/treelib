@@ -91,7 +91,7 @@ def test_depth(tree):
 
     # Try getting the level of the node
     """
-    self.tree.show()
+    tree.print()
     Hárry
     |___ Bill
     |    |___ George
@@ -219,23 +219,22 @@ def test_tree_data(tree):
     tree.remove_node("jill")
 
 
-def test_show_data_property():
+def test_tree_print_data_property(capsys):
     new_tree = Tree()
+    new_tree.print()
 
-    sys.stdout = open(os.devnull, "w")  # stops from printing to console
+    stdout, stderr = capsys.readouterr()
+    assert stdout == 'Tree is empty\n'
 
-    try:
-        new_tree.show()
+    class Flower(object):
+        def __init__(self, color):
+            self.color = color
 
-        class Flower(object):
-            def __init__(self, color):
-                self.color = color
+    new_tree.create_node("Jill", "jill", data=Flower("white"))
+    new_tree.print(data_property="color")
 
-        new_tree.create_node("Jill", "jill", data=Flower("white"))
-        new_tree.show(data_property="color")
-    finally:
-        sys.stdout.close()
-        sys.stdout = sys.__stdout__  # stops from printing to console
+    stdout, stderr = capsys.readouterr()
+    assert stdout == 'white\n'
 
 
 def test_level(tree):
@@ -251,25 +250,15 @@ def test_size(tree):
     assert tree.size(level=0) == 1
 
 
-def test_print_backend(tree):
-    expected_result = """\
-Hárry
-├── Bill
-│   └── George
-└── Jane
-    └── Diane
-"""
-    assert str(tree) == expected_result
+def test_tree_to_string(tree, tree_as_string):
+    assert str(tree) == tree_as_string
 
 
-def test_show(tree):
-    sys.stdout = open(os.devnull, "w")  # stops from printing to console
+def test_tree_print(capsys, tree, tree_as_string):
+    tree.print()
 
-    try:
-        tree.show()
-    finally:
-        sys.stdout.close()
-        sys.stdout = sys.__stdout__  # stops from printing to console
+    stdout, stderr = capsys.readouterr()
+    assert stdout == tree_as_string
 
 
 def test_all_nodes_itr():

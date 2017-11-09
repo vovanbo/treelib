@@ -136,7 +136,7 @@ elif args.profiling == 'cprofile':
     profile = cProfile.Profile()
     profiling_result = profile.run("crawler()")
 
-folder_tree.show()
+folder_tree.print()
 
 if DIR_ERRORLIST:
     for item in DIR_ERRORLIST:

@@ -72,7 +72,7 @@ class Tree:
             nonlocal result
             result += f'{line}\n'
 
-        treelib.utils.print_backend(self, func=write)
+        treelib.utils.print_tree(self, func=write)
         return result
 
     @staticmethod
@@ -483,38 +483,27 @@ class Tree:
             # subtree() hasn't update the parent
             current = self[current].parent if self.root != current else None
 
-    def save2file(self, filename, node_id=None, level=ROOT, id_hidden=True,
+    def save2file(self, filename, node_id=None, id_hidden=True,
                   filter_=None, key=None, reverse=False,
                   ascii_mode=ASCIIMode.ex, data_property=None):
         """Update 20/05/13: Save tree into file for offline analysis"""
+        with open(filename, 'ab') as fp:
+            treelib.utils.print_tree(
+                self, node_id, id_hidden, filter_, key, reverse,
+                ascii_mode, data_property, func=lambda n: fp.write(n + b'\n')
+            )
 
-        def _write_line(line, f):
-            f.write(line + b'\n')
-
-        treelib.utils.print_backend(
-            self, node_id, level, id_hidden, filter_, key, reverse, ascii_mode,
-            data_property, func=lambda x: _write_line(x, open(filename, 'ab'))
-        )
-
-    def show(self, node_id=None, level=ROOT, id_hidden=True, filter_=None,
-             key=None, reverse=False, ascii_mode=ASCIIMode.ex,
-             data_property=None):
-        result = ""
-
-        def write(line):
-            nonlocal result
-            result += f'{line}\n'
-
+    def print(self, node_id=None, id_hidden=True, filter_=None,
+              key=None, reverse=False, ascii_mode=ASCIIMode.ex,
+              data_property=None):
         try:
-            treelib.utils.print_backend(
-                self, node_id, level, id_hidden, filter_,
+            treelib.utils.print_tree(
+                self, node_id, id_hidden, filter_,
                 key, reverse, ascii_mode, data_property,
-                func=write
+                func=print
             )
         except NodeNotFound:
             print('Tree is empty')
-
-        print(result)
 
     def siblings(self, node_id):
         """

@@ -1,4 +1,4 @@
-from typing import Hashable, Callable, Union, Tuple
+from typing import Hashable, Callable, Union, Any
 
 from treelib.common import ASCIIMode
 from treelib.exceptions import NodeNotFound
@@ -12,10 +12,13 @@ def get_label(node: 'Node', data_property: str, id_hidden: bool):
     return result if id_hidden else f'{result}[{node.id}]'
 
 
-def tree_printer_gen(tree: 'Tree', node_id: Hashable, level,
-                     filtering: Callable[['Node'], bool], key, reverse: bool,
-                     ascii_mode: ASCIIMode, is_last: list = None):
-    dt_vline, dt_line_box, dt_line_cor = ascii_mode.value
+def tree_printer_gen(tree: 'Tree', node_id: Hashable,
+                     filtering: Callable[['Node'], bool] = None,
+                     key: Callable[['Node'], Any] = None,
+                     reverse: bool = False,
+                     ascii_mode: ASCIIMode = ASCIIMode.ex,
+                     is_last: list = None, level: int = 0):
+    c_line, c_branch, c_corner = ascii_mode.value
 
     if is_last is None:
         is_last = []
@@ -26,40 +29,47 @@ def tree_printer_gen(tree: 'Tree', node_id: Hashable, level,
 
     node = tree[node_id]
 
-    if level == tree.ROOT:
+    if level == 0:
         yield "", node
     else:
-        leading = ''.join(dt_vline + ' ' * 3 if not x else ' ' * 4
+        leading = ''.join(c_line + ' ' * 3 if not x else ' ' * 4
                           for x in is_last[0:-1])
-        lasting = dt_line_cor if is_last[-1] else dt_line_box
+        lasting = c_corner if is_last[-1] else c_branch
         yield leading + lasting, node
 
-    if filtering(node) and node.expanded:
-        children = [tree[n] for n in node.children if filtering(tree[n])]
-        last_index = len(children) - 1
+    if node.expanded:
+        if filtering is not None and not filtering(node):
+            return
 
-        if key:
-            children_iter = sorted(children, key=key, reverse=reverse)
+        children = (tree[n] for n in node.children)
+
+        if filtering is not None:
+            children = filter(filtering, children)
+
+        if key is not None:
+            children = sorted(children, key=key, reverse=reverse)
         elif reverse:
-            children_iter = reversed(children)
-        else:
-            children_iter = children
+            children = reversed(children)
 
         level += 1
-        for index, child in enumerate(children_iter):
-            is_last.append(index == last_index)
-            for item in tree_printer_gen(tree, child.id, level, filtering,
-                                         key, reverse, ascii_mode, is_last):
+        current_child = next(children, None)
+        while children and current_child is not None:
+            next_child = next(children, None)
+            is_last.append(next_child is None)
+            for item in tree_printer_gen(tree, current_child.id,
+                                         filtering, key, reverse, ascii_mode,
+                                         is_last, level=level):
                 yield item
             is_last.pop()
+            current_child = next_child
 
 
-def print_backend(tree: 'Tree', node_id: Hashable = None, level=None,
-                  id_hidden: bool = True,
-                  filtering: Callable[['Node'], bool] = None,
-                  key=None, reverse: bool = False,
-                  ascii_mode: Union[ASCIIMode, str] = ASCIIMode.ex,
-                  data_property: str = None, func: Callable = print):
+def print_tree(tree: 'Tree', node_id: Hashable = None,
+               id_hidden: bool = True,
+               filtering: Callable[['Node'], bool] = None,
+               key: Callable[['Node'], Any] = None, reverse: bool = False,
+               ascii_mode: Union[ASCIIMode, str] = ASCIIMode.ex,
+               data_property: str = None, func: Callable = print):
     """
     Another implementation of printing tree using Stack
     Print tree structure in hierarchy style.
@@ -81,19 +91,13 @@ def print_backend(tree: 'Tree', node_id: Hashable = None, level=None,
     UPDATE: the @key @reverse is present to sort node at each
     level.
     """
-    key_func = (lambda x: x) if key is None else key
-    filtering = (lambda x: True) if filtering is None else filtering
-
-    if level is None:
-        level = tree.ROOT
-
     ascii_mode = (
         ascii_mode if isinstance(ascii_mode, ASCIIMode)
         else ASCIIMode[ascii_mode]
     )
 
     # iter with func
-    for pre, node in tree_printer_gen(tree, node_id, level, filtering, key_func,
+    for pre, node in tree_printer_gen(tree, node_id, filtering, key,
                                       reverse, ascii_mode):
         label = get_label(node, data_property, id_hidden)
-        func('{0}{1}'.format(pre, label))
+        func(f'{pre}{label}')

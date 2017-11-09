@@ -15,7 +15,7 @@ Basic Usage
     >>> tree.create_node("Diane", "diane", parent="jane")
     >>> tree.create_node("Mary", "mary", parent="diane")
     >>> tree.create_node("Mark", "mark", parent="jane")
-    >>> tree.show()
+    >>> tree.print()
     Harry
     ├── Bill
     └── Jane
@@ -50,7 +50,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 .. code-block:: sh
 
     >>> sub_t = tree.subtree('diane')
-    >>> sub_t.show()
+    >>> sub_t.print()
     Diane
     └── Mary
 
@@ -63,7 +63,7 @@ Tree.WIDTH, Tree.ZIGZAG).
     >>> new_tree.create_node("n2", 2, parent=1)
     >>> new_tree.create_node("n3", 3, parent=1)
     >>> tree.paste('bill', new_tree)
-    >>> tree.show()
+    >>> tree.print()
     Harry
     ├── Bill
     │   └── n1
@@ -79,7 +79,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 .. code-block:: sh
 
     >>> tree.remove_node(1)
-    >>> tree.show()
+    >>> tree.print()
     Harry
     ├── Bill
     └── Jane
@@ -92,7 +92,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 .. code-block:: sh
 
     >>> tree.move_node('mary', 'harry')
-    >>> tree.show()
+    >>> tree.print()
     Harry
     ├── Bill
     ├── Jane
@@ -120,7 +120,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 
 .. code-block:: sh
 
-    >>> tree.show(ascii_mode='em')
+    >>> tree.print(ascii_mode='em')
     Harry
     ╠══ Bill
     ╠══ Jane
@@ -132,7 +132,7 @@ In the JSON form, to_json() takes optional parameter with_data to trigger if
 the data field is appended into JSON string. For example,
 
 
-    >>> tree.show(ascii_mode='em')
+    >>> tree.print(ascii_mode='em')
     Harry
     ╠══ Bill
     ╠══ Jane
@@ -144,7 +144,7 @@ In the JSON form, to_json() takes optional parameter with_data to trigger if
 the data field is appended into JSON string. For example,
 
 
-    >>> tree.show(line_type='em')
+    >>> tree.print(line_type='em')
     Harry
     ╠══ Bill
     ╠══ Jane
@@ -187,7 +187,7 @@ Printing the colors of the tree:
 
 .. code-block:: sh
 
-    >>> ftree.show(data_property="color")
+    >>> ftree.print(data_property="color")
         black
         ├── white
         └── red

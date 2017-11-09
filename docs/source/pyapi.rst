@@ -12,7 +12,7 @@ node (except root) has some children and one parent.
 *Note:* To solve string compatibility between Python 2.x and 3.x,
 treelib follows the way of porting Python 3.x to 2/3. That means, all
 strings are manipulated as unicode and you do not need `u''` prefix
-anymore. The impacted functions include `str()`, `show()` and
+anymore. The impacted functions include `str()`, `print()` and
 `save2file()` routines. But if your data contains non-ascii
 characters and Python 2.x is used, you have to trigger the
 compatibility by declaring `unicode_literals` in the code:
@@ -288,7 +288,7 @@ Instance attributes:
     Save the tree into file for offline analysis.
 
 
-.. method:: show([nid[, level[, idhidden[, filter[, key[, reverse[, line_type[, data_property]]]]]]]]])
+.. method:: print([nid[, level[, idhidden[, filter[, key[, reverse[, line_type[, data_property]]]]]]]]])
 
     Print the tree structure in hierarchy style. ``nid`` refers to the
     expanding point to start; ``level`` refers to the node level in the tree
@@ -300,7 +300,7 @@ Instance attributes:
     ``key``, ``reverse`` are present to sort :class:`Node` object in the same level.
     ``data_property`` refers to the property on the node data object to be printed.
 
-    You have three ways to output your tree data, i.e., stdout with ``show()``,
+    You have three ways to output your tree data, i.e., stdout with ``print()``,
     plain text file with ``save2file()``, and json string with ``to_json()``. The
     former two use the same backend to generate a string of tree structure in a
     text graph.

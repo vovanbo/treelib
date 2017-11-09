@@ -32,5 +32,15 @@ def tree():
 
 
 @pytest.fixture
+def tree_as_string():
+    return """\
+Hárry
+├── Jane
+│   └── Diane
+└── Bill
+    └── George
+"""
+
+@pytest.fixture
 def copytree(tree):
     return Tree(tree, True)
