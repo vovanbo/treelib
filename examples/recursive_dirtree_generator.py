@@ -75,4 +75,4 @@ tree = treelib.Tree()
 base = tree.create_node('Root', 'root')
 build_recursive_tree(tree, base, 2, 10)
 
-tree.show()
+tree.print()
