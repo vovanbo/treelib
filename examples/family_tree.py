@@ -20,32 +20,30 @@ def create_family_tree():
     return tree
 
 
-def example(desp):
-    sep = "-" * 20 + '\n'
-    print(sep + desp)
+def example(text):
+    print(f'\n{" " + text + " ":-^80}\n')
 
 
 if __name__ == '__main__':
     tree = create_family_tree()
 
-    example("Tree of the whole family:")
+    example("Tree of the whole family")
     tree.print(key=lambda x: x.tag, reverse=True, ascii_mode='em')
 
-    example("All family members in DEPTH mode:")
-    print(','.join([tree[node].tag for node in tree.expand_tree()]))
+    example("All family members in DEPTH mode")
+    print(', '.join([tree[node].tag for node in tree.expand_tree()]))
 
-    example("All family members (with identifiers) but Diane's sub-family:")
+    example("All family members (with identifiers) but Diane's sub-family")
     tree.print(id_hidden=False, filter_=lambda x: x.id != 'diane')
 
-    example("Let me introduce Diane family only:")
-    sub_t = tree.subtree('diane')
-    sub_t.print()
+    example("Let me introduce Diane family only")
+    tree.subtree('diane').print()
 
-    example("Children of Diane:")
+    example("Children of Diane")
     for child in tree.is_branch('diane'):
         print(tree[child].tag)
 
-    example("New members join Jill's family:")
+    example("New members join Bill's family")
     new_tree = Tree()
     new_tree.create_node("n1", 1)  # root node
     new_tree.create_node("n2", 2, parent=1)
@@ -53,13 +51,13 @@ if __name__ == '__main__':
     tree.paste('bill', new_tree)
     tree.print()
 
-    example("They leave after a while:")
+    example("They leave after a while")
     tree.remove_node(1)
     tree.print()
 
-    example("Now Mary moves to live with grandfather Harry:")
+    example("Now Mary moves to live with grandfather Harry")
     tree.move_node('mary', 'harry')
     tree.print()
 
-    example("A big family for Mark to send message to the oldest Harry:")
-    print(','.join([tree[node].tag for node in tree.rsearch('mark')]))
+    example("A big family for Mark to send message to the oldest Harry")
+    print(', '.join([tree[node].tag for node in tree.rsearch('mark')]))
