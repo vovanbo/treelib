@@ -103,16 +103,16 @@ class Tree:
         """
         return self._nodes.values()
 
-    def children(self, nid):
+    def children(self, node_id):
         """
-        Return the children (Node) list of nid.
-        Empty list is returned if nid does not exist
+        Return the children (Node) list of node_id.
+        Empty list is returned if node_id does not exist
         """
-        return [self[i] for i in self.is_branch(nid)]
+        return [self[i] for i in self.is_branch(node_id)]
 
-    def contains(self, nid):
+    def contains(self, node_id):
         """Check if the tree contains node of given id"""
-        return nid in self._nodes
+        return node_id in self._nodes
 
     def create_node(self, tag=None, identifier=None, parent=None, data=None):
         """Create a child node for given @parent node."""
