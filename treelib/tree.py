@@ -212,7 +212,7 @@ class Tree:
                     direction = not direction
                     stack = stack_fw if direction else stack_bw
 
-    def filter_nodes(self, func):
+    def filter_nodes(self, func: Callable[[Node], bool]):
         """Filters all nodes by function
 
         Function is passed one node as an argument and that node is included
