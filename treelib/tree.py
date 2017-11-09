@@ -128,20 +128,19 @@ class Tree:
         @return int
         @throw NodeNotFound
         """
-        ret = 0
+        result = 0
         if node is None:
             # Get maximum level of this tree
-            leaves = self.leaves()
-            for leave in leaves:
-                level = self.level(leave.id)
-                ret = level if level >= ret else ret
+            for leaf in self.leaves():
+                level = self.level(leaf.id)
+                result = level if level >= result else result
         else:
             # Get level of the given node
-            nid = node.id if isinstance(node, Node) else node
-            if not self.contains(nid):
-                raise NodeNotFound(f"Node '{nid}' is not in the tree")
-            ret = self.level(nid)
-        return ret
+            node_id = node.id if isinstance(node, Node) else node
+            if not self.contains(node_id):
+                raise NodeNotFound(f"Node '{node_id}' is not in the tree")
+            result = self.level(node_id)
+        return result
 
     def expand_tree(self, node_id=None,
                     mode: TraversalMode = TraversalMode.DEPTH,
