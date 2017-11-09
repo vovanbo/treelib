@@ -580,24 +580,25 @@ class Tree:
             result[node_tag]['data'] = self[node_id].data
 
         if self[node_id].expanded:
-            queue = [self[i] for i in self[node_id].children]
+            queue = (self[i] for i in self[node_id].children)
             if sort:
-                queue_iter = sorted(
+                queue = sorted(
                     queue, key=(lambda x: x) if key is None else key,
                     reverse=reverse
                 )
-            else:
-                queue_iter = queue
 
-            for elem in queue_iter:
+            for elem in queue:
                 result[node_tag]['children'].append(
-                    self.to_dict(elem.id, with_data=with_data,
-                                 sort=sort, reverse=reverse)
+                    self.to_dict(elem.id, with_data=with_data, sort=sort,
+                                 reverse=reverse)
                 )
 
             if not result[node_tag]['children']:
-                result = self[node_id].tag if not with_data else \
-                    {node_tag: {'data': self[node_id].data}}
+                result = (
+                    self[node_id].tag
+                    if not with_data
+                    else {node_tag: {'data': self[node_id].data}}
+                )
 
         return result
 
