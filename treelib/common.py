@@ -8,3 +8,9 @@ class ASCIIMode(Enum):
     em = ('║', '╠══ ', '╚══ ')
     emv = ('║', '╟── ', '╙── ')
     emh = ('│', '╞══ ', '╘══ ')
+
+
+class TraversalMode(Enum):
+    DEPTH = 'depth'
+    WIDTH = 'width'
+    ZIGZAG = 'zigzag'

@@ -11,7 +11,7 @@ import copy
 from collections import OrderedDict
 
 import treelib.utils
-from treelib.common import ASCIIMode
+from treelib.common import ASCIIMode, TraversalMode
 from treelib.exceptions import (
     NodeNotFound, MultipleRoots, DuplicatedNode, LinkPastRootNode, LoopError
 )
@@ -21,8 +21,7 @@ from .node import Node
 class Tree:
     """Tree objects are made of Node(s) stored in _nodes dictionary."""
 
-    #: ROOT, DEPTH, WIDTH, ZIGZAG constants :
-    (ROOT, DEPTH, WIDTH, ZIGZAG) = list(range(4))
+    ROOT = 0
 
     def __contains__(self, identifier):
         """Return a list of the nodes' identifiers matching the
@@ -157,8 +156,9 @@ class Tree:
             ret = self.level(nid)
         return ret
 
-    def expand_tree(self, node_id=None, mode=DEPTH, filter=None, key=None,
-                    reverse=False):
+    def expand_tree(self, node_id=None,
+                    mode: TraversalMode = TraversalMode.DEPTH,
+                    filter=None, key=None, reverse: bool = False):
         """
         Python generator. Loosly based on an algorithm from
         'Essential LISP' by John R. Anderson, Albert T. Corbett, and
@@ -176,22 +176,27 @@ class Tree:
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         filter = self.__real_true if filter is None else filter
+
+        mode = mode if isinstance(mode, TraversalMode) else TraversalMode(mode)
+
         if filter(self[node_id]):
             yield node_id
             queue = [self[i] for i in self[node_id].children if filter(self[i])]
-            if mode in [self.DEPTH, self.WIDTH]:
+
+            if mode in (TraversalMode.DEPTH, TraversalMode.WIDTH):
                 queue.sort(key=key, reverse=reverse)
                 while queue:
                     yield queue[0].id
                     expansion = [self[i] for i in queue[0].children
                                  if filter(self[i])]
                     expansion.sort(key=key, reverse=reverse)
-                    if mode is self.DEPTH:
+
+                    if mode is TraversalMode.DEPTH:
                         queue = expansion + queue[1:]  # depth-first
-                    elif mode is self.WIDTH:
+                    elif mode is TraversalMode.WIDTH:
                         queue = queue[1:] + expansion  # width-first
 
-            elif mode is self.ZIGZAG:
+            elif mode is TraversalMode.ZIGZAG:
                 # Suggested by Ilya Kuprik (ilya-spy@ynadex.ru).
                 stack_fw = []
                 queue.reverse()

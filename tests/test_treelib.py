@@ -142,7 +142,7 @@ def test_expand_tree(tree):
     assert len(nodes) == 2
 
     # changing into width mode
-    nodes = [nid for nid in tree.expand_tree(mode=Tree.WIDTH)]
+    nodes = [nid for nid in tree.expand_tree(mode='width')]
     assert len(nodes) == 5
 
     # expanding by filters
