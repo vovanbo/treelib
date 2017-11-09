@@ -146,9 +146,11 @@ def test_expand_tree(tree):
     assert len(nodes) == 5
 
     # expanding by filters
-    nodes = [nid for nid in tree.expand_tree(filter=lambda x: x.tag == "Bill")]
+    nodes = \
+        [nid for nid in tree.expand_tree(filtering=lambda x: x.tag == "Bill")]
     assert len(nodes) == 0
-    nodes = [nid for nid in tree.expand_tree(filter=lambda x: x.tag != "Bill")]
+    nodes = \
+        [nid for nid in tree.expand_tree(filtering=lambda x: x.tag != "Bill")]
     assert len(nodes) == 3
 
 

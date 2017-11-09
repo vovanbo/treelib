@@ -39,9 +39,9 @@ def tree_printer_gen(tree: 'Tree', node_id: Hashable,
             children = filter(filtering, children)
 
         if key is not None:
-            children = sorted(children, key=key, reverse=reverse)
+            children = (n for n in sorted(children, key=key, reverse=reverse))
         elif reverse:
-            children = reversed(children)
+            children = (n for n in reversed(list(children)))
 
         level += 1
         current_child = next(children, None)

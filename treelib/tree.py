@@ -9,6 +9,7 @@ __author__ = 'chenxm'
 import json
 import copy
 from collections import OrderedDict
+from typing import Callable
 
 import treelib.utils
 from treelib.common import ASCIIMode, TraversalMode
@@ -148,13 +149,14 @@ class Tree:
 
     def expand_tree(self, node_id=None,
                     mode: TraversalMode = TraversalMode.DEPTH,
-                    filter=None, key=None, reverse: bool = False):
+                    filtering: Callable[[Node], bool] = None,
+                    key=None, reverse: bool = False):
         """
         Python generator. Loosly based on an algorithm from
         'Essential LISP' by John R. Anderson, Albert T. Corbett, and
         Brian J. Reiser, page 239-241
 
-        UPDATE: the @filter function is performed on Node object during
+        UPDATE: the @filtering function is performed on Node object during
         traversing. In this manner, the traversing will not continue to
         following children of node whose condition does not pass the filter.
 
@@ -162,48 +164,58 @@ class Tree:
         level.
         """
         node_id = self.root if node_id is None else node_id
+
         if not self.contains(node_id):
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
-        filter = self.__real_true if filter is None else filter
+        if filtering is not None and not callable(filtering):
+            raise TypeError('Filtering must be callable.')
 
         mode = mode if isinstance(mode, TraversalMode) else TraversalMode(mode)
 
-        if filter(self[node_id]):
-            yield node_id
-            queue = [self[i] for i in self[node_id].children if filter(self[i])]
+        if filtering is not None and not filtering(self[node_id]):
+            return
 
-            if mode in (TraversalMode.DEPTH, TraversalMode.WIDTH):
-                queue.sort(key=key, reverse=reverse)
-                while queue:
-                    yield queue[0].id
-                    expansion = [self[i] for i in queue[0].children
-                                 if filter(self[i])]
-                    expansion.sort(key=key, reverse=reverse)
+        yield node_id
+        queue = (self[i] for i in self[node_id].children)
 
-                    if mode is TraversalMode.DEPTH:
-                        queue = expansion + queue[1:]  # depth-first
-                    elif mode is TraversalMode.WIDTH:
-                        queue = queue[1:] + expansion  # width-first
+        if filtering is not None:
+            queue = filter(filtering, queue)
 
-            elif mode is TraversalMode.ZIGZAG:
-                # Suggested by Ilya Kuprik (ilya-spy@ynadex.ru).
-                stack_fw = []
-                queue.reverse()
-                stack = stack_bw = queue
-                direction = False
-                while stack:
-                    expansion = [self[i] for i in stack[0].children
-                                 if filter(self[i])]
-                    yield stack.pop(0).id
-                    if direction:
-                        expansion.reverse()
-                        stack_bw = expansion + stack_bw
-                    else:
-                        stack_fw = expansion + stack_fw
-                    if not stack:
-                        direction = not direction
-                        stack = stack_fw if direction else stack_bw
+        if mode in (TraversalMode.DEPTH, TraversalMode.WIDTH):
+            queue = sorted(queue, key=key, reverse=reverse)
+            while queue:
+                yield queue[0].id
+                expansion = sorted(
+                    filter(filtering, (self[i] for i in queue[0].children)),
+                    key=key, reverse=reverse
+                )
+
+                if mode is TraversalMode.DEPTH:
+                    queue = expansion + queue[1:]  # depth-first
+                elif mode is TraversalMode.WIDTH:
+                    queue = queue[1:] + expansion  # width-first
+
+        elif mode is TraversalMode.ZIGZAG:
+            # Suggested by Ilya Kuprik (ilya-spy@ynadex.ru).
+            stack_fw = []
+            queue = list(queue)
+            queue.reverse()
+            stack = stack_bw = queue
+            direction = False
+            while stack:
+                expansion = filter(filtering,
+                                   (self[i] for i in stack[0].children))
+                yield stack.pop(0).id
+                expansion = list(expansion)
+                if direction:
+                    expansion.reverse()
+                    stack_bw = expansion + stack_bw
+                else:
+                    stack_fw = expansion + stack_fw
+                if not stack:
+                    direction = not direction
+                    stack = stack_fw if direction else stack_bw
 
     def filter_nodes(self, func):
         """Filters all nodes by function
@@ -458,7 +470,7 @@ class Tree:
         self[parent].remove_child(node_id)
         return subtree
 
-    def rsearch(self, node_id, filter_=None):
+    def rsearch(self, node_id, filtering: Callable[[Node], bool] = None):
         """
         Traverse the tree branch along the branch from node_id to its
         ancestors (until root).
@@ -469,12 +481,14 @@ class Tree:
         if not self.contains(node_id):
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
-        filter_ = self.__real_true if filter_ is None else filter_
+        if filtering is not None and not callable(filtering):
+            raise TypeError('Filtering must be a callable.')
 
         current = node_id
         while current is not None:
-            if filter_(self[current]):
+            if filtering is None or filtering(self[current]):
                 yield current
+
             # subtree() hasn't update the parent
             current = self[current].parent if self.root != current else None
 
