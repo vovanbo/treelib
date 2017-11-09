@@ -136,7 +136,7 @@ class Tree:
     def __get_iter(self, nid, level, filter_, key, reverse, dt, is_last):
         dt_vline, dt_line_box, dt_line_cor = dt
 
-        nid = self.root if (nid is None) else nid
+        nid = self.root if nid is None else nid
         if not self.contains(nid):
             raise NodeNotFound(f"Node '{nid}' is not in the tree")
 
@@ -269,7 +269,7 @@ class Tree:
         if not self.contains(node_id):
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
-        filter = self.__real_true if (filter is None) else filter
+        filter = self.__real_true if filter is None else filter
         if filter(self[node_id]):
             yield node_id
             queue = [self[i] for i in self[node_id].children if filter(self[i])]
