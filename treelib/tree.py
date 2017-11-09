@@ -451,11 +451,8 @@ class Tree:
         subtree.root = node_id
         parent = self[node_id].parent
         self[node_id].parent = None  # reset root parent for the new tree
-        removed = []
 
-        for id_ in self.expand_tree(node_id):
-            removed.append(id_)
-
+        removed = [n for n in self.expand_tree(node_id)]
         for id_ in removed:
             subtree._nodes.update({id_: self._nodes.pop(id_)})
 
@@ -564,8 +561,8 @@ class Tree:
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         result.root = node_id
-        for node_n in self.expand_tree(node_id):
-            result._nodes.update({self[node_n].id: self[node_n]})
+        for subtree_node in self.expand_tree(node_id):
+            result._nodes.update({self[subtree_node].id: self[subtree_node]})
 
         return result
 
