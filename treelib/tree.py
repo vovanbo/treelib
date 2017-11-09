@@ -65,10 +65,6 @@ class Tree:
     def __str__(self) -> str:
         return treelib.utils.print_tree(self)
 
-    @staticmethod
-    def __real_true(p):
-        return True
-
     def add_node(self, node: Node, parent: Node = None):
         """
         Add a new node to tree.
