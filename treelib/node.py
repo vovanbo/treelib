@@ -110,10 +110,10 @@ class Node:
         """Set the value of `_tag`."""
         self._tag = value
 
-    def add_child(self, nid):
-        if nid is not None:
-            self._children.append(nid)
+    def add_child(self, node_id):
+        if node_id is not None:
+            self._children.append(node_id)
 
-    def remove_child(self, nid):
-        if nid is not None and nid in self._children:
-            self._children.remove(nid)
+    def remove_child(self, node_id):
+        if node_id is not None and node_id in self._children:
+            self._children.remove(node_id)
