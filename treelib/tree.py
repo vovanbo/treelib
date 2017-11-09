@@ -400,7 +400,6 @@ class Tree:
 
         Return the number of removed nodes.
         """
-        removed = []
         if node_id is None:
             return 0
 
@@ -408,21 +407,14 @@ class Tree:
             raise NodeNotFound(f"Node '{id}' is not in the tree")
 
         parent = self[node_id].parent
-        for id_ in self.expand_tree(node_id):
-            # TODO: implementing this function as a recursive function:
-            #       check if node has children
-            #       true -> run remove_node with child_id
-            #       no -> delete node
-            removed.append(id_)
 
-        cnt = len(removed)
-
+        removed = [n for n in self.expand_tree(node_id)]
         for id_ in removed:
             del self._nodes[id_]
 
         # Update its parent info
         self[parent].remove_child(node_id)
-        return cnt
+        return len(removed)
 
     def remove_subtree(self, node_id):
         """
