@@ -9,21 +9,13 @@ __author__ = 'chenxm'
 import json
 import copy
 from collections import OrderedDict
-from enum import Enum
 
+import treelib.utils
+from treelib.common import ASCIIMode
 from treelib.exceptions import (
     NodeNotFound, MultipleRoots, DuplicatedNode, LinkPastRootNode, LoopError
 )
 from .node import Node
-
-
-class ASCIIMode(Enum):
-    simple = ('|', '|-- ', '+-- ')
-    ex = ('│', '├── ', '└── ')
-    exr = ('│', '├── ', '╰── ')
-    em = ('║', '╠══ ', '╚══ ')
-    emv = ('║', '╟── ', '╙── ')
-    emh = ('│', '╞══ ', '╘══ ')
 
 
 class Tree:
@@ -53,8 +45,8 @@ class Tree:
             self.root = tree.root
 
             if deep:
-                for nid in tree._nodes:
-                    self._nodes[nid] = copy.deepcopy(tree._nodes[nid])
+                for node_id in tree._nodes:
+                    self._nodes[node_id] = copy.deepcopy(tree._nodes[node_id])
             else:
                 self._nodes = tree._nodes
 
@@ -80,94 +72,8 @@ class Tree:
             nonlocal result
             result += f'{line}\n'
 
-        self.__print_backend(func=write)
+        treelib.utils.print_backend(self, func=write)
         return result
-
-    @staticmethod
-    def __get_label(node, data_property, id_hidden):
-        result = getattr(node.data, data_property) \
-            if data_property \
-            else node.tag
-
-        return result if id_hidden else f'{result}[{node.id}]'
-
-    def __print_backend(self, nid=None, level=ROOT, id_hidden=True, filter=None,
-                        key=None, reverse=False, ascii_mode=ASCIIMode.ex,
-                        data_property=None, func=print):
-        """
-        Another implementation of printing tree using Stack
-        Print tree structure in hierarchy style.
-
-        For example:
-            Root
-            |___ C01
-            |    |___ C11
-            |         |___ C111
-            |         |___ C112
-            |___ C02
-            |___ C03
-            |    |___ C31
-
-        A more elegant way to achieve this function using Stack
-        structure, for constructing the Nodes Stack push and pop nodes
-        with additional level info.
-
-        UPDATE: the @key @reverse is present to sort node at each
-        level.
-        """
-        key_func = (lambda x: x) if key is None else key
-
-        # iter with func
-        for pre, node in self.__get(nid, level, filter, key_func, reverse,
-                                    ascii_mode):
-            label = self.__get_label(node, data_property, id_hidden)
-            func('{0}{1}'.format(pre, label))
-
-    def __get(self, nid, level, filter_, key, reverse, ascii_mode):
-        filter_ = (lambda x: True) if filter_ is None else filter_
-
-        # render characters
-        dt = ascii_mode.value \
-            if isinstance(ascii_mode, ASCIIMode) \
-            else ASCIIMode[ascii_mode].value
-
-        return self.__get_iter(nid, level, filter_, key, reverse, dt, [])
-
-    def __get_iter(self, nid, level, filter_, key, reverse, dt, is_last):
-        dt_vline, dt_line_box, dt_line_cor = dt
-
-        nid = self.root if nid is None else nid
-        if not self.contains(nid):
-            raise NodeNotFound(f"Node '{nid}' is not in the tree")
-
-        node = self[nid]
-
-        if level == self.ROOT:
-            yield "", node
-        else:
-            leading = ''.join(dt_vline + ' ' * 3 if not x else ' ' * 4
-                              for x in is_last[0:-1])
-            lasting = dt_line_cor if is_last[-1] else dt_line_box
-            yield leading + lasting, node
-
-        if filter_(node) and node.expanded:
-            children = [self[i] for i in node.children if filter_(self[i])]
-            idxlast = len(children) - 1
-
-            if key:
-                children_iter = sorted(children, key=key, reverse=reverse)
-            elif reverse:
-                children_iter = reversed(children)
-            else:
-                children_iter = children
-
-            level += 1
-            for idx, child in enumerate(children_iter):
-                is_last.append(idx == idxlast)
-                for item in self.__get_iter(child.id, level, filter_,
-                                            key, reverse, dt, is_last):
-                    yield item
-                is_last.pop()
 
     @staticmethod
     def __real_true(p):
@@ -585,8 +491,8 @@ class Tree:
         def _write_line(line, f):
             f.write(line + b'\n')
 
-        self.__print_backend(
-            node_id, level, id_hidden, filter_, key, reverse, ascii_mode,
+        treelib.utils.print_backend(
+            self, node_id, level, id_hidden, filter_, key, reverse, ascii_mode,
             data_property, func=lambda x: _write_line(x, open(filename, 'ab'))
         )
 
@@ -600,9 +506,11 @@ class Tree:
             result += f'{line}\n'
 
         try:
-            self.__print_backend(node_id, level, id_hidden, filter_,
-                                 key, reverse, ascii_mode, data_property,
-                                 func=write)
+            treelib.utils.print_backend(
+                self, node_id, level, id_hidden, filter_,
+                key, reverse, ascii_mode, data_property,
+                func=write
+            )
         except NodeNotFound:
             print('Tree is empty')
 
