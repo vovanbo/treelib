@@ -4,14 +4,6 @@ from treelib.common import ASCIIMode
 from treelib.exceptions import NodeNotFound
 
 
-def get_label(node: 'Node', data_property: str, id_hidden: bool):
-    result = getattr(node.data, data_property) \
-        if data_property \
-        else node.tag
-
-    return result if id_hidden else f'{result}[{node.id}]'
-
-
 def tree_printer_gen(tree: 'Tree', node_id: Hashable,
                      filtering: Callable[['Node'], bool] = None,
                      key: Callable[['Node'], Any] = None,
@@ -64,12 +56,20 @@ def tree_printer_gen(tree: 'Tree', node_id: Hashable,
             current_child = next_child
 
 
+def get_label(node: 'Node', data_property: str, id_hidden: bool):
+    result = getattr(node.data, data_property) \
+        if data_property \
+        else node.tag
+
+    return result if id_hidden else f'{result}[{node.id}]'
+
+
 def print_tree(tree: 'Tree', node_id: Hashable = None,
                id_hidden: bool = True,
                filtering: Callable[['Node'], bool] = None,
                key: Callable[['Node'], Any] = None, reverse: bool = False,
                ascii_mode: Union[ASCIIMode, str] = ASCIIMode.ex,
-               data_property: str = None, func: Callable = print):
+               data_property: str = None, func: Callable = None):
     """
     Another implementation of printing tree using Stack
     Print tree structure in hierarchy style.
@@ -96,8 +96,14 @@ def print_tree(tree: 'Tree', node_id: Hashable = None,
         else ASCIIMode[ascii_mode]
     )
 
-    # iter with func
-    for pre, node in tree_printer_gen(tree, node_id, filtering, key,
-                                      reverse, ascii_mode):
-        label = get_label(node, data_property, id_hidden)
-        func(f'{pre}{label}')
+    result = (
+        f'{pre}{get_label(node, data_property, id_hidden)}'
+        for pre, node in tree_printer_gen(tree, node_id, filtering, key,
+                                          reverse, ascii_mode)
+    )
+
+    if func is not None and callable(func):
+        for s in result:
+            func(s)
+    else:
+        return '\n'.join(s for s in result) + '\n'
