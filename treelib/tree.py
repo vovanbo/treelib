@@ -20,15 +20,6 @@ from .node import Node
 
 class Tree:
     """Tree objects are made of Node(s) stored in _nodes dictionary."""
-
-    ROOT = 0
-
-    def __contains__(self, identifier):
-        """Return a list of the nodes' identifiers matching the
-        id argument.
-        """
-        return [node for node in self._nodes if node == identifier]
-
     def __init__(self, tree=None, deep=False):
         """Initiate a new tree or copy another tree with a shallow or
         deep copy.
@@ -49,6 +40,12 @@ class Tree:
             else:
                 self._nodes = tree._nodes
 
+    def __contains__(self, identifier):
+        """Return a list of the nodes' identifiers matching the
+        id argument.
+        """
+        return [node for node in self._nodes if node == identifier]
+
     def __getitem__(self, key) -> Node:
         """Return _nodes[key]"""
         try:
@@ -56,23 +53,16 @@ class Tree:
         except KeyError:
             raise NodeNotFound("Node '%s' is not in the tree" % key)
 
-    def __len__(self) -> int:
-        """Return len(_nodes)"""
-        return len(self._nodes)
-
     def __setitem__(self, key, item):
         """Set _nodes[key]"""
         self._nodes.update({key: item})
 
+    def __len__(self) -> int:
+        """Return len(_nodes)"""
+        return len(self._nodes)
+
     def __str__(self) -> str:
-        result = ""
-
-        def write(line):
-            nonlocal result
-            result += f'{line}\n'
-
-        treelib.utils.print_tree(self, func=write)
-        return result
+        return treelib.utils.print_tree(self)
 
     @staticmethod
     def __real_true(p):
