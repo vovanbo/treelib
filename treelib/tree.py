@@ -388,12 +388,10 @@ class Tree:
          ['harry', 'jane', 'diane', 'george', 'jill'],
          ['harry', 'bill']]
         """
-        res = []
-
-        for leaf in self.leaves():
-            res.append([nid for nid in self.rsearch(leaf.id)][::-1])
-
-        return res
+        return [
+            [nid for nid in self.rsearch(l.id)][::-1]
+            for l in self.leaves()
+        ]
 
     def remove_node(self, node_id):
         """
