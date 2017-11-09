@@ -3,7 +3,7 @@
 import sys
 import os
 from treelib import Tree, Node
-from treelib.exceptions import NodeIDAbsentError, LoopError
+from treelib.exceptions import NodeNotFound, LoopError
 import pytest
 
 
@@ -94,7 +94,7 @@ def test_getitem(tree):
 
     # assert 'Node access should be possible via getitem.' in str(exc)
 
-    with pytest.raises(NodeIDAbsentError):
+    with pytest.raises(NodeNotFound):
         assert tree['root']
 
 
@@ -115,7 +115,7 @@ def test_children(tree):
         for child in children:
             assert child in tree.all_nodes()
 
-    with pytest.raises(NodeIDAbsentError) as exc:
+    with pytest.raises(NodeNotFound) as exc:
         assert tree.is_branch("alien")
 
     assert "Node 'alien' is not in the tree" in str(exc)
@@ -157,7 +157,7 @@ def test_depth(tree):
 
     # Try getting Exception
     node = Node("Test One", "identifier 1")
-    with pytest.raises(NodeIDAbsentError):
+    with pytest.raises(NodeNotFound):
         tree.depth(node)
 
 

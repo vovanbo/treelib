@@ -12,8 +12,7 @@ from collections import OrderedDict
 from enum import Enum
 
 from treelib.exceptions import (
-    NodeIDAbsentError, MultipleRootError, DuplicatedNodeIdError,
-    LinkPastRootNodeError, LoopError
+    NodeNotFound, MultipleRoots, DuplicatedNode, LinkPastRootNode, LoopError
 )
 from .node import Node
 
@@ -64,7 +63,7 @@ class Tree:
         try:
             return self._nodes[key]
         except KeyError:
-            raise NodeIDAbsentError("Node '%s' is not in the tree" % key)
+            raise NodeNotFound("Node '%s' is not in the tree" % key)
 
     def __len__(self) -> int:
         """Return len(_nodes)"""
@@ -139,7 +138,7 @@ class Tree:
 
         nid = self.root if (nid is None) else nid
         if not self.contains(nid):
-            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
+            raise NodeNotFound(f"Node '{nid}' is not in the tree")
 
         node = self[nid]
 
@@ -183,18 +182,18 @@ class Tree:
             raise TypeError('First parameter must be instance of Node.')
 
         if node.id in self._nodes:
-            raise DuplicatedNodeIdError(f"Can't create node "
-                                        f"with ID '{node.id}'")
+            raise DuplicatedNode(f"Node with ID '{node.id}' "
+                                 f"is already exists in tree.")
 
         pid = parent.id if isinstance(parent, Node) else parent
 
         if pid is None:
             if self.root is not None:
-                raise MultipleRootError('A tree takes one root merely.')
+                raise MultipleRoots('A tree takes one root merely.')
             else:
                 self.root = node.id
         elif not self.contains(pid):
-            raise NodeIDAbsentError(f"Parent node '{pid}' is not in the tree")
+            raise NodeNotFound(f"Parent node '{pid}' is not in the tree")
 
         self._nodes.update({node.id: node})
         if pid in self:
@@ -235,7 +234,7 @@ class Tree:
 
         @param node Node instance or id
         @return int
-        @throw NodeIDAbsentError
+        @throw NodeNotFound
         """
         ret = 0
         if node is None:
@@ -248,7 +247,7 @@ class Tree:
             # Get level of the given node
             nid = node.id if isinstance(node, Node) else node
             if not self.contains(nid):
-                raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
+                raise NodeNotFound(f"Node '{nid}' is not in the tree")
             ret = self.level(nid)
         return ret
 
@@ -268,7 +267,7 @@ class Tree:
         """
         node_id = self.root if node_id is None else node_id
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         filter = self.__real_true if (filter is None) else filter
         if filter(self[node_id]):
@@ -331,7 +330,7 @@ class Tree:
             raise ValueError("First parameter can't be None")
 
         if not self.contains(nid):
-            raise NodeIDAbsentError(f"Node '{nid}' is not in the tree")
+            raise NodeNotFound(f"Node '{nid}' is not in the tree")
 
         if nid not in self:
             return []
@@ -364,11 +363,11 @@ class Tree:
         with a -> c
         """
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         if self.root == node_id:
-            raise LinkPastRootNodeError('Cannot link past the root node, '
-                                        'delete it with remove_node()')
+            raise LinkPastRootNode('Cannot link past the root node, '
+                                   'delete it with remove_node()')
 
         # Get the parent of the node we are linking past
         parent = self[self[node_id].parent]
@@ -389,8 +388,9 @@ class Tree:
         @destination.
         """
         if not self.contains(source) or not self.contains(destination):
-            raise NodeIDAbsentError
-        elif self.is_ancestor(source, destination):
+            raise NodeNotFound
+
+        if self.is_ancestor(source, destination):
             raise LoopError
 
         parent = self[source].parent
@@ -419,7 +419,7 @@ class Tree:
     def parent(self, node_id):
         """Get parent node object of given id"""
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         pid = self[node_id].parent
         if pid is None or not self.contains(pid):
@@ -442,7 +442,7 @@ class Tree:
             raise ValueError('First parameter can not be None')
 
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         set_joint = set(new_tree._nodes) & set(self._nodes)  # joint keys
         if set_joint:
@@ -499,7 +499,7 @@ class Tree:
             return 0
 
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{id}' is not in the tree")
+            raise NodeNotFound(f"Node '{id}' is not in the tree")
 
         parent = self[node_id].parent
         for id_ in self.expand_tree(node_id):
@@ -540,7 +540,7 @@ class Tree:
             return subtree
 
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         subtree.root = node_id
         parent = self[node_id].parent
@@ -566,7 +566,7 @@ class Tree:
             return
 
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         filter_ = self.__real_true if filter_ is None else filter_
 
@@ -603,7 +603,7 @@ class Tree:
             self.__print_backend(node_id, level, id_hidden, filter_,
                                  key, reverse, ascii_mode, data_property,
                                  func=write)
-        except NodeIDAbsentError:
+        except NodeNotFound:
             print('Tree is empty')
 
         print(result)
@@ -662,7 +662,7 @@ class Tree:
             return result
 
         if not self.contains(node_id):
-            raise NodeIDAbsentError(f"Node '{node_id}' is not in the tree")
+            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         result.root = node_id
         for node_n in self.expand_tree(node_id):

@@ -1,24 +1,24 @@
-class NodeIDAbsentError(Exception):
+class NodeNotFound(Exception):
     """Exception throwed if a node's identifier is unknown"""
     pass
 
 
-class NodePropertyAbsentError(Exception):
+class NodePropertyNotFound(Exception):
     """Exception throwed if a node's data property is not specified"""
     pass
 
 
-class MultipleRootError(Exception):
+class MultipleRoots(Exception):
     """Exception throwed if more than one root exists in a tree."""
     pass
 
 
-class DuplicatedNodeIdError(Exception):
+class DuplicatedNode(Exception):
     """Exception throwed if an identifier already exists in a tree."""
     pass
 
 
-class LinkPastRootNodeError(Exception):
+class LinkPastRootNode(Exception):
     """
     Exception throwed in Tree.link_past_node() if one attempts
     to "link past" the root node of a tree.
