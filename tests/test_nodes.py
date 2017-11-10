@@ -1,5 +1,3 @@
-import uuid
-
 import pytest
 
 
@@ -30,7 +28,7 @@ def test_node_set_identifier(node1):
         node1.id = None
 
     node1._set_id(None)
-    assert uuid.UUID(node1.id).version == 1
+    assert node1.id.version == 1
 
 
 def test_node_add_child(node1):

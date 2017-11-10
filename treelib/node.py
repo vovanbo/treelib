@@ -47,7 +47,7 @@ class Node:
 
     def _set_id(self, node_id):
         """Initialize self._set_id"""
-        self._id = str(uuid.uuid1()) if node_id is None else node_id
+        self._id = uuid.uuid1() if node_id is None else node_id
 
     @property
     def parent(self):
