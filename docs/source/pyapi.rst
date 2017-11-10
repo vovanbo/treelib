@@ -33,21 +33,8 @@ compatibility by declaring `unicode_literals` in the code:
 
 Class attributes are:
 
-.. attribute:: Node.ADD
-
-    Addition mode for method `update_fpointer()`.
-
-.. attribute:: Node.DELETE
-
-    Deletion mode for method `update_fpointer()`.
-
-.. attribute:: Node.INSERT
-
-    Behave in the same way with Node.ADD since version 1.1.
-
 
 .. currentmodule:: node
-
 
 
 Instance attributes:
@@ -95,51 +82,32 @@ Instance methods:
 
     Check if the node is the root of present tree.
 
-.. method:: update_bpointer (nid)
+.. method:: add_child (node_id)
 
-    Set the parent (indicated by the ``nid`` parameter) of a node.
+    Add child (indicated by the ``node_id`` parameter) of a node.
 
-.. method:: update_fpointer (nid, mode=Node.ADD)
+.. method:: remove_child (node_id)
 
-    Update the children list with different modes: addition (Node.ADD or
-    Node.INSERT) and deletion (Node.DELETE).
+    Remove child (indicated by the ``node_id`` parameter) of a node.
 
 
 
 :mod:`Tree` Objects
 ---------------------
 
-.. class:: Tree(tree=None, deep=False)
+.. class:: Tree(tree=None, deepcopy=False)
 
     The :class:`Tree` object defines the tree-like structure based on
     :class:`Node` objects. A new tree can be created from scratch without any
-    parameter or a shallow/deep copy of another tree. When ``deep=True``, a
-    deepcopy operation is performed on feeding ``tree`` parameter and *more
+    parameter or a shallow/deep copy of another tree. When ``deepcopy=True``, 
+    a deepcopy operation is performed on feeding ``tree`` parameter and *more
     memory is required to create the tree*.
 
 
 Class attributes are:
 
-.. attribute:: Tree.ROOT
-
-    Default value for the ``level`` parameter in tree's methods.
-
-.. attribute:: Tree.DEPTH
-
-    The depth-first search mode for tree.
-
-.. attribute:: Tree.WIDTH
-
-    The width-first search mode for tree.
-
-.. attribute:: Tree.ZIGZAG
-
-    The `ZIGZAG search
-    <http://en.wikipedia.org/wiki/Tree_%28data_structure%29>`_ mode for tree.
-
 
 .. currentmodule:: tree
-
 
 
 Instance attributes:
@@ -151,11 +119,6 @@ Instance attributes:
     with ``.`` and ``=`` operator respectively.
 
 
-.. method:: nodes
-
-    Return a dict form of nodes in a tree: {id: node_instance}
-
-
 **Instance methods**:
 
 
@@ -165,15 +128,10 @@ Instance attributes:
     default.
 
 
-.. method:: children(nid)
+.. method:: children(node_id)
 
-    Return the children (Node) list of ``nid``. Empty list is returned if
-    ``nid`` does not exist
-
-
-.. method:: contains (nid)
-
-    Check if the tree contains given node.
+    Return the children (Node) list of ``node_id``. Empty list is returned if
+    ``node_id`` does not exist
 
 
 .. method:: create_node(tag[, id[, parent[, data]]])
@@ -188,9 +146,9 @@ Instance attributes:
     (Note: the parameter is node_instance rather than node_identifier).
 
 
-.. method:: expand_tree([nid[, mode[, filter[, key[, reverse]]]]]])
+.. method:: expand_tree([node_id[, mode[, filter[, key[, reverse]]]]]])
 
-    Traverse the tree nodes with different modes. ``nid`` refers to the
+    Traverse the tree nodes with different modes. ``node_id`` refers to the
     expanding point to start; ``mode`` refers to the search mode (Tree.DEPTH,
     Tree.WIDTH). ``filter`` refers to the function of one variable to act on
     the :class:`Node` object. In this manner, the traversing will not continue to
@@ -198,38 +156,32 @@ Instance attributes:
     ``key``, ``reverse`` are present to sort
     :class:Node objects at the same level.
 
-.. method:: filter_nodes(func)
 
-    Filters all nodes by function.
-    ``func`` is passed one node as an argument and that node is included if function returns true.
-    Returns a filter iterator of the node in python 3 or a list of the nodes in python 2.
-    Thanks for William Rusnack.
+.. method:: get_node(node_id)
 
-.. method:: get_node(nid)
-
-    Get the object of the node with ID of ``nid`` An alternative way is using
+    Get the object of the node with ID of ``node_id`` An alternative way is using
     '[]' operation on the tree. But small difference exists between them: the
-    get_node() will return None if ``nid`` is absent, whereas '[]' will raise
+    get_node() will return None if ``node_id`` is absent, whereas '[]' will raise
     ``KeyError``.
 
 
-.. method:: is_branch(nid)
+.. method:: is_branch(node_id)
 
-    Get the children (only sons) list of the node with ID == nid.
+    Get the children (only sons) list of the node with ID == node_id.
 
 
-.. method:: leaves (nid)
+.. method:: leaves (node_id)
 
     Get leaves from given node.
 
 
-.. method:: level(nid[, filter])
+.. method:: level(node_id[, filter])
 
     Get the node level in this tree. The level is an integer starting with '0'
     at the root. In other words, the root lives at level '0';
 
 
-.. method:: link_past_node(nid)
+.. method:: link_past_node(node_id)
 
     Remove a node and link its children to its parent (root is not allowed).
 
@@ -239,15 +191,15 @@ Instance attributes:
     Move node (source) from its parent to another parent (destination).
 
 
-.. method:: parent (nid)
+.. method:: parent (node_id)
 
     Obtain specific node's parent (Node instance). Return None if the parent is
     None or does not exist in the tree.
 
 
-.. method:: paste(nid, new_tree[, deepcopy])
+.. method:: paste(node_id, new_tree[, deepcopy])
 
-    Paste a new tree to an existing tree, with ``nid`` becoming the parent of the
+    Paste a new tree to an existing tree, with ``node_id`` becoming the parent of the
     root of this new tree.
 
 
@@ -257,32 +209,32 @@ Instance attributes:
     to each leaf. Return a list of list of identifiers, root being not omitted.
 
 
-.. method:: remove_node(nid)
+.. method:: remove_node(node_id)
 
     Remove a node and free the memory along with its successors.
 
 
-.. method:: remove_subtree(nid)
+.. method:: remove_subtree(node_id)
 
-    Return a subtree with ``nid`` being the root, and remove all nodes in the
+    Return a subtree with ``node_id`` being the root, and remove all nodes in the
     subtree from the original one.
 
 
-.. method:: rsearch(nid[, filter])
+.. method:: rsearch(node_id[, filter])
 
-    Search the tree from ``nid`` to the root along links reservedly. Parameter
+    Search the tree from ``node_id`` to the root along links reservedly. Parameter
     ``filter`` refers to the function of one variable to act on the
     :class:`Node` object.
 
 
-.. method:: save2file(filename[, nid[, level[, idhidden[, filter[, key[, reverse]]]]]]])
+.. method:: save2file(filename[, node_id[, level[, idhidden[, filter[, key[, reverse]]]]]]])
 
     Save the tree into file for offline analysis.
 
 
-.. method:: print([nid[, level[, idhidden[, filter[, key[, reverse[, line_type[, data_property]]]]]]]]])
+.. method:: print([node_id[, level[, idhidden[, filter[, key[, reverse[, line_type[, data_property]]]]]]]]])
 
-    Print the tree structure in hierarchy style. ``nid`` refers to the
+    Print the tree structure in hierarchy style. ``node_id`` refers to the
     expanding point to start; ``level`` refers to the node level in the tree
     (root as level 0).
     ``idhidden`` refers to hiding the node ID when printing.
@@ -302,9 +254,9 @@ Instance attributes:
      to the change graphical form.
 
 
-.. method:: siblings(nid)
+.. method:: siblings(node_id)
 
-    Get all the siblings of given nid.
+    Get all the siblings of given node_id.
 
 
 .. method:: size ([level])
@@ -313,13 +265,13 @@ Instance attributes:
     Otherwise, the total number of nodes at specific level is returned.
 
 
-.. method:: subtree(nid)
+.. method:: subtree(node_id)
 
-    Return a soft copy of the subtree with ``nid`` being the root. The softness
+    Return a soft copy of the subtree with ``node_id`` being the root. The softness
     means all the nodes are shared between subtree and the original.
 
 
-.. method:: to_dict([nid[, key[, sort[, reverse[, with_data]]]]])
+.. method:: to_dict([node_id[, key[, sort[, reverse[, with_data]]]]])
 
     Transform the whole tree into a dict.
 
