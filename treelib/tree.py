@@ -7,7 +7,7 @@ __author__ = 'Vladimir Bolshakov <vovanbo@gmail.com>'
 import json
 import copy
 from collections import OrderedDict
-from typing import Callable, List, MutableMapping
+from typing import Callable, List, MutableMapping, Optional
 
 import treelib.utils
 from treelib.common import ASCIIMode, TraversalMode
@@ -43,6 +43,16 @@ class Tree(OrderedDict):
             return super(Tree, self).__getitem__(item)
         except KeyError:
             raise NodeNotFound(f"Node '{item}' is not in the tree")
+
+    def __setitem__(self, key, value, **kwargs):
+        super(Tree, self).__setitem__(key, value, **kwargs)
+        if isinstance(value, Node):
+            value._tree = self
+
+    def __delitem__(self, key, **kwargs):
+        if key in self:
+            self[key]._tree = None
+        super(Tree, self).__delitem__(key, **kwargs)
 
     def __merge_tree(self, other: 'Tree', deepcopy: bool = False):
         if deepcopy:
@@ -300,7 +310,7 @@ class Tree(OrderedDict):
 
         return False
 
-    def parent(self, node_id) -> Node:
+    def parent(self, node_id) -> Optional[Node]:
         """Get parent node object of given id"""
         pid = self[node_id].parent
         if pid is None or pid not in self:
@@ -352,7 +362,9 @@ class Tree(OrderedDict):
             del self[id_]
 
         # Update its parent info
-        self[parent].remove_child(node_id)
+        if parent:
+            self[parent].remove_child(node_id)
+
         return len(removed)
 
     def remove_subtree(self, node_id) -> 'Tree':

@@ -303,3 +303,14 @@ def test_loop():
 
     with pytest.raises(LoopError):
         tree.move_node(source='b', destination='d')
+
+
+def test_node_to_tree_link():
+    tree = Tree()
+    node_a = tree.create_node('a', 'a')
+    assert node_a.tree is tree
+    tree.create_node('b', 'b', parent='a')
+    tree.create_node('c', 'c', parent='b')
+    tree.create_node('d', 'd', parent='c')
+    tree.remove_node(node_a.id)
+    assert node_a.tree is None

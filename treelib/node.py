@@ -14,7 +14,7 @@ class Node:
     of a Tree.
     Use `data` attribute to store node-specific data.
     """
-    def __init__(self, tag=None, id=None, expanded=True, data=None):
+    def __init__(self, tag=None, id=None, expanded=True, data=None, tree=None):
         """Create a new Node object to be placed inside a Tree object"""
 
         #: if given as a parameter, must be unique
@@ -33,6 +33,7 @@ class Node:
         #: id(s) of the soons' node(s) :
         self._children = list()
 
+        self._tree = tree
         #: None or whatever given as a parameter
         self.data = data
 
@@ -109,6 +110,10 @@ class Node:
     def tag(self, value):
         """Set the value of `_tag`."""
         self._tag = value
+
+    @property
+    def tree(self):
+        return self._tree
 
     def add_child(self, node_id):
         if node_id is not None:
