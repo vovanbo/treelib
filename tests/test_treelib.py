@@ -52,19 +52,19 @@ def test_getitem(tree):
 
 
 def test_parent(tree):
-    for nid in tree:
-        if nid == tree.root:
-            assert tree.parent(nid) is None
+    for node_id in tree:
+        if node_id == tree.root:
+            assert tree.parent(node_id) is None
         else:
-            assert tree.parent(nid) in tree.values()
+            assert tree.parent(node_id) in tree.values()
 
 
 def test_children(tree):
-    for nid in tree:
-        children = tree.is_branch(nid)
+    for node_id in tree:
+        children = tree.is_branch(node_id)
         for child in children:
             assert tree[child] in tree.values()
-        children = tree.children(nid)
+        children = tree.children(node_id)
         for child in children:
             assert child in tree.values()
 
@@ -116,12 +116,12 @@ def test_depth(tree):
 
 def test_leaves(tree):
     leaves = tree.leaves()
-    for nid in tree.expand_tree():
-        assert tree[nid].is_leaf == (tree[nid] in leaves)
+    for node_id in tree.expand_tree():
+        assert tree[node_id].is_leaf == (tree[node_id] in leaves)
 
-    leaves = tree.leaves(nid='jane')
-    for nid in tree.expand_tree(node_id='jane'):
-        assert tree[nid].is_leaf == (tree[nid] in leaves)
+    leaves = tree.leaves(node_id='jane')
+    for node_id in tree.expand_tree(node_id='jane'):
+        assert tree[node_id].is_leaf == (tree[node_id] in leaves)
 
 
 def test_link_past_node(tree):
@@ -135,23 +135,23 @@ def test_link_past_node(tree):
 
 def test_expand_tree(tree):
     # default config
-    nodes = [nid for nid in tree.expand_tree()]
+    nodes = [n for n in tree.expand_tree()]
     assert len(nodes) == 5
 
     # expanding from specific node
-    nodes = [nid for nid in tree.expand_tree(node_id="bill")]
+    nodes = [n for n in tree.expand_tree(node_id="bill")]
     assert len(nodes) == 2
 
     # changing into width mode
-    nodes = [nid for nid in tree.expand_tree(mode='width')]
+    nodes = [n for n in tree.expand_tree(mode='width')]
     assert len(nodes) == 5
 
     # expanding by filters
     nodes = \
-        [nid for nid in tree.expand_tree(filtering=lambda x: x.tag == "Bill")]
+        [n for n in tree.expand_tree(filtering=lambda x: x.tag == "Bill")]
     assert len(nodes) == 0
     nodes = \
-        [nid for nid in tree.expand_tree(filtering=lambda x: x.tag != "Bill")]
+        [n for n in tree.expand_tree(filtering=lambda x: x.tag != "Bill")]
     assert len(nodes) == 3
 
 
@@ -172,8 +172,8 @@ def test_paste_tree(tree):
 
 
 def test_rsearch(tree):
-    for nid in ["hárry", "jane", "diane"]:
-        assert nid in tree.rsearch("diane")
+    for node_id in ["hárry", "jane", "diane"]:
+        assert node_id in tree.rsearch("diane")
 
 
 def test_subtree(tree):

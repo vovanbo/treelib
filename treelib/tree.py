@@ -200,23 +200,23 @@ class Tree(OrderedDict):
 
         return self[node_id].children
 
-    def leaves(self, nid=None):
+    def leaves(self, node_id=None):
         """Get leaves of the whole tree of a subtree."""
-        if nid is None:
+        if node_id is None:
             return [n for n in self.values() if n.is_leaf]
 
-        return [self[n] for n in self.expand_tree(nid) if self[n].is_leaf]
+        return [self[n] for n in self.expand_tree(node_id) if self[n].is_leaf]
 
-    def level(self, nid, filter=None):
+    def level(self, node_id, filtering: Callable[[Node], bool] = None):
         """
         Get the node level in this tree.
         The level is an integer starting with '0' at the root.
         In other words, the root lives at level '0';
 
-        Update: @filter params is added to calculate level passing
+        Update: @filtering params is added to calculate level passing
         exclusive nodes.
         """
-        return len([n for n in self.rsearch(nid, filter)]) - 1
+        return len([n for n in self.rsearch(node_id, filtering)]) - 1
 
     def link_past_node(self, node_id):
         """
