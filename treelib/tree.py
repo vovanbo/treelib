@@ -7,7 +7,7 @@ __author__ = 'Vladimir Bolshakov <vovanbo@gmail.com>'
 import json
 import copy
 from collections import OrderedDict
-from typing import Callable
+from typing import Callable, List, MutableMapping
 
 import treelib.utils
 from treelib.common import ASCIIMode, TraversalMode
@@ -109,14 +109,14 @@ class Tree(OrderedDict):
             self[pid].add_child(node.id)
         self[node.id].parent = pid
 
-    def children(self, node_id):
+    def children(self, node_id) -> List[Node]:
         """
         Return the children (Node) list of node_id.
         Empty list is returned if node_id does not exist
         """
         return [self[i] for i in self.is_branch(node_id)]
 
-    def create_node(self, *args, parent=None, node_cls=Node, **kwargs):
+    def create_node(self, *args, parent=None, node_cls=Node, **kwargs) -> Node:
         """Create a child node for given @parent node."""
         if not issubclass(node_cls, Node):
             raise ValueError('node_cls must be a subclass of Node.')
@@ -125,7 +125,7 @@ class Tree(OrderedDict):
         self.add_node(node, parent)
         return node
 
-    def depth(self, node=None):
+    def depth(self, node=None) -> int:
         """
         Get the maximum level of this tree or the level of the given node
 
@@ -287,7 +287,7 @@ class Tree(OrderedDict):
         self[destination].add_child(source)
         self[source].parent = destination
 
-    def is_ancestor(self, ancestor, grandchild):
+    def is_ancestor(self, ancestor, grandchild) -> bool:
         parent = self[grandchild].parent
         child = grandchild
 
@@ -300,7 +300,7 @@ class Tree(OrderedDict):
 
         return False
 
-    def parent(self, node_id):
+    def parent(self, node_id) -> Node:
         """Get parent node object of given id"""
         pid = self[node_id].parent
         if pid is None or pid not in self:
@@ -335,7 +335,7 @@ class Tree(OrderedDict):
         self[node_id].add_child(new_tree.root)
         self[new_tree.root].parent = node_id
 
-    def remove_node(self, node_id):
+    def remove_node(self, node_id) -> int:
         """
         Remove a node indicated by 'id'; all the successors are
         removed as well.
@@ -355,7 +355,7 @@ class Tree(OrderedDict):
         self[parent].remove_child(node_id)
         return len(removed)
 
-    def remove_subtree(self, node_id):
+    def remove_subtree(self, node_id) -> 'Tree':
         """
         Return a subtree deleted from this tree. If node_id is None, an
         empty tree is returned.
@@ -432,7 +432,7 @@ class Tree(OrderedDict):
         except NodeNotFound:
             print('Tree is empty')
 
-    def siblings(self, node_id):
+    def siblings(self, node_id) -> List[Node]:
         """
         Return the siblings of given @node_id.
 
@@ -446,7 +446,7 @@ class Tree(OrderedDict):
 
         return siblings
 
-    def size(self, level: int = None):
+    def size(self, level: int = None) -> int:
         """
         Get the number of nodes of the whole tree if @level is not
         given. Otherwise, the total number of nodes at specific level
@@ -469,7 +469,7 @@ class Tree(OrderedDict):
              if self.level(node.id) == level]
         )
 
-    def subtree(self, node_id):
+    def subtree(self, node_id) -> 'Tree':
         """
         Return a shallow COPY of subtree with node_id being the new root.
         If node_id is None, return an empty tree.
@@ -495,7 +495,7 @@ class Tree(OrderedDict):
         return result
 
     def to_dict(self, node_id=None, key=None, sort=True, reverse=False,
-                with_data=False):
+                with_data=False) -> MutableMapping:
         """transform self into a dict"""
 
         node_id = self.root if node_id is None else node_id
@@ -527,7 +527,7 @@ class Tree(OrderedDict):
 
         return result
 
-    def to_json(self, with_data=False, sort=True, reverse=False):
+    def to_json(self, with_data=False, sort=True, reverse=False) -> str:
         """Return the json string corresponding to self"""
         return json.dumps(
             self.to_dict(with_data=with_data, sort=sort, reverse=reverse)
