@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import sys
-import os
+import pytest
+
 from treelib import Tree, Node
 from treelib.exceptions import NodeNotFound, LoopError
-import pytest
 
 
 def test_tree(tree, copytree):
@@ -18,7 +17,7 @@ def test_is_root(tree):
 
 
 def test_paths_to_leaves(tree):
-    paths = tree.paths_to_leaves()
+    paths = tree.paths_to_leaves
     assert len(paths) == 2
     assert ['hárry', 'jane', 'diane'] in paths
     assert ['hárry', 'bill', 'george'] in paths

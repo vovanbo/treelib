@@ -53,6 +53,31 @@ class Tree(OrderedDict):
         else:
             self.update(other)
 
+    @property
+    def paths_to_leaves(self):
+        """
+        Use this function to get the identifiers allowing to go from the root
+        nodes to each leaf.
+        Return a list of list of identifiers, root being not omitted.
+
+        For example :
+            Harry
+            |___ Bill
+            |___ Jane
+            |    |___ Diane
+            |         |___ George
+            |              |___ Jill
+            |         |___ Mary
+            |    |___ Mark
+
+        expected result :
+        [['harry', 'jane', 'diane', 'mary'],
+         ['harry', 'jane', 'mark'],
+         ['harry', 'jane', 'diane', 'george', 'jill'],
+         ['harry', 'bill']]
+        """
+        return [[n for n in self.rsearch(l.id)][::-1] for l in self.leaves()]
+
     def add_node(self, node: Node, parent: Node = None):
         """
         Add a new node to tree.
@@ -305,33 +330,6 @@ class Tree(OrderedDict):
 
         self[node_id].add_child(new_tree.root)
         self[new_tree.root].parent = node_id
-
-    def paths_to_leaves(self):
-        """
-        Use this function to get the identifiers allowing to go from the root
-        nodes to each leaf.
-        Return a list of list of identifiers, root being not omitted.
-
-        For example :
-            Harry
-            |___ Bill
-            |___ Jane
-            |    |___ Diane
-            |         |___ George
-            |              |___ Jill
-            |         |___ Mary
-            |    |___ Mark
-
-        expected result :
-        [['harry', 'jane', 'diane', 'mary'],
-         ['harry', 'jane', 'mark'],
-         ['harry', 'jane', 'diane', 'george', 'jill'],
-         ['harry', 'bill']]
-        """
-        return [
-            [nid for nid in self.rsearch(l.id)][::-1]
-            for l in self.leaves()
-        ]
 
     def remove_node(self, node_id):
         """
