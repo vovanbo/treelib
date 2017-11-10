@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """treelib - Simple to use for you.
 
 Python 3 Tree Implementation
 """
-__author__ = 'chenxm'
+__author__ = 'Vladimir Bolshakov <vovanbo@gmail.com>'
 
 import json
 import copy
@@ -56,11 +54,14 @@ class Tree(OrderedDict):
     @property
     def paths_to_leaves(self):
         """
-        Use this function to get the identifiers allowing to go from the root
+        Use this property to get the identifiers allowing to go from the root
         nodes to each leaf.
         Return a list of list of identifiers, root being not omitted.
 
-        For example :
+        For example:
+
+        .. code-block:: text
+
             Harry
             |___ Bill
             |___ Jane
@@ -70,11 +71,14 @@ class Tree(OrderedDict):
             |         |___ Mary
             |    |___ Mark
 
-        expected result :
-        [['harry', 'jane', 'diane', 'mary'],
-         ['harry', 'jane', 'mark'],
-         ['harry', 'jane', 'diane', 'george', 'jill'],
-         ['harry', 'bill']]
+        Result:
+
+        .. code-block:: python3
+
+            [['harry', 'jane', 'diane', 'mary'],
+             ['harry', 'jane', 'mark'],
+             ['harry', 'jane', 'diane', 'george', 'jill'],
+             ['harry', 'bill']]
         """
         return [[n for n in self.rsearch(l.id)][::-1] for l in self.leaves()]
 

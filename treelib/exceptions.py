@@ -1,26 +1,26 @@
 class NodeNotFound(Exception):
-    """Exception throwed if a node's identifier is unknown"""
+    """Exception raises if a node's identifier is unknown"""
     pass
 
 
 class NodePropertyNotFound(Exception):
-    """Exception throwed if a node's data property is not specified"""
+    """Exception raises if a node's data property is not specified"""
     pass
 
 
 class MultipleRoots(Exception):
-    """Exception throwed if more than one root exists in a tree."""
+    """Exception raises if more than one root exists in a tree."""
     pass
 
 
 class DuplicatedNode(Exception):
-    """Exception throwed if an identifier already exists in a tree."""
+    """Exception raises if an identifier already exists in a tree."""
     pass
 
 
 class LinkPastRootNode(Exception):
     """
-    Exception throwed in Tree.link_past_node() if one attempts
+    Exception raises in Tree.link_past_node() if one attempts
     to "link past" the root node of a tree.
     """
     pass
@@ -32,7 +32,7 @@ class InvalidLevelNumber(Exception):
 
 class LoopError(Exception):
     """
-    Exception thrown if trying to move node B to node A's position
+    Exception raises if trying to move node B to node A's position
     while A is B's ancestor.
     """
     pass
