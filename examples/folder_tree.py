@@ -6,8 +6,8 @@
 #
 __author__ = 'holger'
 
-import zlib
 import argparse
+from hashlib import blake2b
 from pathlib import Path
 
 from treelib import tree
@@ -26,7 +26,8 @@ parser.add_argument('path', nargs='?', type=Path,
 parser.add_argument('pattern', nargs='?', type=str,
                     help='File name pattern to filtered, e.g. *.pdf',
                     default="*")
-parser.add_argument('--debug', type=bool, default=False, help='Debug mode')
+parser.add_argument('--debug', type=bool, nargs='?', const=True, default=False,
+                    help='Debug mode')
 parser.add_argument('--profiling', type=str, choices=['timeit', 'cprofile'],
                     default=None, help='Profiling mode')
 
@@ -37,16 +38,16 @@ folder_tree = tree.Tree()
 root_node = folder_tree.create_node(str(root_path), root_path)  # root node
 
 
-def crc32(data):
+def get_hash(data):
     data = bytes(str(data), 'UTF-8')
+    data_hash = blake2b(data, digest_size=8).hexdigest()
 
     if args.debug:
-        print('++++++ CRC32 ++++++')
+        print('++++++ blake2b ++++++')
         print('input: ' + str(data))
-        print('crc32: ' + hex(zlib.crc32(data) & 0xffffffff))
-        print('+++++++++++++++++++')
-    # crc32 returns a signed value, &-ing it will match py3k
-    return hex(zlib.crc32(data) & 0xffffffff)
+        print('hash: ' + data_hash)
+        print('+++++++++++++++++++++')
+    return data_hash
 
 
 def get_node_id(depth, path):
@@ -58,10 +59,10 @@ def get_node_id(depth, path):
         and unique ID build by hashing the absolute path of the directory.
         All spaces are replaced by '_'
 
-        <depth>_<dirname>+++<crc32>
-        e.g. 2_Folder_XYZ_1+++<crc32>
+        <depth>_<dirname>+++<hash>
+        e.g. 2_Folder_XYZ_1+++<hash>
     """
-    return f"{depth}_{path}+++{crc32(path)}".replace(" ", "_")
+    return f"{depth}_{path}+++{get_hash(path)}".replace(" ", "_")
 
 
 def get_parent_id(depth, path):
@@ -74,7 +75,7 @@ def get_parent_id(depth, path):
     # e.g. /home/user1/mp3/folder1/parent_folder/current_folder
     # get 'parent_folder'
 
-    parent_id = f"{depth - 1}_{path.parent}+++{crc32(path.parent)}"
+    parent_id = f"{depth - 1}_{path.parent}+++{get_hash(path.parent)}"
     return parent_id.replace(" ", "_")
 
 
