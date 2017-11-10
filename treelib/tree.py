@@ -95,8 +95,8 @@ class Tree(OrderedDict):
         if pid is None:
             if self.root is not None:
                 raise MultipleRoots('A tree takes one root merely.')
-            else:
-                self.root = node.id
+
+            self.root = node.id
         elif pid not in self:
             raise NodeNotFound(f"Parent node '{pid}' is not in the tree")
 
