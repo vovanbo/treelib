@@ -190,17 +190,6 @@ class Tree(OrderedDict):
                     direction = not direction
                     stack = stack_fw if direction else stack_bw
 
-    def filter_nodes(self, func: Callable[[Node], bool]):
-        """Filters all nodes by function
-
-        Function is passed one node as an argument and that node is included
-        if function returns true.
-        Returns a filter iterator of the node.
-
-        Added by William Rusnack
-        """
-        return filter(func, self.values())
-
     def is_branch(self, node_id):
         """
         Return the children (ID) list of node_id.

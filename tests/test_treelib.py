@@ -274,22 +274,18 @@ def test_tree_iteration():
 
 
 def test_filter_nodes():
-    """
-    tests: Tree.filter_nodes
-    Added by: William Rusnack
-    """
     new_tree = Tree()
 
-    assert not tuple(new_tree.filter_nodes(lambda n: True))
+    assert not tuple(filter(lambda n: True, new_tree.values()))
 
     nodes = [new_tree.create_node('root_node'),
              new_tree.create_node('second', parent=new_tree.root)]
 
-    assert tuple(new_tree.filter_nodes(lambda n: False)) == ()
-    assert tuple(new_tree.filter_nodes(lambda n: n.is_root)) == (nodes[0],)
-    assert tuple(new_tree.filter_nodes(lambda n: not n.is_root)) == \
+    assert tuple(filter(lambda n: False, new_tree.values())) == ()
+    assert tuple(filter(lambda n: n.is_root, new_tree.values())) == (nodes[0],)
+    assert tuple(filter(lambda n: not n.is_root, new_tree.values())) == \
            (nodes[1],)
-    assert set(new_tree.filter_nodes(lambda n: True))
+    assert set(filter(lambda n: True, new_tree.values()))
     assert set(nodes)
 
 
