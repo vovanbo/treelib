@@ -43,7 +43,7 @@ def build_recursive_tree(tree, base, depth, width):
             )
         dirs_nodes = tree.children(base.id)
         for dir in dirs_nodes:
-            newbase = tree.get_node(dir.id)
+            newbase = tree.get(dir.id)
             build_recursive_tree(tree, newbase, depth, width)
 
 

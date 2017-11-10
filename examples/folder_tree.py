@@ -109,7 +109,7 @@ def crawler():
             parent_id = root_node
 
         # create node
-        folder_tree.create_node(current_path.name, node_id, parent_id)
+        folder_tree.create_node(current_path.name, node_id, parent=parent_id)
 
         # +++ DIRECTORIES +++
         if current_path.is_dir():
@@ -152,7 +152,7 @@ else:
 
 print(f'Count of files: {FILECOUNT}')
 print(f'Count of folders: {DIRCOUNT}')
-print(f'Count of tree nodes: {len(folder_tree.nodes)}')
+print(f'Count of tree nodes: {len(folder_tree)}')
 
 if profiling_result is not None:
     print('\nProfiling results:')

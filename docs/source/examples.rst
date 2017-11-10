@@ -111,7 +111,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 
 .. code-block:: sh
 
-    >>> node = tree.get_node("bill")
+    >>> node = tree.get("bill")
     >>> tree.depth(node)
     1
 

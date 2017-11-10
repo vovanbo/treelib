@@ -10,7 +10,7 @@ def export_to_dot(tree, filename, shape='circle', graph='digraph'):
     """Exports the tree in the dot format of the graphviz software"""
         
     nodes, connections = [], []
-    if tree.nodes:        
+    if tree:
         
         for node in tree.expand_tree(mode=TraversalMode.WIDTH):
             node_id = tree[node].id

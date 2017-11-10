@@ -19,51 +19,39 @@ from treelib.exceptions import (
 from .node import Node
 
 
-class Tree:
+class Tree(OrderedDict):
     """Tree objects are made of Node(s) stored in _nodes dictionary."""
-    def __init__(self, tree=None, deep=False):
+    def __init__(self, tree: 'Tree' = None, deepcopy: bool = False):
         """Initiate a new tree or copy another tree with a shallow or
-        deep copy.
+        deepcopy copy.
         """
-
-        #: dictionary, id: Node object
-        self._nodes = OrderedDict()
+        super(Tree, self).__init__()
 
         #: id of the root node
         self.root = None
 
         if tree is not None:
+            if not isinstance(tree, Tree):
+                raise TypeError('Tree instance is required.')
+
             self.root = tree.root
-
-            if deep:
-                for node_id in tree._nodes:
-                    self._nodes[node_id] = copy.deepcopy(tree._nodes[node_id])
-            else:
-                self._nodes = tree._nodes
-
-    def __contains__(self, identifier):
-        """Return a list of the nodes' identifiers matching the
-        id argument.
-        """
-        return [node for node in self._nodes if node == identifier]
-
-    def __getitem__(self, key) -> Node:
-        """Return _nodes[key]"""
-        try:
-            return self._nodes[key]
-        except KeyError:
-            raise NodeNotFound("Node '%s' is not in the tree" % key)
-
-    def __setitem__(self, key, item):
-        """Set _nodes[key]"""
-        self._nodes.update({key: item})
-
-    def __len__(self) -> int:
-        """Return len(_nodes)"""
-        return len(self._nodes)
+            self.__merge_tree(tree, deepcopy)
 
     def __str__(self) -> str:
         return treelib.utils.print_tree(self)
+
+    def __getitem__(self, item):
+        try:
+            return super(Tree, self).__getitem__(item)
+        except KeyError:
+            raise NodeNotFound(f"Node '{item}' is not in the tree")
+
+    def __merge_tree(self, other: 'Tree', deepcopy: bool = False):
+        if deepcopy:
+            for node_id in other:
+                self[node_id] = copy.deepcopy(other[node_id])
+        else:
+            self.update(other)
 
     def add_node(self, node: Node, parent: Node = None):
         """
@@ -73,7 +61,7 @@ class Tree:
         if not isinstance(node, Node):
             raise TypeError('First parameter must be instance of Node.')
 
-        if node.id in self._nodes:
+        if node.id in self:
             raise DuplicatedNode(f"Node with ID '{node.id}' "
                                  f"is already exists in tree.")
 
@@ -84,24 +72,13 @@ class Tree:
                 raise MultipleRoots('A tree takes one root merely.')
             else:
                 self.root = node.id
-        elif not self.contains(pid):
+        elif pid not in self:
             raise NodeNotFound(f"Parent node '{pid}' is not in the tree")
 
-        self._nodes.update({node.id: node})
+        self[node.id] = node
         if pid in self:
             self[pid].add_child(node.id)
         self[node.id].parent = pid
-
-    def all_nodes(self):
-        """Return all nodes in a list"""
-        return list(self.all_nodes_iter())
-
-    def all_nodes_iter(self):
-        """
-        Returns all nodes in an iterator
-        Added by William Rusnack
-        """
-        return self._nodes.values()
 
     def children(self, node_id):
         """
@@ -110,13 +87,12 @@ class Tree:
         """
         return [self[i] for i in self.is_branch(node_id)]
 
-    def contains(self, node_id):
-        """Check if the tree contains node of given id"""
-        return node_id in self._nodes
-
-    def create_node(self, tag=None, identifier=None, parent=None, data=None):
+    def create_node(self, *args, parent=None, node_cls=Node, **kwargs):
         """Create a child node for given @parent node."""
-        node = Node(tag=tag, id=identifier, data=data)
+        if not issubclass(node_cls, Node):
+            raise ValueError('node_cls must be a subclass of Node.')
+
+        node = node_cls(*args, **kwargs)
         self.add_node(node, parent)
         return node
 
@@ -137,8 +113,10 @@ class Tree:
         else:
             # Get level of the given node
             node_id = node.id if isinstance(node, Node) else node
-            if not self.contains(node_id):
+
+            if node_id not in self:
                 raise NodeNotFound(f"Node '{node_id}' is not in the tree")
+
             result = self.level(node_id)
         return result
 
@@ -160,7 +138,7 @@ class Tree:
         """
         node_id = self.root if node_id is None else node_id
 
-        if not self.contains(node_id):
+        if node_id not in self:
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         if filtering is not None and not callable(filtering):
@@ -221,34 +199,22 @@ class Tree:
 
         Added by William Rusnack
         """
-        return filter(func, self.all_nodes_iter())
+        return filter(func, self.values())
 
-    def get_node(self, nid):
-        """Return the node with `nid`. None returned if `nid` does not exist."""
-        if nid is None or not self.contains(nid):
-            return None
-        return self._nodes[nid]
-
-    def is_branch(self, nid):
+    def is_branch(self, node_id):
         """
-        Return the children (ID) list of nid.
-        Empty list is returned if nid does not exist
+        Return the children (ID) list of node_id.
+        Empty list is returned if node_id does not exist
         """
-        if nid is None:
+        if node_id is None:
             raise ValueError("First parameter can't be None")
 
-        if not self.contains(nid):
-            raise NodeNotFound(f"Node '{nid}' is not in the tree")
-
-        if nid not in self:
-            return []
-
-        return self[nid].children
+        return self[node_id].children
 
     def leaves(self, nid=None):
         """Get leaves of the whole tree of a subtree."""
         if nid is None:
-            return [n for n in self.all_nodes_iter() if n.is_leaf]
+            return [n for n in self.values() if n.is_leaf]
 
         return [self[n] for n in self.expand_tree(nid) if self[n].is_leaf]
 
@@ -270,9 +236,6 @@ class Tree:
         For example, if we have a -> b -> c and delete node b, we are left
         with a -> c
         """
-        if not self.contains(node_id):
-            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
-
         if self.root == node_id:
             raise LinkPastRootNode('Cannot link past the root node, '
                                    'delete it with remove_node()')
@@ -288,14 +251,14 @@ class Tree:
         parent.children += self[node_id].children
         # Delete the node
         parent.remove_child(node_id)
-        del self._nodes[node_id]
+        del self[node_id]
 
     def move_node(self, source, destination):
         """
         Move a node indicated by @source parameter to be a child of
         @destination.
         """
-        if not self.contains(source) or not self.contains(destination):
+        if source not in self or destination not in self:
             raise NodeNotFound
 
         if self.is_ancestor(source, destination):
@@ -319,23 +282,15 @@ class Tree:
 
         return False
 
-    @property
-    def nodes(self):
-        """Return a dict form of nodes in a tree: {id: node_instance}"""
-        return self._nodes
-
     def parent(self, node_id):
         """Get parent node object of given id"""
-        if not self.contains(node_id):
-            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
-
         pid = self[node_id].parent
-        if pid is None or not self.contains(pid):
+        if pid is None or pid not in self:
             return None
 
         return self[pid]
 
-    def paste(self, node_id, new_tree, deepcopy=False):
+    def paste(self, node_id, new_tree: 'Tree', deepcopy: bool = False):
         """
         Paste a @new_tree to the original one by linking the root
         of new tree to given node (node_id).
@@ -349,19 +304,15 @@ class Tree:
         if node_id is None:
             raise ValueError('First parameter can not be None')
 
-        if not self.contains(node_id):
+        if node_id not in self:
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
-        set_joint = set(new_tree._nodes) & set(self._nodes)  # joint keys
+        set_joint = set(new_tree) & set(self)  # joint keys
         if set_joint:
             # TODO: a deprecated routine is needed to avoid exception
             raise ValueError(f'Duplicated nodes {list(set_joint)} exists.')
 
-        if deepcopy:
-            for node in new_tree._nodes:
-                self._nodes.update({node.id: copy.deepcopy(node)})
-        else:
-            self._nodes.update(new_tree._nodes)
+        self.__merge_tree(new_tree, deepcopy)
 
         self[node_id].add_child(new_tree.root)
         self[new_tree.root].parent = node_id
@@ -403,14 +354,11 @@ class Tree:
         if node_id is None:
             return 0
 
-        if not self.contains(node_id):
-            raise NodeNotFound(f"Node '{id}' is not in the tree")
-
         parent = self[node_id].parent
 
         removed = [n for n in self.expand_tree(node_id)]
         for id_ in removed:
-            del self._nodes[id_]
+            del self[id_]
 
         # Update its parent info
         self[parent].remove_child(node_id)
@@ -437,16 +385,13 @@ class Tree:
         if node_id is None:
             return subtree
 
-        if not self.contains(node_id):
-            raise NodeNotFound(f"Node '{node_id}' is not in the tree")
-
         subtree.root = node_id
         parent = self[node_id].parent
         self[node_id].parent = None  # reset root parent for the new tree
 
         removed = [n for n in self.expand_tree(node_id)]
         for id_ in removed:
-            subtree._nodes.update({id_: self._nodes.pop(id_)})
+            subtree[id_] = self.pop(id_)
 
         # Update its parent info
         self[parent].remove_child(node_id)
@@ -460,7 +405,7 @@ class Tree:
         if node_id is None:
             return
 
-        if not self.contains(node_id):
+        if node_id not in self:
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         if filtering is not None and not callable(filtering):
@@ -522,14 +467,14 @@ class Tree:
         Otherwise, InvalidLevelNumber exception will be raised.
         """
         if level is None:
-            return len(self._nodes)
+            return len(self)
 
         if not isinstance(level, int):
             raise TypeError(f"Level should be an integer instead "
                             f"of '{type(level)}'")
 
         return len(
-            [node for node in self.all_nodes_iter()
+            [node for node in self.values()
              if self.level(node.id) == level]
         )
 
@@ -549,12 +494,12 @@ class Tree:
         if node_id is None:
             return result
 
-        if not self.contains(node_id):
+        if node_id not in self:
             raise NodeNotFound(f"Node '{node_id}' is not in the tree")
 
         result.root = node_id
         for subtree_node in self.expand_tree(node_id):
-            result._nodes.update({self[subtree_node].id: self[subtree_node]})
+            result[self[subtree_node].id] = self[subtree_node]
 
         return result
 

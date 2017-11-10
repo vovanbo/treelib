@@ -13,8 +13,8 @@ def test_tree(tree, copytree):
 
 
 def test_is_root(tree):
-    assert tree.nodes['hárry'].is_root
-    assert not tree.nodes['jane'].is_root
+    assert tree['hárry'].is_root
+    assert not tree['jane'].is_root
 
 
 def test_paths_to_leaves(tree):
@@ -25,47 +25,48 @@ def test_paths_to_leaves(tree):
 
 
 def test_nodes(tree):
-    assert len(tree.nodes) == 5
-    assert len(tree.all_nodes()) == 5
+    assert len(tree) == 5
+    assert len(tree.values()) == 5
     assert tree.size() == 5
-    assert tree.get_node("jane").tag == "Jane"
+    assert tree.get("jane").tag == "Jane"
     assert tree["jane"].tag == "Jane"
-    assert tree.contains("jane")
     assert "jane" in tree
-    assert not tree.contains("alien")
+    assert "alien" not in tree
     tree.create_node("Alien", "alien", parent="jane")
-    assert tree.contains("alien")
+    assert "alien" in tree
     tree.remove_node("alien")
-    assert not tree.contains('alien')
+    assert "alien" not in tree
 
 
 def test_getitem(tree):
     """Nodes can be accessed via getitem."""
-    for node_id in tree.nodes:
+    for node_id in tree:
         assert tree[node_id]
 
     # assert 'Node access should be possible via getitem.' in str(exc)
 
-    with pytest.raises(NodeNotFound):
+    with pytest.raises(NodeNotFound) as exc:
         assert tree['root']
+
+    assert "Node 'root' is not in the tree" in str(exc)
 
 
 def test_parent(tree):
-    for nid in tree.nodes:
+    for nid in tree:
         if nid == tree.root:
             assert tree.parent(nid) is None
         else:
-            assert tree.parent(nid) in tree.all_nodes()
+            assert tree.parent(nid) in tree.values()
 
 
 def test_children(tree):
-    for nid in tree.nodes:
+    for nid in tree:
         children = tree.is_branch(nid)
         for child in children:
-            assert tree[child] in tree.all_nodes()
+            assert tree[child] in tree.values()
         children = tree.children(nid)
         for child in children:
-            assert child in tree.all_nodes()
+            assert child in tree.values()
 
     with pytest.raises(NodeNotFound) as exc:
         assert tree.is_branch("alien")
@@ -77,8 +78,8 @@ def test_remove_node(tree):
     tree.create_node("Jill", "jill", parent="george")
     tree.create_node("Mark", "mark", parent="jill")
     assert tree.remove_node("jill") == 2
-    assert tree.get_node("jill") is None
-    assert tree.get_node("mark") is None
+    assert tree.get("jill") is None
+    assert tree.get("mark") is None
 
 
 def test_depth(tree):
@@ -100,9 +101,9 @@ def test_depth(tree):
     |___ Jane
     |    |___ Diane
     """
-    assert tree.depth(tree.get_node("mark")) == 4
-    assert tree.depth(tree.get_node("jill")) == 3
-    assert tree.depth(tree.get_node("george")) == 2
+    assert tree.depth(tree.get("mark")) == 4
+    assert tree.depth(tree.get("jill")) == 3
+    assert tree.depth(tree.get("george")) == 2
     assert tree.depth("jane") == 1
     assert tree.depth("bill") == 1
     assert tree.depth("hárry") == 0
@@ -176,7 +177,7 @@ def test_rsearch(tree):
 
 
 def test_subtree(tree):
-    subtree_copy = Tree(tree.subtree("jane"), deep=True)
+    subtree_copy = Tree(tree.subtree("jane"), deepcopy=True)
     assert subtree_copy.parent("jane") is None
     subtree_copy["jane"].tag = "Sweetie"
     assert tree["jane"].tag == "Jane"
@@ -263,16 +264,12 @@ def test_tree_print(capsys, tree, tree_as_string):
     assert stdout == tree_as_string
 
 
-def test_all_nodes_itr():
-    """
-    tests: Tree.all_nodes_iter
-    Added by: William Rusnack
-    """
+def test_tree_iteration():
     new_tree = Tree()
-    assert not new_tree.all_nodes_iter()
+    assert not new_tree.values()
     nodes = [new_tree.create_node('root_node'),
              new_tree.create_node('second', parent=new_tree.root)]
-    for nd in new_tree.all_nodes_iter():
+    for nd in new_tree.values():
         assert nd in nodes
 
 

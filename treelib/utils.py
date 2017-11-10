@@ -16,9 +16,6 @@ def tree_printer_gen(tree: 'Tree', node_id: Hashable,
         is_last = []
 
     node_id = tree.root if node_id is None else node_id
-    if not tree.contains(node_id):
-        raise NodeNotFound(f"Node '{node_id}' is not in the tree")
-
     node = tree[node_id]
 
     if level == 0:

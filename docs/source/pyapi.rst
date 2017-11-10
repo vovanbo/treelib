@@ -165,14 +165,6 @@ Instance attributes:
     default.
 
 
-.. method:: all_nodes()
-
-    Get the list of all the nodes randomly belonging to this tree.
-
-.. method:: all_nodes_iter()
-
-    Returns all nodes in an iterator.
-
 .. method:: children(nid)
 
     Return the children (Node) list of ``nid``. Empty list is returned if
