@@ -35,10 +35,10 @@ def tree():
 def tree_as_string():
     return """\
 Hárry
-├── Jane
-│   └── Diane
-└── Bill
-    └── George
+|-- Jane
+|   +-- Diane
++-- Bill
+    +-- George
 """
 
 @pytest.fixture

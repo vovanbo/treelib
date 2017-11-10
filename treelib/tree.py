@@ -38,7 +38,7 @@ class Tree(OrderedDict):
             self.__merge_tree(tree, deepcopy)
 
     def __str__(self) -> str:
-        return treelib.utils.print_tree(self)
+        return treelib.utils.print_tree(self, ascii_mode='simple')
 
     def __getitem__(self, item):
         try:
