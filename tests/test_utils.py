@@ -3,7 +3,7 @@
 import os
 
 from treelib import Tree
-from treelib.plugins import export_to_dot
+from treelib.utils import export_to_dot
 
 
 def read_generated_output(filename):

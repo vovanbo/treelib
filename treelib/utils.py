@@ -1,7 +1,6 @@
 from typing import Hashable, Callable, Union, Any
 
-from treelib.common import ASCIIMode
-from treelib.exceptions import NodeNotFound
+from treelib.common import ASCIIMode, TraversalMode
 
 
 def tree_printer_gen(tree: 'Tree', node_id: Hashable,
@@ -104,3 +103,41 @@ def print_tree(tree: 'Tree', node_id: Hashable = None,
             func(s)
     else:
         return '\n'.join(s for s in result) + '\n'
+
+
+def export_to_dot(tree: 'Tree', filename: str, shape='circle', graph='digraph'):
+    """
+    Exports the tree in the DOT format of the Graphviz software.
+
+    .. seealso::
+
+        `Graphviz <http://www.graphviz.org>`_
+        `DOT Language <http://www.graphviz.org/content/dot-language>`_
+
+    """
+    nodes, connections = [], []
+
+    if tree:
+        for node in tree.expand_tree(mode=TraversalMode.WIDTH):
+            node_id = tree[node].id
+            nodes.append(
+                f'"{node_id}" [label="{tree[node].tag}", shape={shape}]'
+            )
+
+            connections.extend(
+                [f'"{node_id}" -> "{c.id}"' for c in tree.children(node_id)]
+            )
+
+    # write nodes and connections to dot format
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(f'{graph} tree {{\n')
+
+        for node in nodes:
+            f.write(f'\t{node}\n')
+
+        f.write('\n')
+
+        for child in connections:
+            f.write(f'\t{child}\n')
+
+        f.write('}')
