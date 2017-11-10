@@ -300,7 +300,6 @@ def test_loop():
     tree.create_node('b', 'b', parent='a')
     tree.create_node('c', 'c', parent='b')
     tree.create_node('d', 'd', parent='c')
-    try:
-        tree.move_node('b', 'd')
-    except LoopError:
-        pass
+
+    with pytest.raises(LoopError):
+        tree.move_node(source='b', destination='d')
