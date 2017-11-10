@@ -257,11 +257,17 @@ def test_tree_to_string(tree, tree_as_string):
     assert str(tree) == tree_as_string
 
 
-def test_tree_print(capsys, tree, tree_as_string):
+def test_tree_print(capsys, tree):
     tree.print()
 
     stdout, stderr = capsys.readouterr()
-    assert stdout == tree_as_string
+    assert stdout == """\
+Hárry
+├── Jane
+│   └── Diane
+└── Bill
+    └── George
+"""
 
 
 def test_tree_iteration():
