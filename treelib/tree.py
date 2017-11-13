@@ -524,11 +524,11 @@ class Tree(OrderedDict):
                     reverse=reverse
                 )
 
-            for elem in queue:
-                result[node_tag]['children'].append(
-                    self.to_dict(elem.id, with_data=with_data, sort=sort,
-                                 reverse=reverse)
-                )
+            result[node_tag]['children'] = [
+                self.to_dict(n.id, with_data=with_data,
+                             sort=sort, reverse=reverse)
+                for n in queue
+            ]
 
             if not result[node_tag]['children']:
                 result = (
