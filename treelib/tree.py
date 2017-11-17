@@ -126,7 +126,7 @@ class Tree(OrderedDict):
         """
         return [self[i] for i in self.is_branch(node_id)]
 
-    def create_node(self, *args, parent=None, node_cls=Node, **kwargs) -> Node:
+    def create_node(self, *args, parent=None, node_cls=Node, **kwargs):
         """Create a child node for given @parent node."""
         if not issubclass(node_cls, Node):
             raise ValueError('node_cls must be a subclass of Node.')
@@ -493,7 +493,7 @@ class Tree(OrderedDict):
 
         This line creates a deep copy of the entire tree.
         """
-        result = Tree()
+        result = self.__class__()
         if node_id is None:
             return result
 
