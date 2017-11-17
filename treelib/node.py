@@ -28,9 +28,9 @@ class Node:
         #: boolean
         self.expanded = expanded
 
-        #: id of the parent's node :
+        #: id of the parent's node
         self._parent = None
-        #: id(s) of the soons' node(s) :
+        #: id(s) of the children node(s)
         self._children = list()
 
         self._tree = tree
