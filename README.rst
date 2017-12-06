@@ -16,13 +16,13 @@ efficient implementation of tree data structure in Python.
 
 The main features of ``ttree`` includes:
 
-    * Efficient operation of node indexing with the benefit of dictionary type.
-    * Support common tree operations like **traversing**, **insertion**,
-      **deletion**, **node moving**, **shallow/deep copying**,
-      **subtree cutting** etc.
-    * Support user-defined data payload to accelerate your model construction.
-    * Has pretty tree showing and text/json dump for pretty print and offline
-      analysis.
+* Efficient operation of node indexing with the benefit of dictionary type.
+* Support common tree operations like **traversing**, **insertion**,
+  **deletion**, **node moving**, **shallow/deep copying**,
+  **subtree cutting** etc.
+* Support user-defined data payload to accelerate your model construction.
+* Has pretty tree showing and text/json dump for pretty print and offline
+  analysis.
 
 Quick Start
 -----------
