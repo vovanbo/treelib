@@ -39,8 +39,7 @@ For installation, APIs and examples, see http://ttree.readthedocs.io/en/latest/
 Update
 ------
 
--  2017-12-06: Fork ``treelib`` to ``ttree`` package by Vladimir
-   Bolshakov
+-  2017-12-06: Fork ``treelib`` to ``ttree`` package by `Vladimir Bolshakov`_
 -  2017-08-10: Abandon supporting Python 3.2 since v1.4.0.
 -  2012-07-07: First published.
 
