@@ -1,8 +1,4 @@
 #!/usr/bin/env python
-"""
-ttree - Taxonomy tree data structure implementation.
-"""
-
 import uuid
 
 from collections import Sequence, MutableMapping, Set
@@ -15,7 +11,7 @@ class Node:
     A :class:`Node` object contains basic properties such as node id,
     node tag, parent node, children nodes etc., and some operations for a node.
 
-    Nodes are elementary objects which are stored a `_nodes` dictionary
+    Nodes are elementary objects which are stored in a dictionary
     of a Tree. Use `data` attribute to store node-specific data.
     """
     def __init__(self, tag=None, id=None, expanded=True, data=None, tree=None):

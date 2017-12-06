@@ -1,24 +1,26 @@
-"""treelib - Simple to use for you.
-
-Python 3 Tree Implementation
-"""
 __author__ = 'Vladimir Bolshakov <vovanbo@gmail.com>'
 
 import json
 import copy
 from collections import OrderedDict
-from typing import Callable, List, MutableMapping, Optional
+from typing import Callable, List, MutableMapping, Optional, Union
 
-import treelib.utils
-from treelib.common import ASCIIMode, TraversalMode
-from treelib.exceptions import (
+import ttree.utils
+from ttree.common import ASCIIMode, TraversalMode
+from ttree.exceptions import (
     NodeNotFound, MultipleRoots, DuplicatedNode, LinkPastRootNode, LoopError
 )
 from .node import Node
 
 
 class Tree(OrderedDict):
-    """Tree objects are made of Node(s) stored in _nodes dictionary."""
+    """
+    The Tree object defines the tree-like structure based on
+    :class:`Node` objects. A new tree can be created from scratch without any
+    parameter or a shallow/deep copy of another tree. When ``deepcopy=True``,
+    a deepcopy operation is performed on feeding ``tree`` parameter and
+    *more memory is required to create the tree*.
+    """
     def __init__(self, tree: 'Tree' = None, deepcopy: bool = False):
         """Initiate a new tree or copy another tree with a shallow or
         deepcopy copy.
@@ -36,7 +38,7 @@ class Tree(OrderedDict):
             self.__merge_tree(tree, deepcopy)
 
     def __str__(self) -> str:
-        return treelib.utils.print_tree(self, ascii_mode='simple')
+        return ttree.utils.print_tree(self, ascii_mode='simple')
 
     def __getitem__(self, item):
         try:
@@ -95,7 +97,9 @@ class Tree(OrderedDict):
     def add_node(self, node: Node, parent: Node = None):
         """
         Add a new node to tree.
-        The 'node' parameter refers to an instance of Node
+
+        Add a new node object to the tree and make the parent as the root
+        by default.
         """
         if not isinstance(node, Node):
             raise TypeError('First parameter must be instance of Node.')
@@ -121,13 +125,18 @@ class Tree(OrderedDict):
 
     def children(self, node_id) -> List[Node]:
         """
-        Return the children (Node) list of node_id.
-        Empty list is returned if node_id does not exist
+        Return the children (Node) list of ``node_id``.
+
+        Empty list is returned if ``node_id`` does not exist.
         """
         return [self[i] for i in self.is_branch(node_id)]
 
     def create_node(self, *args, parent=None, node_cls=Node, **kwargs):
-        """Create a child node for given @parent node."""
+        """
+        Create a new node and add it to this tree.
+
+        If ``id`` is absent, a UUID will be generated automatically.
+        """
         if not issubclass(node_cls, Node):
             raise ValueError('node_cls must be a subclass of Node.')
 
@@ -139,9 +148,12 @@ class Tree(OrderedDict):
         """
         Get the maximum level of this tree or the level of the given node
 
-        @param node Node instance or id
-        @return int
-        @throw NodeNotFound
+        .. note ::
+
+            The parameter is node instance rather than node_identifier.
+
+        :param ~ttree.Node node:
+        :return: Depth level
         """
         result = 0
         if node is None:
@@ -160,10 +172,19 @@ class Tree(OrderedDict):
         return result
 
     def expand_tree(self, node_id=None,
-                    mode: TraversalMode = TraversalMode.DEPTH,
+                    mode: Union[TraversalMode, str] = TraversalMode.DEPTH,
                     filtering: Callable[[Node], bool] = None,
                     key=None, reverse: bool = False):
         """
+        Traverse the tree nodes with different modes.
+
+        ``node_id`` refers to the expanding point to start; ``mode`` refers
+        to the search mode (Tree.DEPTH, Tree.WIDTH). ``filter`` refers to the
+        function of one variable to act on the :class:`Node` object.
+        In this manner, the traversing will not continue to following children
+        of node whose condition does not pass the filter. ``key``, ``reverse``
+        are present to sort :class:Node objects at the same level.
+
         Python generator. Loosly based on an algorithm from
         'Essential LISP' by John R. Anderson, Albert T. Corbett, and
         Brian J. Reiser, page 239-241
@@ -231,7 +252,8 @@ class Tree(OrderedDict):
 
     def is_branch(self, node_id):
         """
-        Return the children (ID) list of node_id.
+        Get the children (only sons) list of the node with ID == node_id.
+
         Empty list is returned if node_id does not exist
         """
         if node_id is None:
@@ -240,7 +262,7 @@ class Tree(OrderedDict):
         return self[node_id].children
 
     def leaves(self, node_id=None):
-        """Get leaves of the whole tree of a subtree."""
+        """Get leaves from given node."""
         if node_id is None:
             return [n for n in self.values() if n.is_leaf]
 
@@ -259,7 +281,9 @@ class Tree(OrderedDict):
 
     def link_past_node(self, node_id):
         """
-        Delete a node by linking past it.
+        Remove a node and link its children to its parent.
+
+        Root is not allowed.
 
         For example, if we have a -> b -> c and delete node b, we are left
         with a -> c
@@ -283,8 +307,7 @@ class Tree(OrderedDict):
 
     def move_node(self, source, destination):
         """
-        Move a node indicated by @source parameter to be a child of
-        @destination.
+        Move node (source) from its parent to another parent (destination).
         """
         if source not in self or destination not in self:
             raise NodeNotFound
@@ -311,7 +334,11 @@ class Tree(OrderedDict):
         return False
 
     def parent(self, node_id) -> Optional[Node]:
-        """Get parent node object of given id"""
+        """
+        Obtain specific node's parent (Node instance).
+
+        Return None if the parent is None or does not exist in the tree.
+        """
         pid = self[node_id].parent
         if pid is None or pid not in self:
             return None
@@ -320,8 +347,8 @@ class Tree(OrderedDict):
 
     def paste(self, node_id, new_tree: 'Tree', deepcopy: bool = False):
         """
-        Paste a @new_tree to the original one by linking the root
-        of new tree to given node (node_id).
+        Paste a new tree to an existing tree, with ``node_id`` becoming the
+        parent of the root of this new tree.
 
         Update: add @deepcopy of pasted tree.
         """
@@ -402,8 +429,10 @@ class Tree(OrderedDict):
 
     def rsearch(self, node_id, filtering: Callable[[Node], bool] = None):
         """
-        Traverse the tree branch along the branch from node_id to its
-        ancestors (until root).
+        Search the tree from ``node_id`` to the root along links reservedly.
+
+        Parameter ``filter`` refers to the function of one variable to act
+        on the :class:`Node` object.
         """
         if node_id is None:
             return
@@ -423,21 +452,52 @@ class Tree(OrderedDict):
             current = self[current].parent if self.root != current else None
 
     def save2file(self, filename, node_id=None, id_hidden=True,
-                  filter_=None, key=None, reverse=False,
+                  filtering=None, key=None, reverse=False,
                   ascii_mode=ASCIIMode.ex, data_property=None):
-        """Update 20/05/13: Save tree into file for offline analysis"""
+        """
+        Save the tree into file for offline analysis.
+
+        :param filename: Export file name
+        :param node_id: Traversal root node ID
+        :param id_hidden: Is ID hidden?
+        :param filtering: Filtering callable
+        :param key: Sorting key callable
+        :param reverse: Reverse mode?
+        :param ascii_mode: ASCII mode
+        :param data_property: Data property name
+        """
         with open(filename, 'ab') as fp:
-            treelib.utils.print_tree(
-                self, node_id, id_hidden, filter_, key, reverse,
+            ttree.utils.print_tree(
+                self, node_id, id_hidden, filtering, key, reverse,
                 ascii_mode, data_property, func=lambda n: fp.write(n + b'\n')
             )
 
-    def print(self, node_id=None, id_hidden=True, filter_=None,
+    def print(self, node_id=None, id_hidden=True, filtering=None,
               key=None, reverse=False, ascii_mode=ASCIIMode.ex,
               data_property=None):
+        """
+        Print the tree structure in hierarchy style.
+
+        You have three ways to output your tree data, i.e., stdout with
+        ``print()``, plain text file with ``save2file()``, and json string
+        with ``to_json()``. The former two use the same backend to generate
+        a string of tree structure in a text graph.
+
+        :param node_id: refers to the expanding point to start
+        :param id_hidden: refers to hiding the node ID when printing
+        :param filtering: refers to the function of one variable to act on the
+            :class:`Node` object. In this manner, the traversing will not
+            continue to following children of node whose condition does
+            not pass the filter.
+        :param key: are present to sort :class:`Node` object in the same level
+        :param reverse: reverse mode
+        :param ascii_mode: ASCII mode
+        :param data_property: refers to the property on the node data object
+            to be printed.
+        """
         try:
-            treelib.utils.print_tree(
-                self, node_id, id_hidden, filter_,
+            ttree.utils.print_tree(
+                self, node_id, id_hidden, filtering,
                 key, reverse, ascii_mode, data_property,
                 func=print
             )
@@ -446,9 +506,10 @@ class Tree(OrderedDict):
 
     def siblings(self, node_id) -> List[Node]:
         """
-        Return the siblings of given @node_id.
+        Return the siblings of given ``node_id``.
 
-        If @node_id is root or there are no siblings, an empty list is returned.
+        If ``node_id`` is root or there are no siblings, an empty list
+        is returned.
         """
         siblings = []
 
@@ -519,10 +580,10 @@ class Tree(OrderedDict):
         if self[node_id].expanded:
             queue = (self[i] for i in self[node_id].children)
             if sort:
-                queue = sorted(
-                    queue, key=(lambda x: x) if key is None else key,
-                    reverse=reverse
-                )
+                sort_options = {'reverse': reverse}
+                if key is not None:
+                    sort_options['key'] = key
+                queue = sorted(queue, **sort_options)
 
             result[node_tag]['children'] = [
                 self.to_dict(n.id, with_data=with_data,

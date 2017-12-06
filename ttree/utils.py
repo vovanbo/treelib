@@ -1,14 +1,24 @@
-from typing import Hashable, Callable, Union, Any
+from typing import Hashable, Callable, Union
 
-from treelib.common import ASCIIMode, TraversalMode
+from ttree.common import ASCIIMode, TraversalMode
 
 
-def tree_printer_gen(tree: 'Tree', node_id: Hashable,
-                     filtering: Callable[['Node'], bool] = None,
-                     key: Callable[['Node'], Any] = None,
+def tree_printer_gen(tree, node_id: Hashable, filtering=None, key=None,
                      reverse: bool = False,
                      ascii_mode: ASCIIMode = ASCIIMode.ex,
                      is_last: list = None, level: int = 0):
+    """
+    Generate elements of existing tree.
+
+    :param ~ttree.Tree tree: Tree instance
+    :param node_id: Traversal root node ID
+    :param filtering: Filtering callable
+    :param key: Sorting key callable
+    :param reverse: Reverse mode
+    :param ascii_mode: ASCII mode
+    :param is_last: Recursion tail flag
+    :param level: Current level of tree in recursion
+    """
     c_line, c_branch, c_corner = ascii_mode.value
 
     if is_last is None:
@@ -52,7 +62,15 @@ def tree_printer_gen(tree: 'Tree', node_id: Hashable,
             current_child = next_child
 
 
-def get_label(node: 'Node', data_property: str, id_hidden: bool):
+def get_label(node, data_property: str, id_hidden: bool):
+    """
+    Get label of node.
+
+    :param ~ttree.Node node: Tree node instance
+    :param data_property: Data property name
+    :param id_hidden: Is ID hidden?
+    :return:
+    """
     result = getattr(node.data, data_property) \
         if data_property \
         else node.tag
@@ -60,17 +78,18 @@ def get_label(node: 'Node', data_property: str, id_hidden: bool):
     return result if id_hidden else f'{result}[{node.id}]'
 
 
-def print_tree(tree: 'Tree', node_id: Hashable = None,
-               id_hidden: bool = True,
-               filtering: Callable[['Node'], bool] = None,
-               key: Callable[['Node'], Any] = None, reverse: bool = False,
+def print_tree(tree, node_id: Hashable = None, id_hidden: bool = True,
+               filtering=None, key=None, reverse: bool = False,
                ascii_mode: Union[ASCIIMode, str] = ASCIIMode.ex,
                data_property: str = None, func: Callable = None):
     """
-    Another implementation of printing tree using Stack
-    Print tree structure in hierarchy style.
+    Another implementation of printing tree using Stack Print tree structure
+    in hierarchy style.
 
     For example:
+
+    .. code-block:: text
+
         Root
         |___ C01
         |    |___ C11
@@ -86,6 +105,16 @@ def print_tree(tree: 'Tree', node_id: Hashable = None,
 
     UPDATE: the @key @reverse is present to sort node at each
     level.
+
+    :param ~ttree.Tree tree: Tree instance
+    :param node_id: Traversal root node ID
+    :param id_hidden: Is ID hidden?
+    :param filtering: Filtering callable
+    :param key: Sorting key callable
+    :param reverse: Reverse mode?
+    :param ascii_mode: ASCII mode
+    :param data_property: Data property name
+    :param func: Printer function callable
     """
     ascii_mode = (
         ascii_mode if isinstance(ascii_mode, ASCIIMode)
@@ -105,15 +134,19 @@ def print_tree(tree: 'Tree', node_id: Hashable = None,
         return '\n'.join(s for s in result) + '\n'
 
 
-def export_to_dot(tree: 'Tree', filename: str, shape='circle', graph='digraph'):
+def export_to_dot(tree, filename: str, shape='circle', graph='digraph'):
     """
-    Exports the tree in the DOT format of the Graphviz software.
+    Export the tree in the DOT format of the Graphviz software.
 
     .. seealso::
 
-        `Graphviz <http://www.graphviz.org>`_
-        `DOT Language <http://www.graphviz.org/content/dot-language>`_
+        * `Graphviz <http://www.graphviz.org>`_
+        * `DOT Language <http://www.graphviz.org/content/dot-language>`_
 
+    :param ~ttree.Tree tree: Tree instance
+    :param filename: Export file name
+    :param shape: Shape of tree node in DOT
+    :param graph: Graph type in DOT
     """
     nodes, connections = [], []
 
