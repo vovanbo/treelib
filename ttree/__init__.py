@@ -7,7 +7,7 @@ Taxonomy tree data structure implementation
 connected by branches. A tree owns merely a root, while a
 node (except root) has some children and one parent.
 """
-__version__ = '1.4.0'
+__version__ = '1.0.1'
 
 from .tree import Tree  # noqa
 from .node import Node  # noqa
