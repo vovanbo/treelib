@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import os
 
-from treelib import Tree
-from treelib.utils import export_to_dot
+from ttree import Tree
+from ttree.utils import export_to_dot
 
 
 def read_generated_output(filename):

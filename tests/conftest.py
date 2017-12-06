@@ -1,6 +1,6 @@
 import pytest
 
-from treelib import Tree, Node
+from ttree import Tree, Node
 
 
 @pytest.fixture

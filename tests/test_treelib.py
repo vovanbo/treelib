@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from treelib import Tree, Node
-from treelib.exceptions import NodeNotFound, LoopError
+from ttree import Tree, Node
+from ttree.exceptions import NodeNotFound, LoopError
 
 
 def test_tree(tree, copytree):
