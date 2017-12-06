@@ -3,6 +3,6 @@ include HISTORY*
 include LICENSE*
 include MANIFEST*
 include *.py
-recursive-include treelib *.py
+recursive-include ttree *.py
 recursive-include tests *.py
 recursive-include examples *.py
