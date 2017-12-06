@@ -1,11 +1,13 @@
-treelib - Simple to use for you.
+ttree - Simple to use for you.
 Python 2/3 Tree Implementation
 
 Copyright (C) 2011
     Brett Alistair Kromkamp - brettkromkamp@gmail.com
-Copyright (C) 2012-2015
+Copyright (C) 2012-2017
     Xiaming Chen - chenxm35@gmail.com
     and other contributors.
+Copyright (C) 2017
+    Vladimir Bolshakov — vovanbo@gmail.com
 All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
