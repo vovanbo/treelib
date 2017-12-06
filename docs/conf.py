@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# treelib documentation build configuration file, created by
+# ttree documentation build configuration file, created by
 # sphinx-quickstart on Wed Nov 12 21:00:41 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -49,7 +49,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'treelib'
+project = u'ttree'
 copyright = u'2012-2017, Xiaming Chen'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -199,7 +199,7 @@ html_show_sourcelink = True
 #html_search_scorer = 'scorer.js'
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'treelibdoc'
+htmlhelp_basename = 'ttreedoc'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -221,8 +221,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-  ('index', 'treelib.tex', u'treelib Documentation',
-   u'Xiaming Chen', 'manual'),
+  ('index', 'ttree.tex', u'ttree Documentation',
+   u'Vladimir Boshakov', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -251,8 +251,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'treelib', u'treelib Documentation',
-     [u'Xiaming Chen'], 1)
+    ('index', 'ttree', u'ttree Documentation',
+     [u'Xiaming Chen, Vladimir Bolshakov'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -265,9 +265,9 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'treelib', u'treelib Documentation',
-   u'Xiaming Chen', 'treelib', 'One line description of project.',
-   'Miscellaneous'),
+  ('index', 'ttree', u'ttree Documentation',
+   u'Xiaming Chen, Vladimir Bolshakov', 'ttree',
+   'One line description of project.', 'Miscellaneous'),
 ]
 
 # Documents to append as an appendix to all manuals.

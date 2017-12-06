@@ -1,21 +1,21 @@
-treelib package
+ttree package
 ===============
 
 Submodules
 ----------
 
-treelib.node module
+ttree.node module
 -------------------
 
-.. automodule:: treelib.node
+.. automodule:: ttree.node
     :members:
     :undoc-members:
     :show-inheritance:
 
-treelib.tree module
+ttree.tree module
 -------------------
 
-.. automodule:: treelib.tree
+.. automodule:: ttree.tree
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ treelib.tree module
 Module contents
 ---------------
 
-.. automodule:: treelib
+.. automodule:: ttree
     :members:
     :undoc-members:
     :show-inheritance:

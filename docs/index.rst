@@ -1,9 +1,9 @@
-.. treelib documentation master file, created by
+.. ttree documentation master file, created by
    sphinx-quickstart on Wed Nov 12 21:00:41 2014.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to treelib's documentation!
+Welcome to ttree's documentation!
 ===================================
 
 **Redistributed under Apache License (2.0) since version 1.3.0.**
@@ -12,11 +12,11 @@ Welcome to treelib's documentation!
 <http://en.wikipedia.org/wiki/Tree_%28data_structure%29>`_ is an
 important data structure in computer programming languages. It has
 wide applications with hierarchical data connections say file systems
-and some algorithms in Machine Learning. `treelib
+and some algorithms in Machine Learning. `ttree
 <https://github.com/caesar0301/pyTree>`_ is created to provide an
 efficient implementation of tree data structure in Python.
 
-The main features of `treelib` includes:
+The main features of `ttree` includes:
 
     * Simple to use in both python 2 and 3.
     * Efficient operation of node indexing with the benefit of dictionary type.

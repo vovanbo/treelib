@@ -1,13 +1,13 @@
-Examples
-===========
+Usage
+=====
 
 
 Basic Usage
--------------
+-----------
 
-.. code-block:: sh
+.. code-block:: python
 
-    >>> from treelib import Node, Tree
+    >>> from ttree import Node, Tree
     >>> tree = Tree()
     >>> tree.create_node("Harry", "harry")  # root node
     >>> tree.create_node("Jane", "jane", parent="harry")
@@ -17,37 +17,36 @@ Basic Usage
     >>> tree.create_node("Mark", "mark", parent="jane")
     >>> tree.print()
     Harry
-    ├── Bill
-    └── Jane
-        ├── Diane
-        │   └── Mary
-        └── Mark
-        
+    ├── Jane
+    │   ├── Diane
+    │   │   └── Mary
+    │   └── Mark
+    └── Bill
+
 
 API Examples
---------------
+------------
 
 **Example 1**: Expand a tree with specific mode (Tree.DEPTH [default],
 Tree.WIDTH, Tree.ZIGZAG).
 
-.. code-block:: sh
+.. code-block:: python
 
-    >>> print(','.join([tree[node].tag for node in \
-                tree.expand_tree(mode=Tree.DEPTH)]))
+    >>> print(','.join([tree[node].tag for node in tree.expand_tree(mode='depth')]))
     Harry,Bill,Jane,Diane,Mary,Mark
 
 **Example 2**: Expand tree with custom filter.
 
-.. code-block:: sh
+.. code-block:: python
 
-    >>> print(','.join([tree[node].tag for node in \
-                tree.expand_tree(filter = lambda x: \
-                x.id != 'diane')]))
+    >>> print(','.join(
+              [tree[node].tag for node in
+               tree.expand_tree(filtering=lambda x: x.id != 'diane')]))
     Harry,Bill,Jane,Mark
 
 **Example 3**: Get a subtree with the root of 'diane'.
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> sub_t = tree.subtree('diane')
     >>> sub_t.print()
@@ -56,7 +55,7 @@ Tree.WIDTH, Tree.ZIGZAG).
 
 **Example 4**: Paste a new tree to the original one.
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> new_tree = Tree()
     >>> new_tree.create_node("n1", 1)  # root node
@@ -65,51 +64,51 @@ Tree.WIDTH, Tree.ZIGZAG).
     >>> tree.paste('bill', new_tree)
     >>> tree.print()
     Harry
-    ├── Bill
-    │   └── n1
-    │       ├── n2
-    │       └── n3
-    └── Jane
-        ├── Diane
-        │   └── Mary
-        └── Mark
+    ├── Jane
+    │   ├── Diane
+    │   │   └── Mary
+    │   └── Mark
+    └── Bill
+        └── n1
+            ├── n2
+            └── n3
 
 **Example 5**: Remove the existing node from the tree
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> tree.remove_node(1)
     >>> tree.print()
     Harry
-    ├── Bill
-    └── Jane
-        ├── Diane
-        │   └── Mary
-        └── Mark
+    ├── Jane
+    │   ├── Diane
+    │   │   └── Mary
+    │   └── Mark
+    └── Bill
 
 **Example 6**: Move a node to another parent.
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> tree.move_node('mary', 'harry')
     >>> tree.print()
     Harry
-    ├── Bill
     ├── Jane
     │   ├── Diane
     │   └── Mark
+    ├── Bill
     └── Mary
 
 **Example 7**: Get the height of the tree.
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> tree.depth()
     2
 
 **Example 8**: Get the level of a node.
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> node = tree.get("bill")
     >>> tree.depth(node)
@@ -118,57 +117,34 @@ Tree.WIDTH, Tree.ZIGZAG).
 **Example 9**: Print or dump tree structure. For example, the same tree in
  basic example can be printed with 'em':
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> tree.print(ascii_mode='em')
     Harry
-    ╠══ Bill
     ╠══ Jane
     ║   ╠══ Diane
     ║   ╚══ Mark
+    ╠══ Bill
     ╚══ Mary
+
 
 In the JSON form, to_json() takes optional parameter with_data to trigger if
 the data field is appended into JSON string. For example,
 
-
-    >>> tree.print(ascii_mode='em')
-    Harry
-    ╠══ Bill
-    ╠══ Jane
-    ║   ╠══ Diane
-    ║   ╚══ Mark
-    ╚══ Mary
-
-In the JSON form, to_json() takes optional parameter with_data to trigger if
-the data field is appended into JSON string. For example,
-
-
-    >>> tree.print(line_type='em')
-    Harry
-    ╠══ Bill
-    ╠══ Jane
-    ║   ╠══ Diane
-    ║   ╚══ Mark
-    ╚══ Mary
-
-In the JSON form, to_json() takes optional parameter with_data to trigger if
-the data field is appended into JSON string. For example,
-
-.. code-block:: sh
+.. code-block:: python
 
     >>> print(tree.to_json(with_data=True))
-    {"Harry": {"data": null, "children": [{"Bill": {"data": null}}, {"Jane": {"data": null, "children": [{"Diane": {"data": null}}, {"Mark": {"data": null}}]}}, {"Mary": {"data": null}}]}}
+    {"Harry": {"children": [{"Bill": {"data": null}}, {"Jane": {"children": [{"Diane": {"data": null}}, {"Mark": {"data": null}}], "data": null}}, {"Mary": {"data": null}}], "data": null}}
 
 
 Advanced Usage
-----------------
+--------------
 
 Sometimes, you need trees to store your own data. The newsest version of
-:mod:`treelib` supports ``.data`` variable to store whatever you want. For
+:mod:`ttree` supports ``.data`` variable to store whatever you want. For
 example, to define a flower tree with your own data:
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> class Flower(object): \
             def __init__(self, color): \
@@ -176,7 +152,7 @@ example, to define a flower tree with your own data:
 
 You can create a flower tree now:
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> ftree = Tree()
     >>> ftree.create_node("Root", "root", data=Flower("black"))
@@ -185,19 +161,19 @@ You can create a flower tree now:
 
 Printing the colors of the tree:
 
-.. code-block:: sh
+.. code-block:: python
 
     >>> ftree.print(data_property="color")
-        black
-        ├── white
-        └── red
+    black
+    ├── white
+    └── red
 
-**Notes:** Before version 1.2.5, you may need to inherit and modify the behaviors of tree. Both are supported since then. For flower example,
 
-.. code-block:: sh
+Additional examples
+-------------------
 
-    >>> class FlowerNode(treelib.Node): \
-            def __init__(self, color): \
-                self.color = color
-    >>> # create a new node
-    >>> fnode = FlowerNode("white")
+The following advanced examples are placed in repo:
+
+* `Family Tree <https://github.com/vovanbo/ttree/blob/master/examples/family_tree.py>`_
+* `Folder Tree <https://github.com/vovanbo/ttree/blob/master/examples/folder_tree.py>`_
+* `Recursive directory tree <https://github.com/vovanbo/ttree/blob/master/examples/recursive_dirtree_generator.py>`_

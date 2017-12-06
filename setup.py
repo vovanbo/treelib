@@ -2,17 +2,17 @@ from setuptools import setup
 from treelib import __version__
 
 setup(
-    name="treelib",
+    name="ttree",
     version=__version__,
-    url='https://github.com/vovanbo/treelib',
-    author='Xiaming Chen',
-    author_email='chenxm35@gmail.com',
-    description='A Python 3 only implementation of tree structure.',
-    long_description='This is a simple tree data structure implementation '
+    url='https://github.com/vovanbo/ttree',
+    author='Vladimir Bolshakov',
+    author_email='vovanbo@gmail.com',
+    description='Taxonomy tree data structure implementation.',
+    long_description='This is a taxonomy tree data structure implementation '
                      'in Python.',
     license="Apache License, Version 2.0",
-    packages=['treelib'],
-    keywords=['data structure', 'tree', 'tools'],
+    packages=['ttree'],
+    keywords=['data structure', 'tree', 'tools', 'taxonomy'],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
