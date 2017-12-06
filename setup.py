@@ -1,5 +1,5 @@
 from setuptools import setup
-from treelib import __version__
+from ttree import __version__
 
 setup(
     name="ttree",
