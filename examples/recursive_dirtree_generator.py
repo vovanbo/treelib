@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
 """
-Example of treelib usage to generate recursive tree of directories.
+Example of ttree usage to generate recursive tree of directories.
 It could be useful to implement Directory Tree data structure
 
 2016 samuelsh
 """
 
-import treelib
+import ttree
 import random
 from hashlib import blake2b
 from string import digits, ascii_letters
@@ -71,7 +71,7 @@ class File:
         return self._name
 
 
-tree = treelib.Tree()
+tree = ttree.Tree()
 base = tree.create_node('Root', 'root')
 build_recursive_tree(tree, base, 2, 10)
 

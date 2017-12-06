@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-# Example usage of treelib
+# Example usage of ttree
 #
 # Author: chenxm
 #
 __author__ = 'chenxm'
 
-from treelib import Tree
+from ttree import Tree
 
 
 def create_family_tree():
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print(', '.join([tree[node].tag for node in tree.expand_tree()]))
 
     example("All family members (with identifiers) but Diane's sub-family")
-    tree.print(id_hidden=False, filter_=lambda x: x.id != 'diane')
+    tree.print(id_hidden=False, filtering=lambda x: x.id != 'diane')
 
     example("Let me introduce Diane family only")
     tree.subtree('diane').print()

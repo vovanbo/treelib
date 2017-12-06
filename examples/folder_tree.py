@@ -10,7 +10,7 @@ import argparse
 from hashlib import blake2b
 from pathlib import Path
 
-from treelib import tree
+from ttree import tree
 
 FILECOUNT = 0
 DIRCOUNT = 0
